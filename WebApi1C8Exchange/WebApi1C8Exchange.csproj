@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Build_Migrations.cmd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Build_Migrations.cmd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MigrationsSqlite\MigrationsSqlite.csproj" />
+    <ProjectReference Include="..\SqlServerMigrations\SqlServerMigrations.csproj" />
+    <ProjectReference Include="..\WebApi1C8Exchange.Data\WebApi1C8Exchange.Data.csproj" />
+    <ProjectReference Include="..\WebApi1C8Exchange.Models\WebApi1C8Exchange.Models.csproj" />
+  </ItemGroup>
+  <Target Name="HostPublish" AfterTargets="Build">
+		<!--<Message Importance="high" Text="*** Linux Publish             ... copying to LinuxVM ... " />
+		<Exec Command="call dotnet ..\SqlServerMigrations\SqlServerMigrations.csproj" />-->
+	</Target>
+</Project>

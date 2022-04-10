@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "WebApi1C8Excange": {
+    "WebApi1C8Exchange": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

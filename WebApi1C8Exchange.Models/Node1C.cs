@@ -1,4 +1,4 @@
-﻿namespace WebApi1C8Excange.Models
+﻿namespace WebApi1C8Exchange.Models
 {
     public class Node1C
     {
