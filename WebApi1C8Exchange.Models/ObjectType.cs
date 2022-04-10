@@ -1,9 +1,9 @@
 ﻿namespace WebApi1C8Exchange.Models
 {
-    public enum ObjectType
+    public enum ObjectType:byte
     {
         Reference,
-        Document
-
+        Document,
+        Query
     }
 }

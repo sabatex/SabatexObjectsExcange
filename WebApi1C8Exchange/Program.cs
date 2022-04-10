@@ -20,6 +20,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
                                 configuration.GetConnectionString("SqlServerConnection"),
                                 x => x.MigrationsAssembly("SqlServerMigrations"));
             break;
+        case "potgresql":
+            options.UseSqlServer(
+                                configuration.GetConnectionString("PostgreSqlConnection"),
+                                x => x.MigrationsAssembly("PostgreSQLMigrations"));
+
+            break;
         default: throw new Exception($"Unsupported provider: {provider}");
     }
 

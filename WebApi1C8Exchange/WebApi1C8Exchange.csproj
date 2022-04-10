@@ -7,14 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Build_Migrations.cmd" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Build_Migrations.cmd" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.3" />
@@ -32,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MigrationsSqlite\MigrationsSqlite.csproj" />
+    <ProjectReference Include="..\MigrationsSqlite\SqliteMigrations.csproj" />
+    <ProjectReference Include="..\PostgreSQLMigrations\PostgreSQLMigrations.csproj" />
     <ProjectReference Include="..\SqlServerMigrations\SqlServerMigrations.csproj" />
     <ProjectReference Include="..\WebApi1C8Exchange.Data\WebApi1C8Exchange.Data.csproj" />
     <ProjectReference Include="..\WebApi1C8Exchange.Models\WebApi1C8Exchange.Models.csproj" />

@@ -7,9 +7,8 @@ namespace WebApi1C8Exchange.Data;
 public class ApplicationDbContext : IdentityDbContext
 {
     public DbSet<Node1C> Nodes1C { get; set; } = default!;
-    public DbSet<Object1C> Objects1C { get; set; } = default!;
-    public DbSet<UnresolvedObject> UnresolvedObjects { get; set; } = default!;
-
+    public DbSet<Objectexchange> Objects1C { get; set; } = default!;
+ 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {

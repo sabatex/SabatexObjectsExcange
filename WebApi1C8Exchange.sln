@@ -5,19 +5,22 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi1C8Exchange", "WebApi1C8Exchange\WebApi1C8Exchange.csproj", "{E1BD8BB5-8181-4E4C-941D-DCB459B74751}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrationsSqlite", "MigrationsSqlite\MigrationsSqlite.csproj", "{7936321A-AC21-4BA1-99D8-A7DADCD7D7D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqliteMigrations", "MigrationsSqlite\SqliteMigrations.csproj", "{7936321A-AC21-4BA1-99D8-A7DADCD7D7D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServerMigrations", "SqlServerMigrations\SqlServerMigrations.csproj", "{7C514D94-915C-449D-81F5-ECADAAC668AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlServerMigrations", "SqlServerMigrations\SqlServerMigrations.csproj", "{7C514D94-915C-449D-81F5-ECADAAC668AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi1C8Exchange.Models", "WebApi1C8Exchange.Models\WebApi1C8Exchange.Models.csproj", "{852B5825-929F-4FCA-B292-CD0393708AF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi1C8Exchange.Models", "WebApi1C8Exchange.Models\WebApi1C8Exchange.Models.csproj", "{852B5825-929F-4FCA-B292-CD0393708AF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi1C8Exchange.Data", "WebApi1C8Exchange.Data\WebApi1C8Exchange.Data.csproj", "{6B5F0AAA-CC33-4254-8DED-7004241B12B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi1C8Exchange.Data", "WebApi1C8Exchange.Data\WebApi1C8Exchange.Data.csproj", "{6B5F0AAA-CC33-4254-8DED-7004241B12B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0105BEE-DA00-40CE-B6F6-D9D225BA7774}"
 	ProjectSection(SolutionItems) = preProject
+		add-migration.cmd = add-migration.cmd
 		addMigration.fsx = addMigration.fsx
 		ProcessUtils.fsx = ProcessUtils.fsx
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreSQLMigrations", "PostgreSQLMigrations\PostgreSQLMigrations.csproj", "{98023478-F755-4715-BCE5-FCEFDFAAEC0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +48,10 @@ Global
 		{6B5F0AAA-CC33-4254-8DED-7004241B12B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B5F0AAA-CC33-4254-8DED-7004241B12B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B5F0AAA-CC33-4254-8DED-7004241B12B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98023478-F755-4715-BCE5-FCEFDFAAEC0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98023478-F755-4715-BCE5-FCEFDFAAEC0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98023478-F755-4715-BCE5-FCEFDFAAEC0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98023478-F755-4715-BCE5-FCEFDFAAEC0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
