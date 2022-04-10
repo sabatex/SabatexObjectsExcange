@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MigrationsSqlite\SqliteMigrations.csproj" />
     <ProjectReference Include="..\PostgreSQLMigrations\PostgreSQLMigrations.csproj" />
+    <ProjectReference Include="..\SqliteMigrations\SqliteMigrations.csproj" />
     <ProjectReference Include="..\SqlServerMigrations\SqlServerMigrations.csproj" />
     <ProjectReference Include="..\WebApi1C8Exchange.Data\WebApi1C8Exchange.Data.csproj" />
     <ProjectReference Include="..\WebApi1C8Exchange.Models\WebApi1C8Exchange.Models.csproj" />

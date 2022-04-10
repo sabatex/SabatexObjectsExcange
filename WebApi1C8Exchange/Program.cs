@@ -13,15 +13,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
         case "sqlite":
             options.UseSqlite(configuration.GetConnectionString("SqliteConnection"),
-                 x => x.MigrationsAssembly("MigrationsSqlite"));
+                 x => x.MigrationsAssembly("SqliteMigrations"));
             break;
         case "sqlserver":
             options.UseSqlServer(
                                 configuration.GetConnectionString("SqlServerConnection"),
                                 x => x.MigrationsAssembly("SqlServerMigrations"));
             break;
-        case "potgresql":
-            options.UseSqlServer(
+        case "postgresql":
+            options.UseNpgsql(
                                 configuration.GetConnectionString("PostgreSqlConnection"),
                                 x => x.MigrationsAssembly("PostgreSQLMigrations"));
 
