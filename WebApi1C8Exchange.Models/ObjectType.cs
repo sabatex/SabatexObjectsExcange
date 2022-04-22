@@ -2,8 +2,7 @@
 {
     public enum ObjectType:byte
     {
-        Reference,
-        Document,
+        Object,
         Query
     }
 }

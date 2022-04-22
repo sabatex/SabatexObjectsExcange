@@ -1,8 +1,8 @@
 ﻿namespace WebApi1C8Exchange.Models
 {
-    public class Node1C
+    public class ClientNode
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }=Guid.NewGuid().ToString();
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string Password { get; set; } = default!;

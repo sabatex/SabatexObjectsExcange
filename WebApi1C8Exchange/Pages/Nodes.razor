@@ -1,0 +1,157 @@
+﻿@page "/nodes"
+@attribute [Authorize(Roles ="Admin")]
+
+@using WebApi1C8Exchange.Models
+@using WebApi1C8Exchange.Data
+@using Microsoft.EntityFrameworkCore
+
+@inject ApplicationDbContext dbContext
+@inject DialogService DialogService
+
+<RadzenButton Icon="add_circle_outline"
+              style="margin-bottom: 10px"
+              Text="Створити повідомлення"
+              Click="@InsertRow"
+              Disabled=@(itemToInsert != null) />
+
+<RadzenButton Icon="delete"
+              style="margin-bottom: 10px;margin-left:20px"
+              ButtonStyle="ButtonStyle.Danger"
+              Text="Видалити"
+              Click="@(args => DeleteRow(selectedItems[0]))"
+              Disabled=@((selectedItems?.Count ?? 0) == 0) />
+
+
+<RadzenDataGrid Data="@items" @ref="grid"
+                TItem="ClientNode"
+                AllowFiltering="true"
+                AllowColumnResize="true"
+                AllowPaging="true"
+                PageSize="10"
+                AllowSorting="true"
+                EditMode="DataGridEditMode.Single"
+                @bind-Value=@selectedItems
+                RowUpdate="@OnUpdateRow"
+                RowCreate="@OnCreateRow">
+    <Columns>
+         <RadzenDataGridColumn Frozen="true" TItem="ClientNode" Context="sampleBlazorModelsSampleOrder" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="client">
+                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@(args => EditRow(client))" @onclick:stopPropagation="true" />
+                @*                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger"  Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteRow(client))"  @onclick:stopPropagation="true"/>
+                *@
+            </Template>
+            <EditTemplate Context="client">
+                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Primary"  Click="@((args) => SaveRow(client))" />
+                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light"  Click="@((args) => CancelEdit(client))" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+         <RadzenDataGridColumn TItem="ClientNode" Property="Id" Title="Id" Width="100px"/>
+         <RadzenDataGridColumn TItem="ClientNode" Property="Name" Title="Name" Width="100px">
+            <EditTemplate Context="node">
+                <RadzenTextBox @bind-Value="node.Name" TValue="string" Width="100%" />
+            </EditTemplate>
+         </RadzenDataGridColumn>
+
+         <RadzenDataGridColumn TItem="ClientNode"  Property="Description" Title="Description" Width="100px">
+            <EditTemplate Context="node">
+                <RadzenTextBox @bind-Value="node.Description" TValue="string" Width="100%" />
+            </EditTemplate>
+         </RadzenDataGridColumn>
+        
+         <RadzenDataGridColumn TItem="ClientNode"  Property="Password" Title="Password" Width="100px">
+            <EditTemplate Context="node">
+                <RadzenTextBox @bind-Value="node.Password" TValue="string" Width="100%" />
+            </EditTemplate>
+         </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    private IEnumerable<ClientNode> items;
+    private RadzenDataGrid<ClientNode> grid;
+
+    ClientNode? itemToInsert;
+    IList<ClientNode> selectedItems;
+    private string client = default!; 
+
+    void resetItemToIntert(ClientNode item)
+    {
+        if (item == itemToInsert)
+        {
+            itemToInsert = null;
+        }
+    }
+
+    void OnUpdateRow(ClientNode item)
+    {
+        resetItemToIntert(item);
+        dbContext.Update(item);
+        dbContext.SaveChanges();
+    }
+
+
+    protected override void OnInitialized()
+    {
+        items = dbContext.ClientNodes.OrderByDescending(k=>k.Name);
+    }
+
+    async Task SaveRow(ClientNode item)
+    {
+        resetItemToIntert(item);
+        await grid.UpdateRow(item);
+    }
+
+    async Task InsertRow()
+    {
+        itemToInsert = new ClientNode();
+        await grid.InsertRow(itemToInsert);
+    }
+
+    async Task EditRow(ClientNode item)
+    {
+        await grid.EditRow(item);
+    }
+
+    void CancelEdit(ClientNode item)
+    {
+        resetItemToIntert(item);
+        grid.CancelEditRow(item);
+
+        // For production
+        var orderEntry = dbContext.Entry(item);
+        if (orderEntry.State == EntityState.Modified)
+        {
+            orderEntry.CurrentValues.SetValues(orderEntry.OriginalValues);
+            orderEntry.State = EntityState.Unchanged;
+        }
+    }
+
+    async Task DeleteRow(ClientNode item)
+    {
+        var dialogResult = await DialogService.Confirm("Ви впевнені?",
+                                        "Видалення запису",
+                                        new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" });
+        if (dialogResult == true)
+        {
+            resetItemToIntert(item);
+            if (items.Contains(item))
+            {
+                dbContext.Remove(item);
+                dbContext.SaveChanges();
+                await grid.Reload();
+            }
+            else
+            {
+                grid.CancelEditRow(item);
+            }
+
+        }
+    }
+
+    void OnCreateRow(ClientNode item)
+    {
+        dbContext.Add(item);
+        dbContext.SaveChanges();
+    }
+}

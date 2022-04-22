@@ -6,8 +6,8 @@ namespace WebApi1C8Exchange.Data;
 
 public class ApplicationDbContext : IdentityDbContext
 {
-    public DbSet<Node1C> Nodes1C { get; set; } = default!;
-    public DbSet<Objectexchange> Objects1C { get; set; } = default!;
+    public DbSet<ClientNode> ClientNodes { get; set; } = default!;
+    public DbSet<ObjectExchange> ObjectExchanges { get; set; } = default!;
  
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -18,6 +18,7 @@ public class ApplicationDbContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.Entity<ObjectExchange>().HasKey(k => new { k.Id, k.SenderId, k.DestinationId });
         //builder.Entity<Object1C>(en =>
         //{
         //    en.Property(p => p.DateStamp).HasColumnType("timestamp without time zone");

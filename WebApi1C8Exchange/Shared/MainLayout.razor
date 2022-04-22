@@ -1,0 +1,46 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>Web Api Document Exchange</PageTitle>
+
+<div class="page">
+    <header>
+        <nav class="top-row ps-3 navbar navbar-light">
+            <div class="container-fluid">
+                <div class="d-flex flex-row">
+                <a class="navbar-brand" href="">sabatex</a>
+                <div class="row-menu">
+                    <NavMenu /> 
+                </div>
+                </div> 
+                 <div class="px-4 auth d-flex">
+                    <LoginDisplay />
+                </div>
+                <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+ 
+            </div>
+            <div class="column-menu @NavMenuCssClass" @onclick="ToggleNavMenu">
+                 <NavMenu /> 
+            </div> 
+        </nav>
+    </header>
+    <main>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+<RadzenContextMenu />
+<RadzenDialog />
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

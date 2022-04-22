@@ -167,10 +167,12 @@ namespace SqlServerMigrations.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -207,10 +209,12 @@ namespace SqlServerMigrations.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -220,11 +224,10 @@ namespace SqlServerMigrations.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.Node1C", b =>
+            modelBuilder.Entity("WebApi1C8Exchange.Models.ClientNode", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -240,17 +243,23 @@ namespace SqlServerMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Nodes1C");
+                    b.ToTable("ClientNodes");
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.Objectexchange", b =>
+            modelBuilder.Entity("WebApi1C8Exchange.Models.ObjectExchange", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("DateStamp")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DestinationId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DateStamp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ObjectJSON")
                         .IsRequired()
@@ -264,19 +273,13 @@ namespace SqlServerMigrations.Migrations
                     b.Property<byte>("ObjectType")
                         .HasColumnType("tinyint");
 
-                    b.Property<Guid>("SenderId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("Id", "SenderId", "DestinationId");
 
-                    b.Property<Guid>("destinationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
+                    b.HasIndex("DestinationId");
 
                     b.HasIndex("SenderId");
 
-                    b.HasIndex("destinationId");
-
-                    b.ToTable("Objects1C");
+                    b.ToTable("ObjectExchanges");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -330,23 +333,23 @@ namespace SqlServerMigrations.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.Objectexchange", b =>
+            modelBuilder.Entity("WebApi1C8Exchange.Models.ObjectExchange", b =>
                 {
-                    b.HasOne("WebApi1C8Exchange.Models.Node1C", "Sender")
+                    b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Destination")
+                        .WithMany()
+                        .HasForeignKey("DestinationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApi1C8Exchange.Models.Node1C", "destination")
-                        .WithMany()
-                        .HasForeignKey("destinationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Destination");
 
                     b.Navigation("Sender");
-
-                    b.Navigation("destination");
                 });
 #pragma warning restore 612, 618
         }

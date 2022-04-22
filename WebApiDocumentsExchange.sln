@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0105BEE-DA00-40CE-B6F6-D9D225BA7774}"
 	ProjectSection(SolutionItems) = preProject
 		add-migration.cmd = add-migration.cmd
+		demo1C.json = demo1C.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgreSQLMigrations", "PostgreSQLMigrations\PostgreSQLMigrations.csproj", "{98023478-F755-4715-BCE5-FCEFDFAAEC0F}"
