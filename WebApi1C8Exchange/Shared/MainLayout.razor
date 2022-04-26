@@ -1,29 +1,28 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Identity
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Web Api Document Exchange</PageTitle>
 
 <div class="page">
     <header>
-        <nav class="top-row ps-3 navbar navbar-light">
-            <div class="container-fluid">
-                <div class="d-flex flex-row">
-                <a class="navbar-brand" href="">sabatex</a>
-                <div class="row-menu">
-                    <NavMenu /> 
-                </div>
-                </div> 
-                 <div class="px-4 auth d-flex">
-                    <LoginDisplay />
-                </div>
-                <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
- 
-            </div>
-            <div class="column-menu @NavMenuCssClass" @onclick="ToggleNavMenu">
-                 <NavMenu /> 
-            </div> 
-        </nav>
+
+    <RadzenMenu>
+        <RadzenMenuItem Text="Home" Path="/" />
+        <RadzenMenuItem Text="Nodes" Path="Nodes"/>
+        <RadzenMenuItem Text="Swagger" Path="/swagger/index.html" Target="_blank"/>    
+        <AuthorizeView>
+            <Authorized>
+                <RadzenMenuItem  Text=@($"Hello, {context.User.Identity?.Name}!") Path="Identity/Account/Manage" Style="margin-left:auto"/>
+                <RadzenMenuItem Text="Log out"  Style="margin-right:1rem" Path="Identity/Account/LogOut"/>
+             </Authorized>
+            <NotAuthorized>
+                <RadzenMenuItem Text="Log in"  Path="Identity/Account/Login" Style="margin-left:auto;margin-right:1rem"/> 
+            </NotAuthorized>
+        </AuthorizeView>
+        
+    </RadzenMenu>
+
     </header>
     <main>
         <article class="content px-4">
@@ -34,13 +33,4 @@
 <RadzenContextMenu />
 <RadzenDialog />
 
-@code {
-    private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
