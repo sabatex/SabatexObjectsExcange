@@ -2,8 +2,7 @@
 
 namespace WebApi1C8Exchange.Models;
 
-public record struct QueryObject(string ObjectName,string Id);
-public record struct StoreObject(string Id,string ObjectJSON);
+public record struct StoreObject(string Id, string ObjectName, string ObjectJSON);
 public record struct PostObject(string SenderNode,
                                 string[] DestinationNode,
                                 string Password,

@@ -16,6 +16,8 @@ namespace WebApi1C8Exchange.Controllers
             _context = context;
         }
 
+
+
         [HttpPost]
         public async Task<IActionResult> PostObject([FromBody] PostObject postObject)
         {
@@ -58,9 +60,6 @@ namespace WebApi1C8Exchange.Controllers
                 }
                 await _context.SaveChangesAsync();
              }
-
- 
-
             return Ok();
         }
         
@@ -124,50 +123,6 @@ namespace WebApi1C8Exchange.Controllers
             }
             return Ok();
         }
-
-
-        [HttpPost("query")]
-        public async Task<IActionResult> PostQuery(string senderNode,
-                                              string destinationNode,
-                                              string password,
-                                              QueryObject queryObject)
-        {
-            var direction = await CheckDirection(senderNode,destinationNode,password);
-            if (direction.sender == null || direction.destination == null)
-                return BadRequest();
-
- 
-            var doc = new ObjectExchange
-            {
-                Id = queryObject.Id,
-                ObjectName = queryObject.ObjectName,
-                Sender = direction.sender,
-                Destination = direction.destination,
-                ObjectType = ObjectType.Query
-            };
-            await _context.ObjectExchanges.AddAsync(doc);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ObjectExchangeExists(doc.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-
-            return Ok();
-        }
-
-
-
 
         private async Task<(ClientNode? sender,ClientNode? destination)> CheckDirection(string senderNode,
                                               string destinationNode,

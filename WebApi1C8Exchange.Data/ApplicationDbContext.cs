@@ -8,7 +8,8 @@ public class ApplicationDbContext : IdentityDbContext
 {
     public DbSet<ClientNode> ClientNodes { get; set; } = default!;
     public DbSet<ObjectExchange> ObjectExchanges { get; set; } = default!;
- 
+    public DbSet<ClientObjectType> ClientObjectTypes { get; set; } = default!;
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
