@@ -12,7 +12,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <ProjectReference Include="..\WebApi1C8Exchange.Models\WebApi1C8Exchange.Models.csproj" />
+	  <ProjectReference Include="..\WebApi1C8Exchange.Models\WebApiDocumentsExchange.Models.csproj" />
 	</ItemGroup>
 
 </Project>

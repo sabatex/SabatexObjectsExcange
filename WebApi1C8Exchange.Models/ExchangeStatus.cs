@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApi1C8Exchange.Models;
+namespace WebApiDocumentsExchange.Models;
 
 public enum ExchangeStatus:byte
 {
@@ -13,5 +13,6 @@ public enum ExchangeStatus:byte
     // обьєкт частково оброблений і чекає на додаткові дані э запит в ObjectQuery
     Waited,
     // обьєкт переданий успішно
-    Resived
+    Resived,
+    Done
 }

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi1C8Exchange", "WebApi1C8Exchange\WebApi1C8Exchange.csproj", "{E1BD8BB5-8181-4E4C-941D-DCB459B74751}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentsExchange", "WebApi1C8Exchange\WebApiDocumentsExchange.csproj", "{E1BD8BB5-8181-4E4C-941D-DCB459B74751}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlServerMigrations", "SqlServerMigrations\SqlServerMigrations.csproj", "{7C514D94-915C-449D-81F5-ECADAAC668AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi1C8Exchange.Models", "WebApi1C8Exchange.Models\WebApi1C8Exchange.Models.csproj", "{852B5825-929F-4FCA-B292-CD0393708AF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentsExchange.Models", "WebApi1C8Exchange.Models\WebApiDocumentsExchange.Models.csproj", "{852B5825-929F-4FCA-B292-CD0393708AF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi1C8Exchange.Data", "WebApi1C8Exchange.Data\WebApi1C8Exchange.Data.csproj", "{6B5F0AAA-CC33-4254-8DED-7004241B12B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentsExchange.Data", "WebApi1C8Exchange.Data\WebApiDocumentsExchange.Data.csproj", "{6B5F0AAA-CC33-4254-8DED-7004241B12B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0105BEE-DA00-40CE-B6F6-D9D225BA7774}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,6 +20,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgreSQLMigrations", "PostgreSQLMigrations\PostgreSQLMigrations.csproj", "{98023478-F755-4715-BCE5-FCEFDFAAEC0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqliteMigrations", "SqliteMigrations\SqliteMigrations.csproj", "{2679F0F3-B457-4A8D-8541-981CC0A90D41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentEx.Test", "WebApiDocumentEx.Test\WebApiDocumentEx.Test.csproj", "{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{2679F0F3-B457-4A8D-8541-981CC0A90D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2679F0F3-B457-4A8D-8541-981CC0A90D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2679F0F3-B457-4A8D-8541-981CC0A90D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

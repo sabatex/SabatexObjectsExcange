@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using WebApi1C8Exchange.Data;
+using WebApiDocumentsExchange.Data;
 
 #nullable disable
 
@@ -17,7 +17,7 @@ namespace PostgreSQLMigrations.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -222,13 +222,33 @@ namespace PostgreSQLMigrations.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.ClientNode", b =>
+            modelBuilder.Entity("WebApi1C8Exchange.Models.AutenficatedNode", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("DateStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("NodeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NodeId");
+
+                    b.ToTable("AutenficatedNodes");
+                });
+
+            modelBuilder.Entity("WebApi1C8Exchange.Models.ClientNode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -246,38 +266,68 @@ namespace PostgreSQLMigrations.Migrations
 
             modelBuilder.Entity("WebApi1C8Exchange.Models.ObjectExchange", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("SenderId")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("DateStamp")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("DestinationId")
-                        .HasColumnType("text");
+                    b.Property<int>("DestinationId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("DateStamp")
+                    b.Property<string>("ObjectId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("ObjectJSON")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ObjectName")
+                    b.Property<string>("ObjectTypeName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<byte>("ObjectType")
+                    b.Property<int>("SenderId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("Status")
                         .HasColumnType("smallint");
 
-                    b.HasKey("Id", "SenderId", "DestinationId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DestinationId");
 
                     b.HasIndex("SenderId");
 
                     b.ToTable("ObjectExchanges");
+                });
+
+            modelBuilder.Entity("WebApi1C8Exchange.Models.QueryObject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("QueryJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("QueryObjects");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -331,6 +381,17 @@ namespace PostgreSQLMigrations.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApi1C8Exchange.Models.AutenficatedNode", b =>
+                {
+                    b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Node")
+                        .WithMany()
+                        .HasForeignKey("NodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Node");
+                });
+
             modelBuilder.Entity("WebApi1C8Exchange.Models.ObjectExchange", b =>
                 {
                     b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Destination")
@@ -348,6 +409,17 @@ namespace PostgreSQLMigrations.Migrations
                     b.Navigation("Destination");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("WebApi1C8Exchange.Models.QueryObject", b =>
+                {
+                    b.HasOne("WebApi1C8Exchange.Models.ObjectExchange", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }

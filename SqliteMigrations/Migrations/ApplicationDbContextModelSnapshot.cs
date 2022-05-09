@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebApi1C8Exchange.Data;
+using WebApiDocumentsExchange.Data;
 
 #nullable disable
 
@@ -15,7 +15,7 @@ namespace SqliteMigrations.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -213,13 +213,31 @@ namespace SqliteMigrations.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.ClientNode", b =>
+            modelBuilder.Entity("WebApi1C8Exchange.Models.AutenficatedNode", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("DateStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NodeId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NodeId");
+
+                    b.ToTable("AutenficatedNodes");
+                });
+
+            modelBuilder.Entity("WebApi1C8Exchange.Models.ClientNode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -237,38 +255,66 @@ namespace SqliteMigrations.Migrations
 
             modelBuilder.Entity("WebApi1C8Exchange.Models.ObjectExchange", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("SenderId")
+                    b.Property<DateTime>("DateStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DestinationId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("DestinationId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("DateStamp")
+                    b.Property<string>("ObjectId")
                         .IsRequired()
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ObjectJSON")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ObjectName")
+                    b.Property<string>("ObjectTypeName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<byte>("ObjectType")
+                    b.Property<int>("SenderId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id", "SenderId", "DestinationId");
+                    b.Property<byte>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("DestinationId");
 
                     b.HasIndex("SenderId");
 
                     b.ToTable("ObjectExchanges");
+                });
+
+            modelBuilder.Entity("WebApi1C8Exchange.Models.QueryObject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("QueryJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("QueryObjects");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -322,6 +368,17 @@ namespace SqliteMigrations.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApi1C8Exchange.Models.AutenficatedNode", b =>
+                {
+                    b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Node")
+                        .WithMany()
+                        .HasForeignKey("NodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Node");
+                });
+
             modelBuilder.Entity("WebApi1C8Exchange.Models.ObjectExchange", b =>
                 {
                     b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Destination")
@@ -339,6 +396,17 @@ namespace SqliteMigrations.Migrations
                     b.Navigation("Destination");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("WebApi1C8Exchange.Models.QueryObject", b =>
+                {
+                    b.HasOne("WebApi1C8Exchange.Models.ObjectExchange", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }

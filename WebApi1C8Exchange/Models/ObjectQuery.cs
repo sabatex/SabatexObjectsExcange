@@ -1,4 +1,4 @@
-﻿namespace WebApi1C8Exchange.Models;
+﻿namespace WebApiDocumentsExchange.Models;
 
 public record struct ObjectQuery(string ObjectType,string ObjectId);
 

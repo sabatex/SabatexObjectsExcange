@@ -1,8 +1,8 @@
 ﻿@page "/nodes"
 @attribute [Authorize(Roles ="Admin")]
 
-@using WebApi1C8Exchange.Models
-@using WebApi1C8Exchange.Data
+@using WebApiDocumentsExchange.Models
+@using WebApiDocumentsExchange.Data
 @using Microsoft.EntityFrameworkCore
 
 @inject ApplicationDbContext dbContext
@@ -10,7 +10,7 @@
 
 <RadzenButton Icon="add_circle_outline"
               style="margin-bottom: 10px"
-              Text="Створити повідомлення"
+              Text="Створити нод"
               Click="@InsertRow"
               Disabled=@(itemToInsert != null) />
 

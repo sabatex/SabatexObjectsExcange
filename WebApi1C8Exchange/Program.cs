@@ -6,12 +6,16 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Radzen;
-using WebApi1C8Exchange.Data;
-using WebApi1C8Exchange.Areas.Identity;
+using WebApiDocumentsExchange.Data;
+using WebApiDocumentsExchange.Areas.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var timeSpan = builder.Configuration.GetValue<int>("TokenValid", 15);
+WebApiDocumentsExchange.Extensions.ExcangeExtensions.TokenValid = TimeSpan.FromMinutes(timeSpan);
+
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -116,3 +120,5 @@ async Task CreateDefaultRoles(WebApplication app)
 
     }
 }
+
+public partial class Program { }

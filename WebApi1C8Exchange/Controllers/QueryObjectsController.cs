@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApi1C8Exchange.Data;
-using WebApi1C8Exchange.Models;
+using WebApiDocumentsExchange.Data;
+using WebApiDocumentsExchange.Models;
 
-namespace WebApi1C8Exchange.Controllers;
+namespace WebApiDocumentsExchange.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -22,14 +22,14 @@ public class QueryObjectsController : ControllerBase
                                                string apiKey,
                                                ObjectQuery[] queryObject)
     {
-            var direction = await _context.GetSendNodesAsync(senderNode, destinationNode, apiKey);
-            foreach (var item in queryObject)
-            {
-                var objectType = await _context.GetClientObjectTypeAsync(direction.destination, item.ObjectType);
-                var record = new QueryObject { ObjectId = item.ObjectId, ObjectType = objectType,Destination=direction.destination,Sender=direction.sender }; 
-                await _context.AddAsync(record);
-            }
-            await _context.SaveChangesAsync();
+            //var direction = await _context.GetSendNodesAsync(senderNode, destinationNode, apiKey);
+            //foreach (var item in queryObject)
+            //{
+            //    var objectType = await _context.GetClientObjectTypeAsync(direction.destination, item.ObjectType);
+            //    var record = new QueryObject { ObjectId = item.ObjectId, ObjectType = objectType,Destination=direction.destination,Sender=direction.sender }; 
+            //    await _context.AddAsync(record);
+            //}
+            //await _context.SaveChangesAsync();
  
 
         return Ok();

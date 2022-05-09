@@ -4,13 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApi1C8Exchange.Models;
-
+namespace WebApiDocumentsExchange.Models;
+/// <summary>
+/// обєкти які потрібно отримати з нода
+/// </summary>
 public class QueryObject
 {
     public int Id { get; set; }
-    public ClientObjectType ObjectType { get; set; } = default!;
-    public string ObjectId { get; set; } = default!;
-    public ClientNode Sender { get; set; } = default!;
-    public ClientNode Destination { get; set; } = default!;
+    /// <summary>
+    /// Обєкт для якого не вирішені посилання
+    /// </summary>
+    public ObjectExchange  Owner { get; set; } = default!;
+    
+    public string QueryJson { get; set; }
+    public QueryStatus Status { get; set; } = QueryStatus.New;
 }

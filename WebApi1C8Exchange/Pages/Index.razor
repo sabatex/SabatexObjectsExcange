@@ -3,8 +3,8 @@
 @using Microsoft.EntityFrameworkCore
 @using Radzen
 @using System.Text.Unicode
-@using WebApi1C8Exchange.Models
-@using WebApi1C8Exchange.Data
+@using WebApiDocumentsExchange.Models
+@using WebApiDocumentsExchange.Data
 @inject ApplicationDbContext dbContext
 @inject DialogService DialogService
 @inject IJSRuntime JSRuntime
@@ -47,7 +47,7 @@
     {
         var query = dbContext.ObjectExchanges.AsQueryable();
         if (senderFilter != string.Empty)
-            query = query.Where(s => s.Sender.Id == senderFilter);
+            query = query.Where(s => s.Sender.Id == int.Parse(senderFilter));
         items = query.OrderByDescending(k=>k.DateStamp);
     }
 

@@ -11,7 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApi1C8Exchange.Data\WebApi1C8Exchange.Data.csproj" />
+    <ProjectReference Include="..\WebApi1C8Exchange.Data\WebApiDocumentsExchange.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
