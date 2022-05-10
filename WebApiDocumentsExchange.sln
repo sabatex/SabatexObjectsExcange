@@ -23,6 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqliteMigrations", "SqliteM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentEx.Test", "WebApiDocumentEx.Test\WebApiDocumentEx.Test.csproj", "{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1C8", "1C8", "{09DA94B8-D76D-4BD5-820B-3DA3BB56C427}"
+	ProjectSection(SolutionItems) = preProject
+		1C8Api\sabatexWebApi.1c = 1C8Api\sabatexWebApi.1c
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +65,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{09DA94B8-D76D-4BD5-820B-3DA3BB56C427} = {A0105BEE-DA00-40CE-B6F6-D9D225BA7774}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0ED09FD-EEAF-4E3E-94C0-5BF69FC94CFC}
