@@ -35,19 +35,18 @@ public class v0Controller : ControllerBase
         return Ok(await _context.Login(nodeName, password));
     }
 
-
     [HttpGet("objects")]
     public async Task<IActionResult> GetObjectsAsync([FromHeader]string apiToken, int take = 10)
     {
         var clientNode = await _context.GetSecureNodeAsync(apiToken);
 
-        var result = await _context.ObjectExchanges.Where(s => s.Destination.Id == clientNode && s.Status == ExchangeStatus.New).Take(take).OrderBy(d=>d.DateStamp).ToArrayAsync();
+        var result = await _context.ObjectExchanges.Where(s => s.Destination.Id == clientNode && s.Status == ExchangeStatus.New).OrderBy(d=>d.DateStamp).Take(take).ToArrayAsync();
 
         return Ok(result);
     }
 
     [HttpGet("queries")]
-    public async Task<IActionResult> GetQueryesAsync(string apiToken, int take = 10)
+    public async Task<IActionResult> GetQueryesAsync([FromHeader] string apiToken, int take = 10)
     {
         var clientNode = await _context.GetSecureNodeAsync(apiToken);
 
@@ -60,7 +59,6 @@ public class v0Controller : ControllerBase
 
         return Ok(result);
     }
-
 
     [HttpPost]
     public async Task<IActionResult> PostAsync([FromHeader] string apiToken,[FromBody] PostObject postObject)
@@ -87,22 +85,17 @@ public class v0Controller : ControllerBase
         return Ok();
     }
 
-
-    [HttpPost("status")]
-    public async Task<IActionResult> PostMarkResiveObjectsAsync([FromHeader] string apiToken, [FromBody] Guid[] objects)
+    [HttpPost("MarkResived")]
+    public async Task<IActionResult> PostMarkResivedObjectsAsync([FromHeader] string apiToken,[FromBody] Guid id)
     {
         var node = await _context.GetSecureNodeAsync(apiToken);
-
-        foreach (var objectId in objects)
-        {
-            // find destination
-            var obj = await _context.ObjectExchanges.FindAsync(objectId);
-            if (obj == null)
-                throw new Exception($"Not find object with Id - {objectId}");
-            if (obj.Status != ExchangeStatus.New && obj.Status != ExchangeStatus.Waited)
-                return BadRequest($"Error change recesive status for NodeId={node}; ObjectId={objectId}");
-            obj.Status = ExchangeStatus.Resived;
-        }
+        // find destination
+        var obj = await _context.ObjectExchanges.FindAsync(id);
+        if (obj == null)
+            throw new Exception($"Not find object with Id - {id}");
+        if (obj.Status != ExchangeStatus.New && obj.Status != ExchangeStatus.Waited)
+            return BadRequest($"Error change recesive status for NodeId={node}; ObjectId={id}");
+        obj.Status = ExchangeStatus.Resived;
         await _context.SaveChangesAsync();
         return Ok();
     }
@@ -113,13 +106,20 @@ public class v0Controller : ControllerBase
         var node = await _context.GetSecureNodeAsync(apiToken);
 
         var result = await _context.ObjectExchanges
-            .Where(f => f.Status == ExchangeStatus.Resived && f.Sender.Id == node).Take(take)
-            .Select(s=>new {s.Destination.Name,s.Id })
+            .Where(f => f.Status == ExchangeStatus.Resived && f.Sender.Id == node)
+            .OrderBy(o=>o.ObjectDateStamp)
+            .Take(take)
+            .Select(s=>new 
+            {
+                Id =s.Id,
+                ObjectId=s.ObjectId,
+                ObjectTypeName=s.ObjectTypeName,
+                ObjectDateStamp=s.ObjectDateStamp,
+                Destination=s.Destination.Name
+            })
             .ToArrayAsync();
         return Ok(result);
     }
-
-
 
     [HttpPost("queries")]
     public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken, [FromBody] QueryObjects queryObjects)

@@ -1,157 +1,68 @@
-// Copyright (c) 2021 by Serhiy Lakas (github sabatex) 
-// version 1.0
+// Copyright (c) 2021 by Serhiy Lakas (github sabatex)
+// Призначений для полегшння роботи з WEBApi
+// version 1.0.2
+function ErrorConnectionString(conf)
+	return "Сервер https://" + conf.Host +":"+conf.Port; 	
+endfunction	
 
-function GetConnectionConfig()
-	config = new structure;
-	config.Insert("host",Константы.SabatexAPIHost.Получить());
-	config.Insert("port",Константы.SabatexAPIPort.Получить());
-	config.Insert("SecureConnection",?(Константы.SabatexAPISecureConnection.Получить()=Истина,Новый ЗащищенноеСоединениеOpenSSL( неопределено, неопределено ),Неопределено));
-	config.Insert("Password","11111111");
-	config.Insert("NodeId","158bcbb1-1c6d-457c-b683-5bc25e754aec");
-	Return config;
+function CreateHTTPSConnection(conf)
+	return new HTTPConnection(
+		conf.host, // сервер (хост)
+        conf.port, // порт, по умолчанию для http используется 80, для https 443
+        , // пользователь для доступа к серверу (если он есть)
+        , // пароль для доступа к серверу (если он есть)
+        , // здесь указывается прокси, если он есть
+        , // таймаут в секундах, 0 или пусто - не устанавливать
+        new ЗащищенноеСоединениеOpenSSL( неопределено, неопределено ) // защищенное соединение, если используется https
+	);
+endfunction	
+
+function BuildUrl(url,queries=null)
+	result  = url;
+		if queries <> null then
+			result  = result +"?";
+			last = false;
+			for each item in queries do
+				if last then
+					result = result + "&";
+				endif;
+				last=true;
+				result = result + item.Ключ +"="+item.Значение;
+			enddo;
+		endif;
+	return result;
+endfunction	
+
+function CreateHTTPRequest(conf,url,queries=null)
+	var headers;
+	request = new HTTPRequest(BuildUrl(url,queries));
+	if conf.Property("headers",headers) then
+		if headers <> null then
+			for each header in headers do
+				request.Headers.Insert(header.Ключ, header.Значение);
+			enddo;
+		endif;
+	endif;
+	return request;
+endfunction	
+
+function HTTPSGet(conf,url,queries=null) export
+	connection = CreateHTTPSConnection(conf);
+	request = CreateHTTPRequest(conf,url,queries);
+	response = connection.Get(request);
+	if response.StatusCode = 200 then
+		return response.GetBodyAsString();
+	else
+		raise "Помилка запиту "+ url + " with StatusCode " + response.StatusCode; 
+	endif;
 endfunction
 
-Function ФункцияПреобразования(Свойство, Значение, ДополнительныеПараметры, Отказ) Экспорт
-	If ТипЗнч(Значение) = Тип("УникальныйИдентификатор") Then
-		Return Строка(Значение);
-	EndIf ;
-	Отказ = Истина;
-EndFunction
+function HTTPSPostForm(conf,url,formParams=null) export
+	connection = CreateHTTPSConnection(conf);
+	request = CreateHTTPRequest(conf,url);
+	request.Headers.Insert("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+	request.Headers.Insert("accept","*/*");
 
-
-Function POSTJSON(destination,objectId,objectName,stringJSON) export
-	config = GetConnectionConfig();
-	connection = new HTTPConnection(
-		config.host, // сервер (хост)
-        config.port, // порт, по умолчанию для http используется 80, для https 443
-        , // пользователь для доступа к серверу (если он есть)
-        , // пароль для доступа к серверу (если он есть)
-        , // здесь указывается прокси, если он есть
-        , // таймаут в секундах, 0 или пусто - не устанавливать
-        config.SecureConnection // защищенное соединение, если используется https
-	);
-	request = new HTTPRequest("/api/exchange");
-	request.Заголовки.Вставить("Content-Type", "application/json; charset=utf-8");
-	//request.Заголовки.Вставить("Content-Type", "text; charset=utf-8");
-
-	request.Заголовки.Вставить("accept","*/*");
-	
-	//r = new structure;
-	//r.Insert("senderNode",config.NodeId);
-	//r.Insert("password",config.Password);
-	//r.Insert("destinationNode",destination);
-	//r.Insert("objectId",objectId);
-	//r.Insert("objectName",objectName);
-	//r.Insert("objectJSON",stringJSON);
-	//json = sabatex_json.Write_JSON(r);
-
-	//request.УстановитьТелоИзСтроки(json,"UTF-8",ИспользованиеByteOrderMark.НеИспользовать);
-	//response = connection.ОтправитьДляОбработки(request);
-	//return response;
-endfunction	
-
-function POSTObject(destinations,object) export
-
-	
-	
-	
-	json = new ЗаписьJSON;
-	jsonParams = new JSONWriterSettings(ПереносСтрокJSON.Нет,,,,,,true);
-	json.УстановитьСтроку(jsonParams);
-	СериализаторXDTO.ЗаписатьJSON(json,object,НазначениеТипаXML.Неявное);
-	result = json.Закрыть();
-	
-	return POSTJSON(destinations,""+object.ref.УникальныйИдентификатор(),object.Метаданные().Name,result);
-endfunction	
-
-function Login(url,port,nodeName,password)
-	config = GetConnectionConfig();
-	connection = new HTTPConnection(
-		config.host, // сервер (хост)
-        config.port, // порт, по умолчанию для http используется 80, для https 443
-        , // пользователь для доступа к серверу (если он есть)
-        , // пароль для доступа к серверу (если он есть)
-        , // здесь указывается прокси, если он есть
-        , // таймаут в секундах, 0 или пусто - не устанавливать
-        config.SecureConnection // защищенное соединение, если используется https
-	);
-	request = new HTTPRequest("/api/v0/login");
-	request.Заголовки.Вставить("Content-Type", "multipart/formdata; charset=utf-8");
-	form = "nodeName="+nodeName+Символы.ПС+"password="+password;
-	
-	form = new Соответствие;
-	form.Вставить("nodeName",nodeName);
-	form.Insert("password",password);
-	
-	
-	//request.Заголовки.Вставить("Content-Type", "text; charset=utf-8");
-
-	request.Заголовки.Вставить("accept","*/*");
-	
-	//r = new structure;
-	//r.Insert("senderNode",config.NodeId);
-	//r.Insert("password",config.Password);
-	//r.Insert("destinationNode",destination);
-	//r.Insert("objectId",objectId);
-	//r.Insert("objectName",objectName);
-	//r.Insert("objectJSON",stringJSON);
-	//json = sabatex_json.Write_JSON(r);
-
-	//request.УстановитьТелоИзСтроки(json,"UTF-8",ИспользованиеByteOrderMark.НеИспользовать);
-	//response = connection.ОтправитьДляОбработки(request);
-	//return response;
-	
-endfunction	
-
-function HTTPSGet(host,port=443,url,queryParams=null,headers = null) export
-	if queryparams <> null then
-		url  = url +"?";
-		last = false;
-		for each item in queryParams do
-			if last then
-				url = url + "&";
-			endif;
-			last=true;
-			url = url + item.Ключ +"="+item.Значение;
-		enddo;
-	endif;
-
-	connection = new HTTPConnection(host,port,
-        , // пользователь для доступа к серверу (если он есть)
-        , // пароль для доступа к серверу (если он есть)
-        , // здесь указывается прокси, если он есть
-        , // таймаут в секундах, 0 или пусто - не устанавливать
-        new ЗащищенноеСоединениеOpenSSL( неопределено, неопределено )
-	);
-	request = new HTTPRequest(url);
-	
-	if headers <> null then
-		for each header in headers do
-			request.Заголовки.Вставить(header.Ключ, header.Значение);
-		enddo;
-	endif;
-	
-	response = connection.Получить(request);
-	return response;
-	
-endfunction
-
-function HTTPSPostForm(host,port=443,url,headers=null,formParams=null) export
-	connection = new HTTPConnection(host,port,
-        , // пользователь для доступа к серверу (если он есть)
-        , // пароль для доступа к серверу (если он есть)
-        , // здесь указывается прокси, если он есть
-        , // таймаут в секундах, 0 или пусто - не устанавливать
-        new ЗащищенноеСоединениеOpenSSL( неопределено, неопределено )
-	);
-	request = new HTTPRequest(url);
-	
-	if headers <> null then
-		for each header in headers do
-			request.Заголовки.Вставить(header.Ключ, header.Значение);
-		enddo;
-	endif;	
-		
 	if formParams <> null then
 		form = "";
 		last = false;
@@ -164,7 +75,33 @@ function HTTPSPostForm(host,port=443,url,headers=null,formParams=null) export
 		enddo;	
 	endif;
 	
-	request.УстановитьТелоИзСтроки(form,"UTF-8",ИспользованиеByteOrderMark.НеИспользовать);
-	response = connection.ОтправитьДляОбработки(request);
+	request.SetBodyFromString(form,"UTF-8",ИспользованиеByteOrderMark.НеИспользовать);
+	try
+		response = connection.Post(request);
+		if response.StatusCode = 200 then
+			return response.GetBodyAsString();
+		else
+			raise "Помилка запиту "+ url + " with StatusCode " + response.StatusCode; 
+		endif;
+ 	except
+		raise ErrorConnectionString(conf); 
+	endtry;
+	
 	return response;
 endfunction
+
+function HTTPSPostJson(conf,url,jsonString) export
+	connection = CreateHTTPSConnection(conf);
+	request = CreateHTTPRequest(conf,url);
+	request.Headers.Insert("Content-Type", "application/json; charset=utf-8");
+	request.Headers.Insert("accept","*/*");
+	request.SetBodyFromString(jsonString,"UTF-8",ИспользованиеByteOrderMark.НеИспользовать);
+	response = connection.Post(request);
+	if response.StatusCode = 200 then
+		return response.GetBodyAsString();
+	else
+		raise "Помилка POST "+ url + " with StatusCode " + response.StatusCode; 
+	endif;
+
+endfunction	
+

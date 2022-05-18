@@ -224,7 +224,7 @@ namespace SqlServerMigrations.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.AutenficatedNode", b =>
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.AutenficatedNode", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -242,7 +242,7 @@ namespace SqlServerMigrations.Migrations
                     b.ToTable("AutenficatedNodes");
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.ClientNode", b =>
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.ClientNode", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -266,7 +266,7 @@ namespace SqlServerMigrations.Migrations
                     b.ToTable("ClientNodes");
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.ObjectExchange", b =>
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectExchange", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -277,6 +277,9 @@ namespace SqlServerMigrations.Migrations
 
                     b.Property<int>("DestinationId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("ObjectDateStamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ObjectId")
                         .IsRequired()
@@ -307,7 +310,7 @@ namespace SqlServerMigrations.Migrations
                     b.ToTable("ObjectExchanges");
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.QueryObject", b =>
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.QueryObject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -383,9 +386,9 @@ namespace SqlServerMigrations.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.AutenficatedNode", b =>
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.AutenficatedNode", b =>
                 {
-                    b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Node")
+                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Node")
                         .WithMany()
                         .HasForeignKey("NodeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -394,15 +397,15 @@ namespace SqlServerMigrations.Migrations
                     b.Navigation("Node");
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.ObjectExchange", b =>
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectExchange", b =>
                 {
-                    b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Destination")
+                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Destination")
                         .WithMany()
                         .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApi1C8Exchange.Models.ClientNode", "Sender")
+                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -413,9 +416,9 @@ namespace SqlServerMigrations.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("WebApi1C8Exchange.Models.QueryObject", b =>
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.QueryObject", b =>
                 {
-                    b.HasOne("WebApi1C8Exchange.Models.ObjectExchange", "Owner")
+                    b.HasOne("WebApiDocumentsExchange.Models.ObjectExchange", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)

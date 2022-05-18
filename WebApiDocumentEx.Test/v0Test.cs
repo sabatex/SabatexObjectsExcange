@@ -79,7 +79,7 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
         //mark resived
         client = _factory.CreateClient();
         client.DefaultRequestHeaders.Add("apiToken", _destinationToken);
-        response = await client.PostAsJsonAsync<Guid[]>("api/v0/status", new Guid[] {sendObject.Id});
+        response = await client.PostAsJsonAsync<Guid>("api/v0/MarkResived", sendObject.Id);
         Assert.True(response.IsSuccessStatusCode);
 
         //delete resived
@@ -148,7 +148,7 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
         //mark resived
         client = _factory.CreateClient();
         client.DefaultRequestHeaders.Add("apiToken", _destinationToken);
-        response = await client.PostAsJsonAsync<Guid[]>("api/v0/status", new Guid[] { sendObject.Id });
+        response = await client.PostAsJsonAsync<Guid>("api/v0/MarkResived", sendObject.Id);
         Assert.True(response.IsSuccessStatusCode);
 
         //delete resived
