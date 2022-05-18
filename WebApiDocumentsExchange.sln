@@ -26,6 +26,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1C8", "1C8", "{09DA94B8-D76D-4BD5-820B-3DA3BB56C427}"
 	ProjectSection(SolutionItems) = preProject
 		module.sabatexExchangeServer.txt = module.sabatexExchangeServer.txt
+		module.sabatexJSON.txt = module.sabatexJSON.txt
 		1C8Api\sabatexWebApi.1c = 1C8Api\sabatexWebApi.1c
 	EndProjectSection
 EndProject
