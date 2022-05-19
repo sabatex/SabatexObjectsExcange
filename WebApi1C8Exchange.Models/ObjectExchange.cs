@@ -2,30 +2,13 @@
 
 namespace WebApiDocumentsExchange.Models;
 
-public record struct StoreObject(string Id, string ObjectName, string ObjectJSON);
-
-
-
-/// <summary>
-/// Список обєктів для нода
-/// </summary>
-/// <param name="node">назва нода</param>
-/// <param name="apiKey">ключ для нода</param>
-/// <param name="ObjectsId">ід обєкта</param>
-public record struct ExchangeObjectsId(string[] ObjectsId);
-
-public record struct QueryObjects(Guid objectId, string ObjectsJson);
-
 public class ObjectExchange
 {
+    // унікальне Id відправлення клієнта
     public Guid Id { get; set; }
 
-    /// <summary>
-    /// унікальне ід обєкта клієнта
-    /// </summary>
-    [MaxLength(255)]
     [Required]
-    public string ObjectId { get; set; }
+    public Guid ObjectId { get; set; }
 
     /// <summary>
     /// тип обєкта  "Довідник.Номенклатура"

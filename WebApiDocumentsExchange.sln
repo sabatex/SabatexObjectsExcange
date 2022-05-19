@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1C8", "1C8", "{09DA94B8-D76
 		module.sabatexExchangeServer.txt = module.sabatexExchangeServer.txt
 		module.sabatexJSON.txt = module.sabatexJSON.txt
 		1C8Api\sabatexWebApi.1c = 1C8Api\sabatexWebApi.1c
+		РасходнаяНакладнаяUNF.json = РасходнаяНакладнаяUNF.json
 	EndProjectSection
 EndProject
 Global

@@ -65,23 +65,21 @@ public class v0Controller : ControllerBase
     {
         var sender = await _context.GetSecureNodeAsync(apiToken);
 
-        foreach (var dest in postObject.DestinationNode)
+        // find destination
+        var destination = await _context.GetNodeAsync(postObject.DestinationNode);
+        var doc = new ObjectExchange
         {
-            // find destination
-            var destination = await _context.GetNodeAsync(dest);
-            var doc = new ObjectExchange
-            {
-                Id = new Guid(),
-                ObjectId = postObject.ObjectId,
-                ObjectTypeName = postObject.ObjectType,
-                ObjectJSON = postObject.ObjectJson,
-                SenderId = sender,
-                DestinationId = destination,
-                DateStamp = DateTime.Now,
-            };
-            await _context.ObjectExchanges.AddAsync(doc);
-            await _context.SaveChangesAsync();
-        }
+            Id = postObject.Id,
+            ObjectId = postObject.ObjectId,
+            ObjectTypeName = postObject.ObjectType,
+            ObjectJSON = postObject.ObjectJson,
+            SenderId = sender,
+            DestinationId = destination,
+            DateStamp = postObject.DateStamp
+        };
+        await _context.ObjectExchanges.AddAsync(doc);
+        await _context.SaveChangesAsync();
+
         return Ok();
     }
 

@@ -53,8 +53,8 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
 
         var obj = new PostObject
         {
-            DestinationNode = new string[] { "1c" },
-            ObjectId = Guid.NewGuid().ToString(),
+            DestinationNode = "1c",
+            ObjectId = Guid.NewGuid(),
             ObjectType = "test type",
             ObjectJson = "{ }"
 
@@ -99,8 +99,8 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
 
         var obj = new PostObject
         {
-            DestinationNode = new string[] { "1c" },
-            ObjectId = Guid.NewGuid().ToString(),
+            DestinationNode = "1c",
+            ObjectId = Guid.NewGuid(),
             ObjectType = "test type",
             ObjectJson = "{ }"
 

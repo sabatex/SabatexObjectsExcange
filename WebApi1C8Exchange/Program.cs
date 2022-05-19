@@ -104,19 +104,44 @@ async Task CreateDefaultRoles(WebApplication app)
         var UserManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
         var adminRole = await RoleManager.FindByNameAsync("Admin");
-
         if (adminRole == null)
         {
-            IdentityResult adminRoleResul = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            var result = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            if (result.Succeeded == false)
+                throw new Exception("Error! Do not create Admin role!");
             adminRole = await RoleManager.FindByNameAsync("Admin");
-            var claimAdminRole = await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.Name, "Admin"));
         }
-
-
-        //var claimAdminRole = await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.Name,"Admin"));
-        var userToMakeAdmin = await UserManager.FindByNameAsync("serhiy.lakas@hotmail.com");
-        if (userToMakeAdmin != null)
-            await UserManager.AddToRoleAsync(userToMakeAdmin, "Admin");
+        var claimRole = new Claim(ClaimTypes.Name, "Admin");
+        var claimsRole = await RoleManager.GetClaimsAsync(adminRole);
+        if (!claimsRole.Contains(claimRole))
+        {
+            var result = await RoleManager.AddClaimAsync(adminRole, claimRole);
+            if (result.Succeeded == false)
+                throw new Exception("Error! Do not create Claim for Admin role!");
+        }
+        var userToMakeAdmin = await UserManager.FindByNameAsync("admin@sabatex.github");
+        if (userToMakeAdmin == null)
+        {
+            var adminUser = new IdentityUser
+            {
+                UserName = "admin@sabatex.github",
+                NormalizedUserName = "ADMIN@SABATEX.GITHUB",
+                Email = "admin@sabatex.github",
+                NormalizedEmail = "ADMIN@SABATEX.GITHUB",
+                EmailConfirmed = true,
+                PasswordHash = "AQAAAAEAACcQAAAAEPRL0LeJfSOGoyLArpPkBFHqujEy6/WiHBk4/qMkjgTuNyTgUYxGsVzAeg//F+dwxw==",
+                SecurityStamp = "CTDABLX7JKXS7FC5WUZXTISX2IKZO7ZA",
+                ConcurrencyStamp = "72089f6c-c148-4952-9b7d-73cd0ccb6f54",
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                LockoutEnabled = true
+            };
+            var result = await UserManager.CreateAsync(adminUser);
+            if (result.Succeeded == false)
+                throw new Exception("Error! Do not create  Admin user!");
+            userToMakeAdmin = await UserManager.FindByNameAsync("admin@sabatex.github");
+        }
+        await UserManager.AddToRoleAsync(userToMakeAdmin, "Admin");
 
     }
 }

@@ -255,7 +255,8 @@ namespace SqlServerMigrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -281,10 +282,8 @@ namespace SqlServerMigrations.Migrations
                     b.Property<DateTime>("ObjectDateStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ObjectId")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<Guid>("ObjectId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ObjectJSON")
                         .IsRequired()

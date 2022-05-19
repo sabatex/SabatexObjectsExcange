@@ -242,6 +242,7 @@ namespace SqliteMigrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
@@ -268,9 +269,7 @@ namespace SqliteMigrations.Migrations
                     b.Property<DateTime>("ObjectDateStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ObjectId")
-                        .IsRequired()
-                        .HasMaxLength(255)
+                    b.Property<Guid>("ObjectId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ObjectJSON")

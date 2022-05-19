@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SqliteMigrations.Migrations
 {
-    public partial class m1 : Migration
+    public partial class m0 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,7 +54,7 @@ namespace SqliteMigrations.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     Password = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -193,8 +193,9 @@ namespace SqliteMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ObjectId = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    ObjectId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ObjectTypeName = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    ObjectDateStamp = table.Column<DateTime>(type: "TEXT", nullable: false),
                     SenderId = table.Column<int>(type: "INTEGER", nullable: false),
                     DestinationId = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<byte>(type: "INTEGER", nullable: false),

@@ -12,8 +12,8 @@ using WebApiDocumentsExchange.Data;
 namespace PostgreSQLMigrations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220512092439_m2")]
-    partial class m2
+    [Migration("20220519121456_m0")]
+    partial class m0
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -255,7 +255,8 @@ namespace PostgreSQLMigrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -281,10 +282,8 @@ namespace PostgreSQLMigrations.Migrations
                     b.Property<DateTime>("ObjectDateStamp")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ObjectId")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                    b.Property<Guid>("ObjectId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ObjectJSON")
                         .IsRequired()
