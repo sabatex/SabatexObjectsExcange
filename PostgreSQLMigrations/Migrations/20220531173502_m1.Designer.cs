@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebApiDocumentsExchange.Data;
@@ -11,9 +12,10 @@ using WebApiDocumentsExchange.Data;
 namespace PostgreSQLMigrations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220531173502_m1")]
+    partial class m1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,16 +270,14 @@ namespace PostgreSQLMigrations.Migrations
             modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectExchange", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<int>("SenderId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DestinationId")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("DateStamp")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DestinationId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("ObjectDateStamp")
                         .HasColumnType("timestamp with time zone");
@@ -294,13 +294,13 @@ namespace PostgreSQLMigrations.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<int>("Priority")
+                    b.Property<int>("SenderId")
                         .HasColumnType("integer");
 
                     b.Property<byte>("Status")
                         .HasColumnType("smallint");
 
-                    b.HasKey("Id", "SenderId", "DestinationId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DestinationId");
 
@@ -327,21 +327,12 @@ namespace PostgreSQLMigrations.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OwnerDestinationId")
-                        .HasColumnType("integer");
-
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("OwnerId1")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("OwnerSenderId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId1", "OwnerSenderId", "OwnerDestinationId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("QueryObjects");
                 });
@@ -431,7 +422,7 @@ namespace PostgreSQLMigrations.Migrations
                 {
                     b.HasOne("WebApiDocumentsExchange.Models.ObjectExchange", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerId1", "OwnerSenderId", "OwnerDestinationId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

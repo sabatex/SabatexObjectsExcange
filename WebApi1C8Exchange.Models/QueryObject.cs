@@ -15,7 +15,8 @@ public class QueryObject
     /// Обєкт для якого не вирішені посилання
     /// </summary>
     public ObjectExchange  Owner { get; set; } = default!;
-    
-    public string QueryJson { get; set; }
-    public QueryStatus Status { get; set; } = QueryStatus.New;
+    public Guid OwnerId { get; set; }
+    public string ObjectType { get; set; }
+    public Guid ObjectId { get; set; }
+    public bool IsResived { get; set; } = false;
 }

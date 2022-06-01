@@ -16,18 +16,24 @@ function Login(conf) export
 	return sabatexWebApi.HTTPSPostForm(conf,"api/v0/login",form);
 endfunction	
 
-function POSTObject1C(conf,object,objectId,node,dateStamp) export
-	name = object.Метаданные().ПолноеИмя();
-	
-	JSONText = sabatexJSON.SerializeXDTO(object.ПолучитьОбъект());
-	
+///
+/// 
+///
+function POSTObject1C(conf, // налаштування
+	                  id,   // id відправлення (string) 
+	                  node, // отримувач (string)
+					  dateStamp, // дата обєкта
+					  objectType,// тип обєкта
+					  objectId,  // внутрішнє ІД обєкта (string)
+					  objectJSON) export
+
 	postObject = new structure;
-	nodes= new array;
-	nodes.Add(node);
-	postObject.Insert("DestinationNode",nodes);
-	postObject.Insert("ObjectType",name);
-	postObject.Insert("ObjectId",String(object.Ref.UUID()));
-	postObject.Insert("ObjectJson",JSONText);
+	postObject.Insert("DestinationNode",node.Description);
+	postObject.Insert("Id",string(id));
+	postObject.Insert("DateStamp",dateStamp);
+	postObject.Insert("ObjectType",objectType.Description);
+	postObject.Insert("ObjectId",String(objectId));
+	postObject.Insert("ObjectJson",objectJSON);
 	try	
 		POSTObject(conf,"/api/v0",postObject);
 		return true;
@@ -38,7 +44,7 @@ function POSTObject1C(conf,object,objectId,node,dateStamp) export
 endfunction	
 
 function POSTObject(conf,url,object) export
-	jsonText = sabatex_JSON.Write_JSON(object);
+	jsonText = sabatexJSON.Serialize(object);
 	return sabatexWebApi.HTTPSPostJson(conf,url,jsonText);
 endfunction	
 
@@ -133,12 +139,10 @@ procedure ReciveObjects(conf)
 	enddo;	
 endprocedure
 
-procedure SetDateSend(node,objectId,dateStamp)
+procedure SetDateSend(id)
 		reg = РегистрыСведений.sabatexExchange.СоздатьМенеджерЗаписи();
-		reg.node = node;
-		reg.objectId = objectId;
-		reg.dateStamp = dateStamp;
-		reg.Прочитать();
+		reg.Id = id;
+		reg.Прочитать(); 
 		reg.dateSend = CurrentDate();
 		reg.Записать();
 endprocedure	
@@ -147,13 +151,15 @@ procedure PostObjects(conf)
 	Запрос = Новый Запрос;
 	Запрос.Текст = 
 		"ВЫБРАТЬ ПЕРВЫЕ "+ conf.take + "
+		|	sabatexExchange.Id КАК Id,
 		|	sabatexExchange.node КАК node,
-		|	sabatexExchange.object КАК object,
+		|	sabatexExchange.objectJSON КАК objectJSON,
 		|	sabatexExchange.dateStamp КАК dateStamp,
 		|	sabatexExchange.objectId КАК objectId,
 		|	sabatexExchange.dateSend КАК dateSend,
 		|	sabatexExchange.dateRecesive КАК dateRecesive,
-		|	sabatexExchange.OwnerId КАК OwnerId
+		|	sabatexExchange.OwnerId КАК OwnerId,
+		|	sabatexExchange.objectType КАК objectType
 		|ИЗ
 		|	РегистрСведений.sabatexExchange КАК sabatexExchange
 		|ГДЕ
@@ -161,11 +167,11 @@ procedure PostObjects(conf)
 	
 	РезультатЗапроса = Запрос.Выполнить();
 	
-	ВыборкаДетальныеЗаписи = РезультатЗапроса.Выбрать();
+	items = РезультатЗапроса.Выбрать();
 	
-	Пока ВыборкаДетальныеЗаписи.Следующий() Цикл
-		if POSTObject1C(conf,ВыборкаДетальныеЗаписи.object,ВыборкаДетальныеЗаписи.objectId,ВыборкаДетальныеЗаписи.node,ВыборкаДетальныеЗаписи.dateStamp) then
-			SetDateSend(ВыборкаДетальныеЗаписи.node,ВыборкаДетальныеЗаписи.objectId,ВыборкаДетальныеЗаписи.dateStamp);	
+	Пока items.Следующий() Цикл
+		if POSTObject1C(conf,items.Id,items.node,items.dateStamp,items.objectType,items.objectId,items.objectJSON) then
+			SetDateSend(items.Id);	
 		endif;
 	КонецЦикла;
 endprocedure	
@@ -190,7 +196,45 @@ procedure DeleteSendedObjects(conf)
 
 endprocedure	
 
+procedure RegisterObjectForExchange(obj) export
+	ref	= obj.Ref;
+	name = ref.Metadata().FullName();
+	 
+	spr = Справочники.sabatexExchangeObjects.НайтиПоНаименованию(name);
+	if spr = Справочники.sabatexExchangeObjects.ПустаяСсылка() then
+		Error("RegisterObjectForExchange","Для обєкта - " + name + "не передбачено обмін");
+		return;	
+	endif;
+	
+	if spr.Nodes.Count() = 0 then
+		Error("RegisterObjectForExchange","Для обєкта - " + name + "не задані ноди обміну");
+		return;	
+	endif;	
+	
+	for each dest in spr.Nodes do
+		if dest.FilterContragent <> Справочники.Контрагенты.ПустаяСсылка() then
+			try
+				if obj.Контрагент <> dest.FilterContragent then
+					continue;
+				endif;
+			except
+				continue;
+			endtry;
+		endif;	
+			
+		rs = РегистрыСведений.sabatexExchange.СоздатьМенеджерЗаписи();
+		rs.Id = new UUID();
+		rs.dateStamp = CurrentDate();
+		rs.node = dest.Node;
+		rs.objectType = spr;
+		rs.objectId = ref.UUID();
+		rs.objectJSON = sabatexJSON.SerializeXDTO(obj);
+		rs.Write();
+	enddo;	
+endprocedure	
+
 procedure ExchangeProcess() export
+
 	filter = new structure;
 	filter.Insert("id",1);
 	conf =  РегистрыСведений.sabatexNodeConfig.Получить(filter);
@@ -216,4 +260,5 @@ procedure ExchangeProcess() export
 
 	// відправляємо 50 обєктів
 	PostObjects(conf);
-endprocedure	
+endprocedure
+

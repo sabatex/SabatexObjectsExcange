@@ -239,7 +239,7 @@ namespace SqlServerMigrations.Migrations
 
                     b.HasIndex("NodeId");
 
-                    b.ToTable("AutenficatedNodes");
+                    b.ToTable("AutenficatedNodes", (string)null);
                 });
 
             modelBuilder.Entity("WebApiDocumentsExchange.Models.ClientNode", b =>
@@ -264,7 +264,7 @@ namespace SqlServerMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClientNodes");
+                    b.ToTable("ClientNodes", (string)null);
                 });
 
             modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectExchange", b =>
@@ -306,7 +306,7 @@ namespace SqlServerMigrations.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("ObjectExchanges");
+                    b.ToTable("ObjectExchanges", (string)null);
                 });
 
             modelBuilder.Entity("WebApiDocumentsExchange.Models.QueryObject", b =>
@@ -317,21 +317,24 @@ namespace SqlServerMigrations.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<Guid>("OwnerId")
+                    b.Property<bool>("IsResived")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ObjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("QueryJson")
+                    b.Property<string>("ObjectType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("QueryObjects");
+                    b.ToTable("QueryObjects", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

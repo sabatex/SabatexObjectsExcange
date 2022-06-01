@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace WebApiDocumentsExchange.Models;
 
-public enum QueryStatus:byte
-{
-    New,Done
-}
+
+public record struct QueryedObject(Guid ownerId, Guid objectId, string ObjectType);
+

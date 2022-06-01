@@ -34,6 +34,8 @@ public class ObjectExchange
     /// внутрішня позначка часу створення обєкта
     /// </summary>
     public DateTime DateStamp { get; set; }
+    // приорітет пакета (обробляються з найвищим приорітетом)
+    public int Priority { get; set; } = 0;
     public string ObjectJSON { get; set; }
     
 }

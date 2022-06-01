@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Identity
+@using System.Reflection
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Web Api Document Exchange</PageTitle>
@@ -8,7 +9,9 @@
     <header>
 
     <RadzenMenu>
+        <RadzenLabel Text=@version class="d-flex align-items-center bg-info p-1" Style="border-radius:10px 0 0 10px" />
         <RadzenMenuItem Text="Home" Path="/" />
+        <RadzenMenuItem Text="Queries" Path="/queries" />
         <RadzenMenuItem Text="Nodes" Path="Nodes"/>
         <RadzenMenuItem Text="Swagger" Path="/swagger/index.html" Target="_blank"/>    
         <AuthorizeView>
@@ -33,4 +36,6 @@
 <RadzenContextMenu />
 <RadzenDialog />
 
-
+@code{
+    string version = "Version "+Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+}

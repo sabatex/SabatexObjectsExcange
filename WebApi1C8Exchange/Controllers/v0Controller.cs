@@ -51,11 +51,9 @@ public class v0Controller : ControllerBase
         var clientNode = await _context.GetSecureNodeAsync(apiToken);
 
         var result = await _context.QueryObjects
-            .Where(s => s.Owner.SenderId == clientNode && s.Status == QueryStatus.New)
+            .Where(s => s.Owner.SenderId == clientNode && s.IsResived == false)
             .Take(take)
-            .Select(d => new { objectName = d.Owner.ObjectTypeName,
-                               Id = d.Owner.Id,
-                               QueryJSON=d.QueryJson}).ToArrayAsync();
+            .ToArrayAsync();
 
         return Ok(result);
     }
@@ -120,30 +118,26 @@ public class v0Controller : ControllerBase
     }
 
     [HttpPost("queries")]
-    public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken, [FromBody] QueryObjects queryObjects)
+    public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken, [FromBody] QueryedObject queryedObject)
     {
         var sender = await _context.GetSecureNodeAsync(apiToken);
-        var obj = await _context.ObjectExchanges.FindAsync(queryObjects.objectId);
-        if (obj != null)
+        var obj = await _context.ObjectExchanges.FindAsync(queryedObject.ownerId);
+        if (obj == null)
+            throw new Exception($"The ExchangeObject with Id={queryedObject.ownerId} not exist!");
+        if (obj.DestinationId != sender)
+            throw new Exception($"The destination:{obj.DestinationId} not equal sender:{sender} for object {queryedObject.ownerId}");
+        if (obj.Status != ExchangeStatus.New)
+            throw new Exception($"The object status must be New for query by object:{queryedObject.ownerId}");
+        obj.Status = ExchangeStatus.Waited;
+        var query = new QueryObject
         {
-            if (obj.DestinationId == sender)
-            {
-                if (obj.Status == ExchangeStatus.New)
-                {
-                    obj.Status = ExchangeStatus.Waited;
-                    var query = new QueryObject
-                    {
-                        Owner = obj,
-                        Status = QueryStatus.New,
-                        QueryJson = queryObjects.ObjectsJson
-                    };
-                    await _context.QueryObjects.AddAsync(query);
-                    await _context.SaveChangesAsync();
-                    return Ok();
-                }
-            }
-        }
-        throw new Exception();            
+            Owner = obj,
+            ObjectId = queryedObject.objectId,
+            ObjectType = queryedObject.ObjectType
+        };
+        await _context.QueryObjects.AddAsync(query);
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 
     [HttpPost("delete")]

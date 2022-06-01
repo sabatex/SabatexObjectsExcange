@@ -125,10 +125,11 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
         // need query
         client = _factory.CreateClient();
         client.DefaultRequestHeaders.Add("apiToken", _destinationToken);
-        response = await client.PostAsJsonAsync<QueryObjects>("api/v0/queries", new QueryObjects
+        response = await client.PostAsJsonAsync<QueryedObject>("api/v0/queries", new QueryedObject
         {
-            objectId = sendObject.Id,
-            ObjectsJson = "query items from sender"
+            objectId = Guid.NewGuid(),
+            ObjectType = "Test",
+            ownerId = sendObject.Id
         });
         Assert.True(response.IsSuccessStatusCode);
 
@@ -137,7 +138,7 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
         client.DefaultRequestHeaders.Add("apiToken", _senderToken);
         response = await client.GetAsync($"api/v0/queries?take={50}");
         Assert.True(response.IsSuccessStatusCode);
-        var queryObjects = await response.Content.ReadFromJsonAsync<QueryObjects[]>();
+        var queryObjects = await response.Content.ReadFromJsonAsync<QueryedObject[]>();
         Assert.NotNull(queryObjects);
         Assert.True(queryObjects.Length > 0);
 

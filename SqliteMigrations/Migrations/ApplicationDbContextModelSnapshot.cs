@@ -228,7 +228,7 @@ namespace SqliteMigrations.Migrations
 
                     b.HasIndex("NodeId");
 
-                    b.ToTable("AutenficatedNodes");
+                    b.ToTable("AutenficatedNodes", (string)null);
                 });
 
             modelBuilder.Entity("WebApiDocumentsExchange.Models.ClientNode", b =>
@@ -251,7 +251,7 @@ namespace SqliteMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClientNodes");
+                    b.ToTable("ClientNodes", (string)null);
                 });
 
             modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectExchange", b =>
@@ -293,7 +293,7 @@ namespace SqliteMigrations.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("ObjectExchanges");
+                    b.ToTable("ObjectExchanges", (string)null);
                 });
 
             modelBuilder.Entity("WebApiDocumentsExchange.Models.QueryObject", b =>
@@ -302,21 +302,24 @@ namespace SqliteMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("OwnerId")
+                    b.Property<bool>("IsResived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("ObjectId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("QueryJson")
+                    b.Property<string>("ObjectType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<byte>("Status")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("QueryObjects");
+                    b.ToTable("QueryObjects", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

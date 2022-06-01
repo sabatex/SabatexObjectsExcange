@@ -1,0 +1,36 @@
+﻿@page "/queries"
+@attribute [Authorize(Roles ="Admin")]
+
+@using WebApiDocumentsExchange.Models
+@using WebApiDocumentsExchange.Data
+
+@inject ApplicationDbContext dbContext
+
+<h3>Queries</h3>
+<RadzenDataGrid Data="@items" TItem="QueryObject"  @ref="grid"
+                AllowFiltering="true"
+                AllowColumnResize="true"
+                AllowPaging="true"
+                PageSize="10"
+                AllowSorting="true"
+                SelectionMode="DataGridSelectionMode.Single">
+    <Columns>
+        <RadzenDataGridColumn TItem="QueryObject" Property="Id" Title="Id" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Property="OwnerId" Title="Owner" MinWidth="200px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Property="ObjectId" Title="ObjectId" MinWidth="200px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Property="ObjectType" Title="Object type" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Property="IsResived" Title="Is Recived" MinWidth="100px"/>
+    </Columns>
+</RadzenDataGrid>
+
+
+@code {
+    private IEnumerable<QueryObject> items;
+    RadzenDataGrid<QueryObject> grid;
+    
+    protected override void OnInitialized()
+    {
+        items = dbContext.QueryObjects;
+    }
+
+}
