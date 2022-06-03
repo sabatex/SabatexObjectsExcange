@@ -1,0 +1,62 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace WebApiDocumentsExchange.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="WebApi1C8Exchange.styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body>
+    @RenderBody()
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script>
+        //sabatex object
+        var sabatex = {
+            getFileUrl: function (fileContent) {
+                var data = new Blob([fileContent], { type: 'text/plain' });
+                return window.URL.createObjectURL(data);
+            },
+            downloadFileResult: function (fileUrl, fileName) {
+                let link = document.createElement("a");
+                link.download = fileName;
+                link.href = fileUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            },
+            downloadFile: function (fileName, fileContent) {
+                let link = document.createElement("a");
+                link.download = fileName;
+                var data = new Blob([fileContent], { type: 'text/plain' });
+                link.href = window.URL.createObjectURL(data);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+        };
+
+    </script>
+</body>
+</html>

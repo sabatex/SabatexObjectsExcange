@@ -1,0 +1,67 @@
+﻿@page "/"
+@attribute [Authorize(Roles ="Admin")]
+@using Microsoft.EntityFrameworkCore
+@using Radzen
+@using System.Text.Unicode
+@using WebApiDocumentsExchange.Models
+@using WebApiDocumentsExchange.Data
+@inject ApplicationDbContext dbContext
+@inject DialogService DialogService
+@inject IJSRuntime JSRuntime
+
+
+<PageTitle>Index</PageTitle>
+<RadzenDropDown AllowClear="true" TValue="string" Class="w-100" 
+                                Data=@nodes
+                                AllowFiltering="true"
+                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                                FilterOperator="StringFilterOperator.Contains"
+                                TextProperty="Name"
+                                ValueProperty="Id" Change="@OnClientChange" />
+<RadzenDataGrid Data="@items" TItem="ObjectExchange"  @ref="grid"
+                AllowFiltering="true"
+                AllowColumnResize="true"
+                AllowPaging="true"
+                PageSize="10"
+                AllowSorting="true"
+                SelectionMode="DataGridSelectionMode.Single">
+    <Columns>
+        <RadzenDataGridColumn TItem="ObjectExchange" Property="Id" Title="Id" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="ObjectExchange" Property="ObjectTypeName" Title="Object Name" MinWidth="200px"/>
+        <RadzenDataGridColumn TItem="ObjectExchange" Property="Sender.Name" Title="Sender" MinWidth="200px"/>
+        <RadzenDataGridColumn TItem="ObjectExchange" Property="Destination.Name" Title="Destination" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="ObjectExchange" Property="ObjectType" Title="Type" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="ObjectExchange" Property="DateStamp" Title="Date Stamp" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="ObjectExchange" Property="ObjectJSON" Title="Data" MinWidth="100px"/>
+    </Columns>
+</RadzenDataGrid>
+
+
+@code {
+    RadzenDataGrid<ObjectExchange> grid;
+    private IEnumerable<ObjectExchange> items;
+    private IEnumerable<ClientNode> nodes;
+    private string senderFilter = default!;
+
+    private void SetFilter()
+    {
+        var query = dbContext.ObjectExchanges.AsQueryable();
+        if (senderFilter != string.Empty)
+            query = query.Where(s => s.Sender.Id == int.Parse(senderFilter));
+        items = query.OrderByDescending(k=>k.DateStamp);
+    }
+
+    protected override void OnInitialized()
+    {
+        items = dbContext.ObjectExchanges;
+        nodes = dbContext.ClientNodes.ToArray();
+    }
+
+    void OnClientChange(object value)
+    {
+        senderFilter = (string)value;
+        SetFilter();
+    }    
+
+
+}
