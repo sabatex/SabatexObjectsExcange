@@ -5,16 +5,15 @@ namespace WebApiDocumentsExchange.Models;
 public class ObjectExchange
 {
     // унікальне Id відправлення клієнта
-    public Guid Id { get; set; }
+    public long Id { get; set; }
 
     [Required]
-    public Guid ObjectId { get; set; }
+    public string ObjectId { get; set; } = default!;
 
-    /// <summary>
-    /// тип обєкта  "Довідник.Номенклатура"
-    /// </summary>
-    [MaxLength(255)]
-    public string ObjectTypeName { get; set; }
+    public ObjectType ObjectType { get; set; } = default!;
+    public int ObjectTypeId { get; set; }
+
+
     /// <summary>
     /// штам часу обєкта в системі клієнта (для синхронізації повторних вигрузок)
     /// </summary>
@@ -29,7 +28,6 @@ public class ObjectExchange
     /// </summary>
     public ClientNode Destination { get; set; }
     public int DestinationId { get; set; }
-    public ExchangeStatus Status { get; set; }
     /// <summary>
     /// внутрішня позначка часу створення обєкта
     /// </summary>
@@ -37,5 +35,6 @@ public class ObjectExchange
     // приорітет пакета (обробляються з найвищим приорітетом)
     public int Priority { get; set; } = 0;
     public string ObjectJSON { get; set; }
-    
+    public bool IsDone { get; set; } = false;
+
 }
