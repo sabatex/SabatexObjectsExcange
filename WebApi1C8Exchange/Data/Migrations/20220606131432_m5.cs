@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiDocumentsExchange.Data.Migrations
 {
-    public partial class m1 : Migration
+    public partial class m5 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<DateTime>(
                 name: "DateStamp",
-                table: "AutenficatedNodes",
+                table: "ObjectExchanges",
                 type: "timestamp without time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
@@ -22,7 +22,7 @@ namespace WebApiDocumentsExchange.Data.Migrations
         {
             migrationBuilder.AlterColumn<DateTime>(
                 name: "DateStamp",
-                table: "AutenficatedNodes",
+                table: "ObjectExchanges",
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),

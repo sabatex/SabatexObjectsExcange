@@ -78,8 +78,6 @@ namespace WebApiDocumentsExchange.Controllers
             return result.Id;
         }
 
-        protected async Task<ObjectType?> GetObjectTypeByNameAsync(int nodeId,string name)=>
-            await  _dbContext.ObjectTypes.SingleOrDefaultAsync(s => s.Name == name && s.NodeId == nodeId);
 
     }
 }

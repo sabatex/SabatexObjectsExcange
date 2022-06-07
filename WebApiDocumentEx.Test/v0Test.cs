@@ -37,8 +37,8 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
         var sendedObjects = new List<long>();
         for (int i = 0; i < 100; i++)
         {
-            var r = await _factory.CreateClient().ApiPostObjectExchangeAsync(token, destination,
-                new ObjectDescriptorWithBody(Guid.NewGuid().ToString(), "Довідник.Номенклатура", TestConst.TestConstString));
+            var r = await _factory.CreateClient().ApiPostObjectExchangeAsync(token,
+                new PostObject(destination,Guid.NewGuid().ToString(), "Довідник.Номенклатура", TestConst.TestConstString));
             sendedObjects.Add(r);
 
         }
@@ -125,8 +125,8 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
         var queries = await _factory.CreateClient().ApiQueryObjectGetAsync(senderToken, 100);
         foreach (var query in queries)
         {
-            var r = await _factory.CreateClient().ApiPostObjectExchangeAsync(senderToken, "ut",
-                new ObjectDescriptorWithBody(Guid.NewGuid().ToString(), "Довідник.ОдиниціВиміру", TestConst.TestConstString));
+            var r = await _factory.CreateClient().ApiPostObjectExchangeAsync(senderToken, 
+                new PostObject("ut", Guid.NewGuid().ToString(), "Довідник.ОдиниціВиміру", TestConst.TestConstString));
 
             // remove query
             await _factory.CreateClient().ApiQueryObjectDeleteAsync(senderToken, query.Id);

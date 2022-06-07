@@ -5,9 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace WebApiDocumentsExchange.Models;
-
-public record ObjectDescriptor(string ObjectId,string ObjectTypeName);
-public record ObjectDescriptorWithBody(string ObjectId, string ObjectTypeName,string ObjectJSON);
-public record ShortObjectDescriptorWithBody(string ObjectId, int ObjectTypeId, string ObjectJSON);
-public record struct QueryedObject(string Destination, string ObjectId, string ObjectTypeName);
+public record  QueryedObject(string Destination,string ObjectType, string ObjectId);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="Destination">sumbolic name or digital id</param>
+/// <param name="ObjectId"></param>
+/// <param name="ObjectType">sumbolic name or digital id</param>
+/// <param name="ObjectJSON"></param>
+public record PostObject(string Destination, string ObjectType, string ObjectId,string ObjectJSON):QueryedObject(Destination,ObjectType,ObjectId);
 

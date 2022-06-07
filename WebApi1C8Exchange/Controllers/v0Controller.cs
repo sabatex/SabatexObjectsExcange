@@ -36,16 +36,24 @@ public class v0Controller : BaseController
     /// </summary>
     /// <param name="apiToken"></param>
     /// <param name="nodeName"></param>
+    /// <param name="nodeName"></param>
     /// <returns></returns>
     [HttpGet("objecttypes")]
-    public async Task<IActionResult> GetObjectTypesAsync([FromHeader] string apiToken,[FromQuery]string? nodeName=null)
+    public async Task<IActionResult> GetObjectTypesAsync([FromHeader] string apiToken,string node)
     {
-        var clientNode = await GetSecureNodeAsync(apiToken);
-        if (nodeName == null)
-            return Ok(await _dbContext.ObjectTypes.Where(s => s.NodeId == clientNode).ToArrayAsync());
-        var node = await GetNodeAsync(nodeName);
 
-        return Ok(await _dbContext.ObjectTypes.Where(s => s.NodeId == node).ToArrayAsync());
+        var clientNode = await GetSecureNodeAsync(apiToken);
+
+        int nodeId = clientNode;
+        if (node != null)
+        {
+            if (!int.TryParse(node, out nodeId))
+            {
+                nodeId = await GetNodeAsync(node);
+            }
+        }
+        
+        return Ok(await _dbContext.ObjectTypes.Where(s => s.NodeId == nodeId).ToArrayAsync());
     }
 
     /// <summary>
@@ -106,23 +114,27 @@ public class v0Controller : BaseController
     
     [HttpPost("objects")]
     public async Task<IActionResult> PostAsync([FromHeader] string apiToken,
-                                               [FromHeader] string destinationName,
-                                               [FromBody] ObjectDescriptorWithBody objectDescriptor)
+                                               [FromBody] PostObject postObject)
     {
+        string objectId = postObject.ObjectId.ToUpper();
+
         var sender = await GetSecureNodeAsync(apiToken);
 
-        // find destination
-        var destination = await GetNodeAsync(destinationName);
-        var objectType = await GetObjectTypeByNameAsync(sender, objectDescriptor.ObjectTypeName); 
-        if (objectType == null)
-            return BadRequest();
+        int destinationId = await GetObjectDestinationAsync(postObject);
+        int objectTypeId = await GetObjectTypeIdAsync(postObject,sender);
+ 
+        var exist = await _dbContext.ObjectExchanges.Where(s => s.DestinationId == destinationId && s.ObjectTypeId == objectTypeId && s.ObjectId == objectId).OrderByDescending(o=>o.DateStamp).FirstOrDefaultAsync();
+        int priority = exist?.Priority + 1 ?? 0;
+        
+        
         var doc = new ObjectExchange
         {
-            ObjectId = objectDescriptor.ObjectId,
-            ObjectTypeId = objectType.Id,
-            ObjectJSON = objectDescriptor.ObjectJSON,
+            ObjectId = objectId,
+            ObjectTypeId = objectTypeId,
+            ObjectJSON = postObject.ObjectJSON,
             SenderId = sender,
-            DestinationId = destination
+            DestinationId = destinationId,
+            Priority = priority
         };
         await _dbContext.ObjectExchanges.AddAsync(doc);
         await _dbContext.SaveChangesAsync();
@@ -201,29 +213,28 @@ public class v0Controller : BaseController
 
     [HttpPost("queries")]
     public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken,
-                                                    [FromHeader] string destinationName,
-                                                    [FromBody] ObjectDescriptor queryedObject)
+                                                    [FromBody] QueryedObject queryedObject)
     {
         var sender = await GetSecureNodeAsync(apiToken);
-        var destination = await GetNodeAsync(destinationName);
-        var objectType = await  GetObjectTypeByNameAsync(destination,queryedObject.ObjectTypeName);
-        if (objectType == null)
-            return BadRequest();
 
+        int destinationId = await GetObjectDestinationAsync(queryedObject);
+ 
+        int objectTypeId = await GetObjectTypeIdAsync(queryedObject,destinationId);
+  
         // check exist same query 
         var obj = await _dbContext.QueryObjects.SingleOrDefaultAsync(
-            s=>s.DestinationId == destination
+            s=>s.DestinationId == destinationId
             && s.SenderId == sender
-            && s.ObjectTypeId == objectType.Id
-            && s.ObjectId == queryedObject.ObjectId);
+            && s.ObjectTypeId == objectTypeId
+            && s.ObjectId == queryedObject.ObjectId.ToUpper());
 
         if (obj == null)
         {
             obj = new QueryObject
             {
-            DestinationId = destination,
-            ObjectId = queryedObject.ObjectId,
-            ObjectTypeId = objectType.Id,
+            DestinationId = destinationId,
+            ObjectId = queryedObject.ObjectId.ToUpper(),
+            ObjectTypeId = objectTypeId,
             SenderId = sender
             };
 
@@ -251,7 +262,31 @@ public class v0Controller : BaseController
 
     #endregion
 
+    private async Task<ObjectType?> GetObjectTypeByNameAsync(int nodeId, string name) =>
+    await _dbContext.ObjectTypes.SingleOrDefaultAsync(s => s.Name == name && s.NodeId == nodeId);
 
+
+
+    private async Task<int> GetObjectDestinationAsync(QueryedObject queryedObject)
+    {
+        if (int.TryParse(queryedObject.Destination, out int destination))
+        {
+            return destination; 
+        }
+        return await GetNodeAsync(queryedObject.Destination); 
+    }
+    private async Task<int> GetObjectTypeIdAsync(QueryedObject queryedObject,int nodeId)
+    {
+        if (int.TryParse(queryedObject.ObjectType, out int objectTypeId))
+        {
+            return objectTypeId;
+        }
+
+        var objectType = await GetObjectTypeByNameAsync(nodeId, queryedObject.ObjectType);
+        if (objectType == null)
+            throw new Exception($"The object type {queryedObject.ObjectType} for node {nodeId} not Exist");
+        return objectType.Id;
+    }
 
 
 

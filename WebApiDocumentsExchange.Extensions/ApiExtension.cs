@@ -49,21 +49,33 @@ public static class ApiExtension
     }
 
     #region ObjectTypes
-    public static async Task<ObjectType[]> ApiGetObjectTypesAsync(this HttpClient client, string token,string? name = null)
+    public static async Task<ObjectType[]> ApiGetObjectTypesAsync(this HttpClient client, string token, string nodeName)
     {
         client.DefaultRequestHeaders.Add("apiToken", token);
-        if (name == null)
-            name = String.Empty;
-        else
-            name = $"/?name={name}";
-        var response = await client.GetAsync($"api/v0/objecttypes{name}");
+        var response = await client.GetAsync($"api/v0/objecttypes?node={nodeName}");
         if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-            return null;
+            return new ObjectType[] {};
 
         if (!response.IsSuccessStatusCode)
-            throw new Exception($"The error read ObjectType:{name} is not login");
+            throw new Exception($"The error read ObjectType:{nodeName} is not login");
         return await response.Content.ReadFromJsonAsync<ObjectType[]>() ?? new ObjectType[] {};
     }
+
+    public static async Task<ObjectType[]> ApiGetObjectTypesAsync(this HttpClient client, string token, int id) =>
+       await ApiGetObjectTypesAsync(client,token,id.ToString());
+  
+    public static async Task<ObjectType[]> ApiGetObjectTypesAsync(this HttpClient client, string token)
+    {
+        client.DefaultRequestHeaders.Add("apiToken", token);
+        var response = await client.GetAsync($"api/v0/objecttypes");
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            return new ObjectType[] { };
+
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"The error read ObjectType ");
+        return await response.Content.ReadFromJsonAsync<ObjectType[]>() ?? new ObjectType[] { };
+    }
+
     public static async Task<ObjectType?> ApiPostObjectTypeAsync(this HttpClient client, string token, string objectTypeName)
     {
         client.DefaultRequestHeaders.Add("apiToken", token);
@@ -82,11 +94,10 @@ public static class ApiExtension
     #endregion
 
     #region objects
-    public static async Task<long> ApiPostObjectExchangeAsync(this HttpClient client, string token, string destination, ObjectDescriptorWithBody obj)
+    public static async Task<long> ApiPostObjectExchangeAsync(this HttpClient client, string token,PostObject obj)
     {
         client.DefaultRequestHeaders.Add("apiToken", token);
-        client.DefaultRequestHeaders.Add("destinationName", destination);
-        var response = await client.PostAsJsonAsync<ObjectDescriptorWithBody>("api/v0/objects", obj);
+        var response = await client.PostAsJsonAsync<PostObject>("api/v0/objects", obj);
         if (!response.IsSuccessStatusCode)
             throw new Exception($"The error post ObjectType:{obj.ObjectId}");
         var result = await response.Content.ReadAsStringAsync();
@@ -161,10 +172,8 @@ public static class ApiExtension
     public static async Task<long> ApiPostQueryAsync(this HttpClient client, string token, string destination, string objectTypeName,string objectId)
     {
         client.DefaultRequestHeaders.Add("apiToken", token);
-        client.DefaultRequestHeaders.Add("destinationName", destination);
-        var content = new ObjectDescriptor(objectId, objectTypeName);
- 
-        var response = await client.PostAsJsonAsync<ObjectDescriptor>("api/v0/queries", content);
+        var content = new QueryedObject(destination,objectId, objectTypeName);
+        var response = await client.PostAsJsonAsync<QueryedObject>("api/v0/queries", content);
         if (!response.IsSuccessStatusCode)
             throw new Exception($"The error post query:{objectTypeName}");
         var result = await response.Content.ReadAsStringAsync();

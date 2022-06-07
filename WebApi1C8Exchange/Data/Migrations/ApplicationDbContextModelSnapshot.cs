@@ -277,16 +277,13 @@ namespace WebApiDocumentsExchange.Data.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("DateStamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("DestinationId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsDone")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ObjectDateStamp")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ObjectId")
                         .IsRequired()

@@ -29,16 +29,14 @@ public class ApplicationDbContext : IdentityDbContext
         {
             en.Property(p => p.DateStamp).HasColumnType("timestamp without time zone");
         });
+        builder.Entity<ObjectExchange>(en =>
+        {
+            en.Property(p => p.DateStamp).HasColumnType("timestamp without time zone");
+        });
+        builder.Entity<ObjectExchange>(en =>
+        {
+            en.Property(p => p.DateStamp).HasColumnType("timestamp without time zone");
+        });
 
-
-        //builder.Entity<ObjectExchange>().HasKey(k => new { k.Id, k.SenderId, k.DestinationId });
-        //builder.Entity<Object1C>(en =>
-        //{
-        //    en.Property(p => p.DateStamp).HasColumnType("timestamp without time zone");
-        //});
-        //builder.Entity<UnresolvedObject>(en =>
-        //{
-        //    en.Property(p => p.DateStamp).HasColumnType("timestamp without time zone");
-        //});
     }
 }

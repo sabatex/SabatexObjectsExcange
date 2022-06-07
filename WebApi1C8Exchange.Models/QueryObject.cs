@@ -15,15 +15,15 @@ public class QueryObject
     /// <summary>
     /// відправник
     /// </summary>
-    public ClientNode Sender { get; set; }
+    public ClientNode? Sender { get; set; }
     public int SenderId { get; set; }
 
     /// <summary>
     /// отримувач
     /// </summary>
-    public ClientNode Destination { get; set; }
+    public ClientNode? Destination { get; set; }
     public int DestinationId { get; set; }
-    public ObjectType ObjectType { get; set; } = default!;
+    public ObjectType? ObjectType { get; set; } = default!;
     public int ObjectTypeId { get; set; }
     public string ObjectId { get; set; } = default!;
 
