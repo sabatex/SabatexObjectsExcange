@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,13 +11,20 @@ namespace WebApiDocumentsExchange.Models;
 /// </summary>
 public class QueryObject
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
     /// <summary>
-    /// Обєкт для якого не вирішені посилання
+    /// відправник
     /// </summary>
-    public ObjectExchange  Owner { get; set; } = default!;
-    public Guid OwnerId { get; set; }
-    public string ObjectType { get; set; }
-    public Guid ObjectId { get; set; }
-    public bool IsResived { get; set; } = false;
+    public ClientNode? Sender { get; set; }
+    public int SenderId { get; set; }
+
+    /// <summary>
+    /// отримувач
+    /// </summary>
+    public ClientNode? Destination { get; set; }
+    public int DestinationId { get; set; }
+    public ObjectType? ObjectType { get; set; } = default!;
+    public int ObjectTypeId { get; set; }
+    public string ObjectId { get; set; } = default!;
+
 }

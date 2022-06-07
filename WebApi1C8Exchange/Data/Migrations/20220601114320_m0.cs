@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace PostgreSQLMigrations.Migrations
+namespace WebApiDocumentsExchange.Data.Migrations
 {
     public partial class m0 : Migration
     {
@@ -190,17 +190,39 @@ namespace PostgreSQLMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ObjectTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    NodeId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ObjectTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ObjectTypes_ClientNodes_NodeId",
+                        column: x => x.NodeId,
+                        principalTable: "ClientNodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ObjectExchanges",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ObjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ObjectTypeName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ObjectId = table.Column<string>(type: "text", nullable: false),
+                    ObjectTypeId = table.Column<int>(type: "integer", nullable: false),
                     ObjectDateStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SenderId = table.Column<int>(type: "integer", nullable: false),
                     DestinationId = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<byte>(type: "smallint", nullable: false),
                     DateStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Priority = table.Column<int>(type: "integer", nullable: false),
                     ObjectJSON = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -218,6 +240,12 @@ namespace PostgreSQLMigrations.Migrations
                         principalTable: "ClientNodes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ObjectExchanges_ObjectTypes_ObjectTypeId",
+                        column: x => x.ObjectTypeId,
+                        principalTable: "ObjectTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,17 +254,30 @@ namespace PostgreSQLMigrations.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    QueryJson = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<byte>(type: "smallint", nullable: false)
+                    SenderId = table.Column<int>(type: "integer", nullable: false),
+                    DestinationId = table.Column<int>(type: "integer", nullable: false),
+                    ObjectTypeId = table.Column<int>(type: "integer", nullable: false),
+                    ObjectId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_QueryObjects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_QueryObjects_ObjectExchanges_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "ObjectExchanges",
+                        name: "FK_QueryObjects_ClientNodes_DestinationId",
+                        column: x => x.DestinationId,
+                        principalTable: "ClientNodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QueryObjects_ClientNodes_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "ClientNodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QueryObjects_ObjectTypes_ObjectTypeId",
+                        column: x => x.ObjectTypeId,
+                        principalTable: "ObjectTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -284,9 +325,20 @@ namespace PostgreSQLMigrations.Migrations
                 column: "NodeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ClientNodes_Name",
+                table: "ClientNodes",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ObjectExchanges_DestinationId",
                 table: "ObjectExchanges",
                 column: "DestinationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ObjectExchanges_ObjectTypeId",
+                table: "ObjectExchanges",
+                column: "ObjectTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectExchanges_SenderId",
@@ -294,9 +346,24 @@ namespace PostgreSQLMigrations.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QueryObjects_OwnerId",
+                name: "IX_ObjectTypes_NodeId",
+                table: "ObjectTypes",
+                column: "NodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QueryObjects_DestinationId",
                 table: "QueryObjects",
-                column: "OwnerId");
+                column: "DestinationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QueryObjects_ObjectTypeId",
+                table: "QueryObjects",
+                column: "ObjectTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QueryObjects_SenderId",
+                table: "QueryObjects",
+                column: "SenderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -320,6 +387,9 @@ namespace PostgreSQLMigrations.Migrations
                 name: "AutenficatedNodes");
 
             migrationBuilder.DropTable(
+                name: "ObjectExchanges");
+
+            migrationBuilder.DropTable(
                 name: "QueryObjects");
 
             migrationBuilder.DropTable(
@@ -329,7 +399,7 @@ namespace PostgreSQLMigrations.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "ObjectExchanges");
+                name: "ObjectTypes");
 
             migrationBuilder.DropTable(
                 name: "ClientNodes");

@@ -10,36 +10,14 @@ using WebApiDocumentsExchange.Data;
 using WebApiDocumentsExchange.Areas.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-var timeSpan = builder.Configuration.GetValue<int>("TokenValid", 15);
-WebApiDocumentsExchange.Extensions.ExcangeExtensions.TokenValid = TimeSpan.FromMinutes(timeSpan);
-
+builder.Services.Configure<WebApiDocumentsExchange.Services.ApiConfig>(
+    builder.Configuration.GetSection(nameof(WebApiDocumentsExchange.Services.ApiConfig)));
+var coonectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var configuration = builder.Configuration;
-    var provider = configuration.GetValue("Provider", "Sqlite");
-    switch (provider.ToLower())
-    {
-        case "sqlite":
-            options.UseSqlite(configuration.GetConnectionString("SqliteConnection"),
-                 x => x.MigrationsAssembly("SqliteMigrations"));
-            break;
-        case "sqlserver":
-            options.UseSqlServer(
-                                configuration.GetConnectionString("SqlServerConnection"),
-                                x => x.MigrationsAssembly("SqlServerMigrations"));
-            break;
-        case "postgresql":
-            options.UseNpgsql(
-                                configuration.GetConnectionString("PostgreSqlConnection"),
-                                x => x.MigrationsAssembly("PostgreSQLMigrations"));
-
-            break;
-        default: throw new Exception($"Unsupported provider: {provider}");
-    }
+    options.UseNpgsql(coonectionString);
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -142,6 +120,44 @@ async Task CreateDefaultRoles(WebApplication app)
             userToMakeAdmin = await UserManager.FindByNameAsync("admin@sabatex.github");
         }
         await UserManager.AddToRoleAsync(userToMakeAdmin, "Admin");
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        try
+        {
+            await dbContext.ClientNodes.AddAsync(new WebApiDocumentsExchange.Models.ClientNode
+            {
+                Name = "ut",
+                Description = "dik 1C UT",
+                Password = "1"
+
+            });
+            await dbContext.SaveChangesAsync();
+        }
+        catch { };
+
+        try
+        {
+            await dbContext.ClientNodes.AddAsync(new WebApiDocumentsExchange.Models.ClientNode
+            {
+                Name = "DIKWebApp",
+                Description = "DIK Web App client",
+                Password = "1"
+
+            });
+            await dbContext.SaveChangesAsync();
+        }
+        catch { };
+        try
+        {
+            await dbContext.ClientNodes.AddAsync(new WebApiDocumentsExchange.Models.ClientNode
+            {
+                Name = "bagel",
+                Description = "Bagel Central Base",
+                Password = "1"
+
+            });
+            await dbContext.SaveChangesAsync();
+        }
+        catch { };
 
     }
 }

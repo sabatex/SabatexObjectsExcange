@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApi1C8Exchange\WebApiDocumentsExchange.csproj" />
+    <ProjectReference Include="..\WebApiDocumentsExchange.Extensions\WebApiDocumentsExchange.Extensions.csproj" />
   </ItemGroup>
 
 </Project>
