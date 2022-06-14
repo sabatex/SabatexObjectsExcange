@@ -46,13 +46,12 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-         <RadzenDataGridColumn TItem="ClientNode" Property="Id" Title="Id" Width="100px"/>
          <RadzenDataGridColumn TItem="ClientNode" Property="Name" Title="Name" Width="100px">
             <EditTemplate Context="node">
-                <RadzenTextBox @bind-Value="node.Name" TValue="string" Width="100%" />
+                <RadzenTextBox @bind-Value="node.Name"  Disabled="node.Name!=null" TValue="string" Width="100%" />
             </EditTemplate>
          </RadzenDataGridColumn>
-
+         
          <RadzenDataGridColumn TItem="ClientNode"  Property="Description" Title="Description" Width="100px">
             <EditTemplate Context="node">
                 <RadzenTextBox @bind-Value="node.Description" TValue="string" Width="100%" />
@@ -151,6 +150,7 @@
 
     void OnCreateRow(ClientNode item)
     {
+        item.Id = item.Name.ToLower();
         dbContext.Add(item);
         dbContext.SaveChanges();
     }

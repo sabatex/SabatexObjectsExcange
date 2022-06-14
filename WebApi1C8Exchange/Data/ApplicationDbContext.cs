@@ -10,7 +10,6 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<ClientNode> ClientNodes { get; set; }
     public DbSet<ObjectExchange> ObjectExchanges { get; set; }
     public DbSet<QueryObject> QueryObjects { get; set; }
-    public DbSet<ObjectType> ObjectTypes { get; set; }
 
     public DbSet<AutenficatedNode> AutenficatedNodes { get; set; }
 
@@ -24,12 +23,8 @@ public class ApplicationDbContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.Entity<ClientNode>().HasIndex(i => i.Name).IsUnique();
+
         builder.Entity<AutenficatedNode>(en =>
-        {
-            en.Property(p => p.DateStamp).HasColumnType("timestamp without time zone");
-        });
-        builder.Entity<ObjectExchange>(en =>
         {
             en.Property(p => p.DateStamp).HasColumnType("timestamp without time zone");
         });

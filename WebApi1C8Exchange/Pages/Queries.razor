@@ -16,10 +16,10 @@
                 SelectionMode="DataGridSelectionMode.Single">
     <Columns>
         <RadzenDataGridColumn TItem="QueryObject" Property="Id" Title="Id" MinWidth="100px"/>
-        <RadzenDataGridColumn TItem="QueryObject" Property="OwnerId" Title="Owner" MinWidth="200px"/>
-        <RadzenDataGridColumn TItem="QueryObject" Property="ObjectId" Title="ObjectId" MinWidth="200px"/>
-        <RadzenDataGridColumn TItem="QueryObject" Property="ObjectType" Title="Object type" MinWidth="100px"/>
-        <RadzenDataGridColumn TItem="QueryObject" Property="IsResived" Title="Is Recived" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Property="Sender.Name" Title="Sender" MinWidth="200px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Property="Destination.Name" Title="Destination" MinWidth="200px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Property="ObjectType.Name" Title="Object type" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Property="ObjectId" Title="Object Id" MinWidth="100px"/>
     </Columns>
 </RadzenDataGrid>
 

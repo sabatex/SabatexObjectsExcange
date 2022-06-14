@@ -4,32 +4,21 @@ namespace WebApiDocumentsExchange.Models;
 
 public class ObjectExchange
 {
-    public long Id { get; set; }
+    public long Id { get; set; } //"Id":10
 
     [Required]
-    public string ObjectId { get; set; } = default!; //must uppercase
+    public string ObjectId { get; set; } = default!; //must lovercase"objectId":"2138431-324u324i-32u4w234"
+    [MaxLength(50)]
+    public string ObjectType { get; set; } = default!; // lovercase"ObjectType":"Справочник.НоменклатураЭ"
 
-    public ObjectType? ObjectType { get; set; }
-    public int ObjectTypeId { get; set; }
-
-
-    /// <summary>
-    /// отримувач
-    /// </summary>
-    public ClientNode? Sender { get; set; }
-    public int SenderId { get; set; }
-    /// <summary>
-    /// відправник
-    /// </summary>
-    public ClientNode? Destination { get; set; }
-    public int DestinationId { get; set; }
+    [MaxLength(50)]
+    public string Sender { get; set; } = default!; // "sender":
+    [MaxLength(50)]
+    public string Destination { get; set; } = default!;
     /// <summary>
     /// внутрішня позначка часу створення обєкта
     /// </summary>
     public DateTime DateStamp { get; set; } = DateTime.Now;
-    // приорітет пакета (обробляються з найвищим приорітетом від нуля 0.1.2.3..)
-    public int Priority { get; set; } = 0;
-    public string ObjectJSON { get; set; }
-    public bool IsDone { get; set; } = false;
-
+    public string ObjectJSON { get; set; }=default!;
+ 
 }

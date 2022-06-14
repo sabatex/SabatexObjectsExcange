@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace WebApiDocumentsExchange.Data.Migrations
 {
-    public partial class m0 : Migration
+    public partial class m7 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,11 +50,23 @@ namespace WebApiDocumentsExchange.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AutenficatedNodes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Node = table.Column<string>(type: "text", nullable: false),
+                    DateStamp = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AutenficatedNodes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ClientNodes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Password = table.Column<string>(type: "text", nullable: false)
@@ -62,6 +74,40 @@ namespace WebApiDocumentsExchange.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ClientNodes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ObjectExchanges",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ObjectId = table.Column<string>(type: "text", nullable: false),
+                    ObjectType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Sender = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Destination = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    DateStamp = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ObjectJSON = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ObjectExchanges", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QueryObjects",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ObjectId = table.Column<string>(type: "text", nullable: false),
+                    ObjectType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Sender = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Destination = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QueryObjects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,118 +216,6 @@ namespace WebApiDocumentsExchange.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AutenficatedNodes",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    NodeId = table.Column<int>(type: "integer", nullable: false),
-                    DateStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AutenficatedNodes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AutenficatedNodes_ClientNodes_NodeId",
-                        column: x => x.NodeId,
-                        principalTable: "ClientNodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ObjectTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    NodeId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ObjectTypes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ObjectTypes_ClientNodes_NodeId",
-                        column: x => x.NodeId,
-                        principalTable: "ClientNodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ObjectExchanges",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ObjectId = table.Column<string>(type: "text", nullable: false),
-                    ObjectTypeId = table.Column<int>(type: "integer", nullable: false),
-                    ObjectDateStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SenderId = table.Column<int>(type: "integer", nullable: false),
-                    DestinationId = table.Column<int>(type: "integer", nullable: false),
-                    Status = table.Column<byte>(type: "smallint", nullable: false),
-                    DateStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Priority = table.Column<int>(type: "integer", nullable: false),
-                    ObjectJSON = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ObjectExchanges", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ObjectExchanges_ClientNodes_DestinationId",
-                        column: x => x.DestinationId,
-                        principalTable: "ClientNodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ObjectExchanges_ClientNodes_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "ClientNodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ObjectExchanges_ObjectTypes_ObjectTypeId",
-                        column: x => x.ObjectTypeId,
-                        principalTable: "ObjectTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QueryObjects",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SenderId = table.Column<int>(type: "integer", nullable: false),
-                    DestinationId = table.Column<int>(type: "integer", nullable: false),
-                    ObjectTypeId = table.Column<int>(type: "integer", nullable: false),
-                    ObjectId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QueryObjects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_QueryObjects_ClientNodes_DestinationId",
-                        column: x => x.DestinationId,
-                        principalTable: "ClientNodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_QueryObjects_ClientNodes_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "ClientNodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_QueryObjects_ObjectTypes_ObjectTypeId",
-                        column: x => x.ObjectTypeId,
-                        principalTable: "ObjectTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -318,52 +252,6 @@ namespace WebApiDocumentsExchange.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AutenficatedNodes_NodeId",
-                table: "AutenficatedNodes",
-                column: "NodeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientNodes_Name",
-                table: "ClientNodes",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ObjectExchanges_DestinationId",
-                table: "ObjectExchanges",
-                column: "DestinationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ObjectExchanges_ObjectTypeId",
-                table: "ObjectExchanges",
-                column: "ObjectTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ObjectExchanges_SenderId",
-                table: "ObjectExchanges",
-                column: "SenderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ObjectTypes_NodeId",
-                table: "ObjectTypes",
-                column: "NodeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QueryObjects_DestinationId",
-                table: "QueryObjects",
-                column: "DestinationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QueryObjects_ObjectTypeId",
-                table: "QueryObjects",
-                column: "ObjectTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QueryObjects_SenderId",
-                table: "QueryObjects",
-                column: "SenderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -387,6 +275,9 @@ namespace WebApiDocumentsExchange.Data.Migrations
                 name: "AutenficatedNodes");
 
             migrationBuilder.DropTable(
+                name: "ClientNodes");
+
+            migrationBuilder.DropTable(
                 name: "ObjectExchanges");
 
             migrationBuilder.DropTable(
@@ -397,12 +288,6 @@ namespace WebApiDocumentsExchange.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "ObjectTypes");
-
-            migrationBuilder.DropTable(
-                name: "ClientNodes");
         }
     }
 }

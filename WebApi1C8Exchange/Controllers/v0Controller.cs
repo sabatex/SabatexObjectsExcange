@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using WebApiDocumentsExchange.Data;
 using WebApiDocumentsExchange.Models;
 using WebApiDocumentsExchange.Services;
@@ -10,18 +12,27 @@ namespace WebApiDocumentsExchange.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class v0Controller : BaseController
+public class v0Controller : ControllerBase
 {
     private readonly ILogger<v0Controller> _logger;
-    public v0Controller(ApplicationDbContext context, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig) :base(context,apiConfig)
+    protected readonly ApplicationDbContext _dbContext;
+    protected readonly ApiConfig _apiConfig;
+
+    public v0Controller(ApplicationDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig)
     {
         _logger = logger;
-    }
+        _dbContext = dbContext;
+        _apiConfig = apiConfig.Value;
 
+    }
+    /// <summary>
+    /// Get current API version
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
-    public IActionResult Get([FromHeader] string apiToken)
+    public IActionResult Get()
     {
-        return Ok(AppVersion);
+        return Ok(Assembly.GetExecutingAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty);
     }
    
     [HttpPost("login")]
@@ -30,85 +41,16 @@ public class v0Controller : BaseController
         return Ok(await LoginAsync(nodeName, password));
     }
 
-    #region ObjectTypes
-    /// <summary>
-    /// Отримуємо перелік підтримуємих типів отримувача або поточного нода 
-    /// </summary>
-    /// <param name="apiToken"></param>
-    /// <param name="nodeName"></param>
-    /// <param name="nodeName"></param>
-    /// <returns></returns>
-    [HttpGet("objecttypes")]
-    public async Task<IActionResult> GetObjectTypesAsync([FromHeader] string apiToken,string node)
-    {
-
-        var clientNode = await GetSecureNodeAsync(apiToken);
-
-        int nodeId = clientNode;
-        if (node != null)
-        {
-            if (!int.TryParse(node, out nodeId))
-            {
-                nodeId = await GetNodeAsync(node);
-            }
-        }
-        
-        return Ok(await _dbContext.ObjectTypes.Where(s => s.NodeId == nodeId).ToArrayAsync());
-    }
-
-    /// <summary>
-    /// Отримуємо тип для поточного нода  
-    /// </summary>
-    /// <param name="apiToken"></param>
-    /// <param name="nodeName"></param>
-    /// <returns></returns>
-    [HttpGet("objecttypes/{typeName}")]
-    public async Task<IActionResult> GetObjectTypeAsync([FromHeader] string apiToken, [FromRoute] string typeName)
-    {
-        var clientNode = await GetSecureNodeAsync(apiToken);
-        var result = await _dbContext.ObjectTypes.SingleOrDefaultAsync(s=>
-                            s.NodeId==clientNode && s.Name==typeName);
-
-        if (result == null)
-            return NotFound();
-        return Ok(result);
-    }
-
-
-    [HttpPost("objecttypes")]
-    public async Task<IActionResult> PostObjectTypesAsync([FromHeader] string apiToken,[FromForm] string objectTypeName)
-    {
-        if (objectTypeName == null)
-            return BadRequest();
-        var clientNode = await GetSecureNodeAsync(apiToken);
-        var result = await _dbContext.ObjectTypes.SingleOrDefaultAsync(s => s.Name == objectTypeName && s.NodeId == clientNode);
-        if (result == null)
-        {
-            result = new ObjectType
-            {
-                NodeId = clientNode,
-                Name = objectTypeName
-            };
-            await _dbContext.ObjectTypes.AddAsync(result);
-            await _dbContext.SaveChangesAsync();
-            
-        }
-        return Ok(result);
-    }
-
-
-    #endregion
-
     #region ObjectExchange
     [HttpGet("objects")]
-    public async Task<IActionResult> GetObjectsAsync([FromHeader]string apiToken, int take = 10)
+    public async Task<IActionResult> GetObjectsAsync([FromHeader]string apiToken, string nodeName, int take = 10)
     {
         var clientNode = await GetSecureNodeAsync(apiToken);
+        var destination = await GetNodeAsync(nodeName);
 
-        var result = await _dbContext.ObjectExchanges.Where(s => s.DestinationId == clientNode && !s.IsDone)
-                                     .OrderBy(d=>d.Priority) // priority 0,1,2..x
-                                     .ThenBy(d=>d.DateStamp).Take(take).ToArrayAsync();
-
+        var result = await _dbContext.ObjectExchanges.Where(s => s.Destination == clientNode && s.Sender == destination)
+                                     .OrderBy(d=>d.DateStamp) // priority
+                                     .Take(take).ToArrayAsync();
         return Ok(result);
     }
     
@@ -120,21 +62,16 @@ public class v0Controller : BaseController
 
         var sender = await GetSecureNodeAsync(apiToken);
 
-        int destinationId = await GetObjectDestinationAsync(postObject);
-        int objectTypeId = await GetObjectTypeIdAsync(postObject,sender);
+        string destination = await GetNodeAsync(postObject.Destination);
  
-        var exist = await _dbContext.ObjectExchanges.Where(s => s.DestinationId == destinationId && s.ObjectTypeId == objectTypeId && s.ObjectId == objectId).OrderByDescending(o=>o.DateStamp).FirstOrDefaultAsync();
-        int priority = exist?.Priority + 1 ?? 0;
-        
-        
         var doc = new ObjectExchange
         {
-            ObjectId = objectId,
-            ObjectTypeId = objectTypeId,
+            ObjectId = objectId.ToLower(),
+            ObjectType = postObject.ObjectType.ToLower(),
             ObjectJSON = postObject.ObjectJSON,
-            SenderId = sender,
-            DestinationId = destinationId,
-            Priority = priority
+            Sender = sender,
+            Destination = destination,
+            DateStamp = postObject.DateStamp
         };
         await _dbContext.ObjectExchanges.AddAsync(doc);
         await _dbContext.SaveChangesAsync();
@@ -142,70 +79,33 @@ public class v0Controller : BaseController
         return Ok(doc.Id);
     }
 
-    [HttpPost("objects/done/{id:long}")]
-    public async Task<IActionResult> PostMarkResivedObjectsAsync([FromHeader] string apiToken,long id)
-    {
-        var node = await GetSecureNodeAsync(apiToken);
-        // find destination
-        var obj = await _dbContext.ObjectExchanges.FindAsync(id);
-        if (obj == null)
-            return NotFound();
-        obj.IsDone = true;
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-    [HttpGet("objects/done")]
-    public async Task<IActionResult> GetRecivedObjectsAsync([FromHeader] string apiToken,int take=10)
-    {
-        var node = await GetSecureNodeAsync(apiToken);
-
-        var result = await _dbContext.ObjectExchanges
-            .Where(f => f.IsDone && f.SenderId == node)
-            .Take(take)
-            .Select(s=>s.Id)
-            .ToArrayAsync();
-        return Ok(result);
-    }
-    
-    [HttpDelete("objects/done/{id:long}")]
+    [HttpDelete("objects/{id:long}")]
     public async Task<IActionResult> DeleteAsync([FromHeader] string apiToken, long id)
     {
-        var sender = await GetSecureNodeAsync(apiToken);
+        var node = await GetSecureNodeAsync(apiToken);
         var obj = await _dbContext.ObjectExchanges.FindAsync(id);
         if (obj == null)
             return NotFound();
-        if (!obj.IsDone)
-            return BadRequest();
-        if (obj.SenderId !=sender)
+        if (obj.Destination !=node)
             return BadRequest();
         _dbContext.ObjectExchanges.Remove(obj);
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
-    [HttpPost("objects/Priority/{id:long}")]
-    public async Task<IActionResult> PostPriorityObjectsAsync([FromHeader] string apiToken, long id)
-    {
-        var node = await GetSecureNodeAsync(apiToken);
-        // find destination
-        var obj = await _dbContext.ObjectExchanges.FindAsync(id);
-        if (obj == null)
-            return NotFound();
-        obj.Priority = obj.Priority == int.MaxValue? int.MaxValue: obj.Priority+1;
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-
+   
+ 
     #endregion
 
     #region queries
     [HttpGet("queries")]
-    public async Task<IActionResult> GetQueryesAsync([FromHeader] string apiToken, int take = 10)
+    public async Task<IActionResult> GetQueryesAsync([FromHeader] string apiToken, string nodeName, int? take)
     {
         var clientNode = await GetSecureNodeAsync(apiToken);
-
+        var sender = await GetNodeAsync(nodeName);
+        
         var result = await _dbContext.QueryObjects
-            .Where(s => s.DestinationId == clientNode)
-            .Take(take)
+            .Where(s => s.Destination == clientNode && s.Sender == sender)
+            .Take(take ?? 10)
             .ToArrayAsync();
 
         return Ok(result);
@@ -217,25 +117,24 @@ public class v0Controller : BaseController
     {
         var sender = await GetSecureNodeAsync(apiToken);
 
-        int destinationId = await GetObjectDestinationAsync(queryedObject);
+        string destination = await GetNodeAsync(queryedObject.Destination);
  
-        int objectTypeId = await GetObjectTypeIdAsync(queryedObject,destinationId);
   
         // check exist same query 
         var obj = await _dbContext.QueryObjects.SingleOrDefaultAsync(
-            s=>s.DestinationId == destinationId
-            && s.SenderId == sender
-            && s.ObjectTypeId == objectTypeId
-            && s.ObjectId == queryedObject.ObjectId.ToUpper());
+            s=>s.Destination == destination
+            && s.Sender == sender
+            && s.ObjectType == queryedObject.ObjectType.ToLower()
+            && s.ObjectId == queryedObject.ObjectId.ToLower());
 
         if (obj == null)
         {
             obj = new QueryObject
             {
-            DestinationId = destinationId,
-            ObjectId = queryedObject.ObjectId.ToUpper(),
-            ObjectTypeId = objectTypeId,
-            SenderId = sender
+                Destination = destination,
+                ObjectId = queryedObject.ObjectId.ToLower(),
+                ObjectType = queryedObject.ObjectType.ToLower(),
+                Sender = sender
             };
 
             await _dbContext.QueryObjects.AddAsync(obj);
@@ -251,7 +150,7 @@ public class v0Controller : BaseController
         var obj = await _dbContext.QueryObjects.FindAsync(id);
         if (obj ==null)
             return NotFound();
-        if (obj.DestinationId != sender)
+        if (obj.Destination != sender)
             return BadRequest();
 
         _dbContext.QueryObjects.Remove(obj);
@@ -262,32 +161,62 @@ public class v0Controller : BaseController
 
     #endregion
 
-    private async Task<ObjectType?> GetObjectTypeByNameAsync(int nodeId, string name) =>
-    await _dbContext.ObjectTypes.SingleOrDefaultAsync(s => s.Name == name && s.NodeId == nodeId);
-
-
-
-    private async Task<int> GetObjectDestinationAsync(QueryedObject queryedObject)
+ 
+    private async Task<string> GetNodeAsync([NotNull] string node)
     {
-        if (int.TryParse(queryedObject.Destination, out int destination))
-        {
-            return destination; 
-        }
-        return await GetNodeAsync(queryedObject.Destination); 
+        var result = await _dbContext.ClientNodes.FindAsync(node.ToLower());
+        if (result == null)
+            throw new ArgumentException("Node {0} not exist!", node);
+
+        return result.Id;
     }
-    private async Task<int> GetObjectTypeIdAsync(QueryedObject queryedObject,int nodeId)
+    private async Task<string> GetSecureNodeAsync(string apiToken)
     {
-        if (int.TryParse(queryedObject.ObjectType, out int objectTypeId))
+        var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(apiToken);
+        if (clientAutenficate != null)
         {
-            return objectTypeId;
-        }
+            if ((DateTime.Now - clientAutenficate.DateStamp) < _apiConfig.TokensLifeTimeMinutes)
+            {
+                var result = await _dbContext.ClientNodes.FindAsync(clientAutenficate.Node);
+                if (result != null)
+                {
+                    return result.Id;
+                }
+            }
 
-        var objectType = await GetObjectTypeByNameAsync(nodeId, queryedObject.ObjectType);
-        if (objectType == null)
-            throw new Exception($"The object type {queryedObject.ObjectType} for node {nodeId} not Exist");
-        return objectType.Id;
+        }
+        throw new Exception("Access denied!!!");
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_context"></param>
+    /// <param name="node"></param>
+    /// <param name="password"></param>
+    /// <returns>Api token</returns>
+    /// <exception cref="Exception"></exception>
+    private async Task<string> LoginAsync(string node, string password)
+    {
+        var clientNode = await _dbContext.ClientNodes.FindAsync(node.ToLower());
+        if (clientNode != null)
+        {
+            if (clientNode.Password == password)
+            {
+                var result = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Node == clientNode.Id);
+                if (result != null)
+                {
+                    _dbContext.AutenficatedNodes.Remove(result);
+                }
+                result = new AutenficatedNode { Node = clientNode.Id, DateStamp = DateTime.Now, Id = Guid.NewGuid().ToString() };
+                await _dbContext.AutenficatedNodes.AddAsync(result);
+                await _dbContext.SaveChangesAsync();
+                return result.Id.ToString();
+            }
+        }
+        throw new Exception("The login or password incorect!");
+    }
 
 
 

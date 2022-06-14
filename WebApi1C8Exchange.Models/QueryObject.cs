@@ -12,19 +12,12 @@ namespace WebApiDocumentsExchange.Models;
 public class QueryObject
 {
     public long Id { get; set; }
-    /// <summary>
-    /// відправник
-    /// </summary>
-    public ClientNode? Sender { get; set; }
-    public int SenderId { get; set; }
+    public string ObjectId { get; set; } = default!; //must lovercase
+    [MaxLength(50)]
+    public string ObjectType { get; set; } = default!; // lovercase
 
-    /// <summary>
-    /// отримувач
-    /// </summary>
-    public ClientNode? Destination { get; set; }
-    public int DestinationId { get; set; }
-    public ObjectType? ObjectType { get; set; } = default!;
-    public int ObjectTypeId { get; set; }
-    public string ObjectId { get; set; } = default!;
-
+    [MaxLength(50)]
+    public string Sender { get; set; } = default!;
+    [MaxLength(50)]
+    public string Destination { get; set; } = default!;
 }

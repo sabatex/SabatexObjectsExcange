@@ -12,8 +12,8 @@ using WebApiDocumentsExchange.Data;
 namespace WebApiDocumentsExchange.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220601114320_m0")]
-    partial class m0
+    [Migration("20220610121331_m7")]
+    partial class m7
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -230,25 +230,22 @@ namespace WebApiDocumentsExchange.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DateStamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("NodeId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Node")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NodeId");
 
                     b.ToTable("AutenficatedNodes");
                 });
 
             modelBuilder.Entity("WebApiDocumentsExchange.Models.ClientNode", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -264,9 +261,6 @@ namespace WebApiDocumentsExchange.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("ClientNodes");
                 });
 
@@ -279,13 +273,12 @@ namespace WebApiDocumentsExchange.Data.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("DateStamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("DestinationId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("ObjectDateStamp")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("ObjectId")
                         .IsRequired()
@@ -295,79 +288,49 @@ namespace WebApiDocumentsExchange.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ObjectTypeId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ObjectType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SenderId")
-                        .HasColumnType("integer");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("smallint");
+                    b.Property<string>("Sender")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DestinationId");
-
-                    b.HasIndex("ObjectTypeId");
-
-                    b.HasIndex("SenderId");
 
                     b.ToTable("ObjectExchanges");
                 });
 
-            modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("NodeId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NodeId");
-
-                    b.ToTable("ObjectTypes");
-                });
-
             modelBuilder.Entity("WebApiDocumentsExchange.Models.QueryObject", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("DestinationId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("ObjectId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ObjectTypeId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ObjectType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<int>("SenderId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Sender")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DestinationId");
-
-                    b.HasIndex("ObjectTypeId");
-
-                    b.HasIndex("SenderId");
 
                     b.ToTable("QueryObjects");
                 });
@@ -421,82 +384,6 @@ namespace WebApiDocumentsExchange.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("WebApiDocumentsExchange.Models.AutenficatedNode", b =>
-                {
-                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Node")
-                        .WithMany()
-                        .HasForeignKey("NodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Node");
-                });
-
-            modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectExchange", b =>
-                {
-                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Destination")
-                        .WithMany()
-                        .HasForeignKey("DestinationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApiDocumentsExchange.Models.ObjectType", "ObjectType")
-                        .WithMany()
-                        .HasForeignKey("ObjectTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Destination");
-
-                    b.Navigation("ObjectType");
-
-                    b.Navigation("Sender");
-                });
-
-            modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectType", b =>
-                {
-                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Node")
-                        .WithMany()
-                        .HasForeignKey("NodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Node");
-                });
-
-            modelBuilder.Entity("WebApiDocumentsExchange.Models.QueryObject", b =>
-                {
-                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Destination")
-                        .WithMany()
-                        .HasForeignKey("DestinationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApiDocumentsExchange.Models.ObjectType", "ObjectType")
-                        .WithMany()
-                        .HasForeignKey("ObjectTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Destination");
-
-                    b.Navigation("ObjectType");
-
-                    b.Navigation("Sender");
                 });
 #pragma warning restore 612, 618
         }

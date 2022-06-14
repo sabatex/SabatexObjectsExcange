@@ -51,6 +51,11 @@ else
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+
+    //temporary
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
 }
 
 app.UseHttpsRedirection();
@@ -121,43 +126,38 @@ async Task CreateDefaultRoles(WebApplication app)
         }
         await UserManager.AddToRoleAsync(userToMakeAdmin, "Admin");
         var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        try
+        string sendertest = "SenderTest";
+        string destinationtest = "DestinationTest";
+        var st = await dbContext.ClientNodes.FindAsync(sendertest.ToLower());
+        if (st == null)
         {
             await dbContext.ClientNodes.AddAsync(new WebApiDocumentsExchange.Models.ClientNode
             {
-                Name = "ut",
-                Description = "dik 1C UT",
+                Name = sendertest,
+                Id = sendertest.ToLower(),
+                Description = "sender test (For testing)",
                 Password = "1"
 
             });
             await dbContext.SaveChangesAsync();
-        }
-        catch { };
 
-        try
+        }
+
+        var dt = await dbContext.ClientNodes.FindAsync(destinationtest.ToLower());
+        if (dt == null)
         {
             await dbContext.ClientNodes.AddAsync(new WebApiDocumentsExchange.Models.ClientNode
             {
-                Name = "DIKWebApp",
-                Description = "DIK Web App client",
+                Id=destinationtest.ToLower(),
+                Name = destinationtest,
+                Description = "destination test (For testing)",
                 Password = "1"
 
             });
             await dbContext.SaveChangesAsync();
-        }
-        catch { };
-        try
-        {
-            await dbContext.ClientNodes.AddAsync(new WebApiDocumentsExchange.Models.ClientNode
-            {
-                Name = "bagel",
-                Description = "Bagel Central Base",
-                Password = "1"
 
-            });
-            await dbContext.SaveChangesAsync();
         }
-        catch { };
+
 
     }
 }

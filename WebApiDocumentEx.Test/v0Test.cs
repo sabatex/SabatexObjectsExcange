@@ -17,49 +17,46 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
+    private const string senderNodeName = "sendertest";
+    private const string destinationNodeName = "destinationtest";
+
     public v0Test(WebApplicationFactory<Program> factory)
     {
         _factory = factory;
     }
 
-    private async Task AddObjectType(string token, string name)
-    {
-        var objectTypes = await _factory.CreateClient().ApiGetObjectTypesAsync(token);
-        if (objectTypes.SingleOrDefault(s => s.Name == name) == null)
-        {
-            await _factory.CreateClient().ApiPostObjectTypeAsync(token, name);
-        }
 
-    }
-
-    private async Task<long[]> SendObjectsAsync(string token, string destination,int count)
+    private async Task<long[]> SendObjectsAsync(HttpClient client, string destination,int count)
     {
         var sendedObjects = new List<long>();
         for (int i = 0; i < 100; i++)
         {
-            var r = await _factory.CreateClient().ApiPostObjectExchangeAsync(token,
-                new PostObject(destination,Guid.NewGuid().ToString(), "Довідник.Номенклатура", TestConst.TestConstString));
+            var postObject = new PostObject(Destination: destination,
+                               ObjectType: "Довідник.Номенклатура",
+                               ObjectId: Guid.NewGuid().ToString(),
+                               ObjectJSON: TestConst.TestConstString,
+                               DateStamp:DateTime.Now);
+            var r = await client.ApiPostObjectExchangeAsync(postObject);
             sendedObjects.Add(r);
-
         }
         return sendedObjects.ToArray();
     }
 
-    private async Task RandomAnalize(string token, string destination,ObjectExchange objectExchange)
+    private async Task RandomAnalize(HttpClient client, string destination,ObjectExchange objectExchange)
     {
         if (Random.Shared.Next(0, 3) != 0)
         {
-            await _factory.CreateClient().ApiMarkObjectExchangeAsync(token, objectExchange.Id);
+            await client.ApiDeleteObjectExchangeAsync(objectExchange.Id);
         }
         else
         {
-            await _factory.CreateClient().ApiPostQueryAsync(token, destination, "Довідник.ОдиниціВиміру", Random.Shared.Next(1, 10).ToString());
-            await _factory.CreateClient().ApiObjectExchangeUpPriorityAsync(token, objectExchange.Id);
+            await client.ApiPostQueryAsync(destination, "Довідник.ОдиниціВиміру", Random.Shared.Next(1, 10).ToString());
+            await client.ApiDeleteObjectExchangeAsync(objectExchange.Id);
         }
 
     }
 
-    private async Task<int> ReadObjectsAsync(string token, string destination,int count,bool random=false)
+    private async Task<int> ReadObjectsAsync(HttpClient client, string destination,int count,bool random=false)
     {
         int result = 0;
         while (result < count)
@@ -68,7 +65,7 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
             int take = c < 10 ? c : 10;
             if (take == 0)
                 return result;
-            var objects = await _factory.CreateClient().ApiGetObjectExchangeAsync(token, take);
+            var objects = await client.ApiGetObjectExchangeAsync(destination,take);
             if (objects.Count() == 0)
                 return result;
  
@@ -76,64 +73,93 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
             foreach (var obj in objects)
             {
                 if (random)
-                    await RandomAnalize(token,destination,obj);
+                    await RandomAnalize(client,destination,obj);
                 else
-                    await _factory.CreateClient().ApiMarkObjectExchangeAsync(token, obj.Id);
+                    await client.ApiDeleteObjectExchangeAsync(obj.Id);
             }
         }
         return result;
     }
 
-    private async Task<int> DeleteObjectsAsync(string token,int count=10)
-    {
-        var markIsDone = await _factory.CreateClient().ApiGetObjectExchangeIsDoneAsync(token, count);
-        Assert.NotNull(markIsDone);
-        foreach (var id in markIsDone)
-        {
-            await _factory.CreateClient().ApiDeleteObjectExchangeAsync(token, id);
-        }
-        return markIsDone.Count();
-    }
-
-    [Fact,Priority(1)]
-    public async void TestSimpleExchange()
+    
+    [Fact, Priority(1)]
+    public async void TestInitialize()
     {
         // логінимось на сервері
-        var senderToken = await _factory.CreateClient().Login("bagel", "1");
-        var destinationToken = await _factory.CreateClient().Login("ut", "1");
+        var senderHTTPClient = _factory.CreateClient();
+        Assert.True(await senderHTTPClient.Login(senderNodeName, "1"));
+        var destinationHTTPClient = _factory.CreateClient();
+        Assert.True(await destinationHTTPClient.Login(destinationNodeName, "1"));
+    }
 
-        // check objectType
-        await AddObjectType(senderToken, "Довідник.Номенклатура");
-        await AddObjectType(senderToken, "Довідник.ОдиниціВиміру");
-        // send 100 objects
-        var sendedObjects = await SendObjectsAsync(senderToken,"ut",100);
-        await ReadObjectsAsync(destinationToken, "bagel", 100);
-        var count = DeleteObjectsAsync(senderToken, 100);
+
+    [Fact,Priority(2)]
+    public async void TestObjectExchange()
+    {
+        // логінимось на сервері
+        var senderHTTPClient = _factory.CreateClient();
+        Assert.True(await senderHTTPClient.Login(senderNodeName, "1"));
+        var destinationHTTPClient = _factory.CreateClient();
+        Assert.True(await destinationHTTPClient.Login(destinationNodeName, "1"));
+
+         // send 100 objects
+        var postObjects = await SendObjectsAsync(senderHTTPClient,destinationNodeName,100);
+        Assert.Equal(100, postObjects.Count());
+       
+        // get 100 objects
+        var getObjects = await destinationHTTPClient.ApiGetObjectExchangeAsync(senderNodeName, 100);
+        Assert.Equal(100, getObjects.Count());
+
+        // delete 100 objects
+        foreach (var obj in getObjects)
+        {
+            await destinationHTTPClient.ApiDeleteObjectExchangeAsync(obj.Id);
+        }
+        
+        getObjects = await destinationHTTPClient.ApiGetObjectExchangeAsync(senderNodeName, 1000);
+        foreach (var obj in getObjects)
+        {
+            await destinationHTTPClient.ApiDeleteObjectExchangeAsync(obj.Id);
+        }
+
+        Assert.True(getObjects.Count()==0);
+
+
+
     }
 
     [Fact, Priority(3)]
-    public async void TestExchangeWithQuery()
+    public async void TestQueryExchange()
     {
         // логінимось на сервері
-        var senderToken = await _factory.CreateClient().Login("bagel", "1");
-        var destinationToken = await _factory.CreateClient().Login("ut", "1");
-        var sendedObjects = await SendObjectsAsync(senderToken, "ut", 100);
-        var count = await ReadObjectsAsync(destinationToken, "bagel", 100,true);
-        count = await DeleteObjectsAsync(senderToken, 100);
-        // analize query
+        var senderHTTPClient = _factory.CreateClient();
+        Assert.True(await senderHTTPClient.Login(senderNodeName, "1"));
+        var destinationHTTPClient = _factory.CreateClient();
+        Assert.True(await destinationHTTPClient.Login(destinationNodeName, "1"));
 
-        var queries = await _factory.CreateClient().ApiQueryObjectGetAsync(senderToken, 100);
+        for (int i = 0; i < 100; i++)
+        {
+            await senderHTTPClient.ApiPostQueryAsync(destinationNodeName, "TestObjectType", Random.Shared.Next(0, 10).ToString());
+        }
+ 
+        var queries = await destinationHTTPClient.ApiGetQueryObjectAsync(senderNodeName, 100);
+        Assert.Equal(10,queries.Count());
+
         foreach (var query in queries)
         {
-            var r = await _factory.CreateClient().ApiPostObjectExchangeAsync(senderToken, 
-                new PostObject("ut", Guid.NewGuid().ToString(), "Довідник.ОдиниціВиміру", TestConst.TestConstString));
-
-            // remove query
-            await _factory.CreateClient().ApiQueryObjectDeleteAsync(senderToken, query.Id);
+            await destinationHTTPClient.ApiDeleteQueryObjectAsync(query.Id);
         }
+        
+        queries = await destinationHTTPClient.ApiGetQueryObjectAsync(senderNodeName, 100);
+       
 
-        count = await ReadObjectsAsync(destinationToken, "bagel", 100, true);
-        count = await DeleteObjectsAsync(senderToken, 100);
-        var s = "";
+        foreach (var query in queries)
+        {
+            await destinationHTTPClient.ApiDeleteQueryObjectAsync(query.Id);
+        }
+        Assert.True(queries.Count()==0);
     }
+
+
+
 }

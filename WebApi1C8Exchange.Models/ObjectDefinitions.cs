@@ -13,5 +13,5 @@ public record  QueryedObject(string Destination,string ObjectType, string Object
 /// <param name="ObjectId"></param>
 /// <param name="ObjectType">sumbolic name or digital id</param>
 /// <param name="ObjectJSON"></param>
-public record PostObject(string Destination, string ObjectType, string ObjectId,string ObjectJSON):QueryedObject(Destination,ObjectType,ObjectId);
+public record PostObject(string Destination, string ObjectType, string ObjectId,DateTime DateStamp, string ObjectJSON):QueryedObject(Destination,ObjectType,ObjectId);
 

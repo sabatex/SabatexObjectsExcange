@@ -12,8 +12,7 @@ public class AutenficatedNode
     /// key and access token
     /// </summary>
     public string Id { get; set; }
-    public ClientNode Node { get; set; }
-    public int NodeId { get; set; }
+    public string Node { get; set; }
     public DateTime DateStamp { get; set; }
 
 }

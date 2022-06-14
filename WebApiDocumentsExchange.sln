@@ -18,11 +18,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1C8", "1C8", "{09DA94B8-D76
 	ProjectSection(SolutionItems) = preProject
 		module.sabatexExchangeServer.txt = module.sabatexExchangeServer.txt
 		module.sabatexJSON.txt = module.sabatexJSON.txt
+		nomenclature.json = nomenclature.json
 		1C8Api\sabatexWebApi.1c = 1C8Api\sabatexWebApi.1c
 		РасходнаяНакладнаяUNF.json = РасходнаяНакладнаяUNF.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiDocumentsExchange.Extensions", "WebApiDocumentsExchange.Extensions\WebApiDocumentsExchange.Extensions.csproj", "{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentsExchange.Extensions", "WebApiDocumentsExchange.Extensions\WebApiDocumentsExchange.Extensions.csproj", "{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
