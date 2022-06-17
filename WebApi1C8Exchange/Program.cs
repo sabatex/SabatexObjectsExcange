@@ -85,7 +85,8 @@ async Task CreateDefaultRoles(WebApplication app)
         var services = serviceScope.ServiceProvider;
         var RoleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var UserManager = services.GetRequiredService<UserManager<IdentityUser>>();
-
+        
+        // Admin
         var adminRole = await RoleManager.FindByNameAsync("Admin");
         if (adminRole == null)
         {
@@ -94,14 +95,16 @@ async Task CreateDefaultRoles(WebApplication app)
                 throw new Exception("Error! Do not create Admin role!");
             adminRole = await RoleManager.FindByNameAsync("Admin");
         }
-        var claimRole = new Claim(ClaimTypes.Name, "Admin");
-        var claimsRole = await RoleManager.GetClaimsAsync(adminRole);
-        if (!claimsRole.Contains(claimRole))
-        {
-            var result = await RoleManager.AddClaimAsync(adminRole, claimRole);
-            if (result.Succeeded == false)
-                throw new Exception("Error! Do not create Claim for Admin role!");
-        }
+        
+        //var claimRole = new Claim(ClaimTypes.Name, "Admin");
+        //var claimsRole = await RoleManager.GetClaimsAsync(adminRole);
+        //if (!claimsRole.Contains(claimRole))
+        //{
+        //    var result = await RoleManager.AddClaimAsync(adminRole, claimRole);
+        //    if (result.Succeeded == false)
+        //        throw new Exception("Error! Do not create Claim for Admin role!");
+        //}
+        
         var userToMakeAdmin = await UserManager.FindByNameAsync("admin@sabatex.github");
         if (userToMakeAdmin == null)
         {
@@ -124,7 +127,62 @@ async Task CreateDefaultRoles(WebApplication app)
                 throw new Exception("Error! Do not create  Admin user!");
             userToMakeAdmin = await UserManager.FindByNameAsync("admin@sabatex.github");
         }
-        await UserManager.AddToRoleAsync(userToMakeAdmin, "Admin");
+        
+        if (! await UserManager.IsInRoleAsync(userToMakeAdmin, "Admin"))
+        {
+            await UserManager.AddToRoleAsync(userToMakeAdmin, "Admin");
+        }
+        
+       
+
+        //User
+        var userRole = await RoleManager.FindByNameAsync("User");
+        if (userRole == null)
+        {
+            var result = await RoleManager.CreateAsync(new IdentityRole("User"));
+            if (result.Succeeded == false)
+                throw new Exception("Error! Do not create User role!");
+            userRole = await RoleManager.FindByNameAsync("User");
+        }
+        
+        //claimRole = new Claim(ClaimTypes.Name, "User");
+        //claimsRole = await RoleManager.GetClaimsAsync(userRole);
+        //if (!claimsRole.Contains(claimRole))
+        //{
+        //    var result = await RoleManager.AddClaimAsync(userRole, claimRole);
+        //    if (result.Succeeded == false)
+        //        throw new Exception("Error! Do not create Claim for User role!");
+        //}
+
+        var userToMakeUser = await UserManager.FindByNameAsync("user@sabatex.github");
+        if (userToMakeUser == null)
+        {
+            var user = new IdentityUser
+            {
+                UserName = "user@sabatex.github",
+                NormalizedUserName = "USER@SABATEX.GITHUB",
+                Email = "user@sabatex.github",
+                NormalizedEmail = "USER@SABATEX.GITHUB",
+                EmailConfirmed = true,
+                PasswordHash = "AQAAAAEAACcQAAAAEJBMqdDHkZPi+zd0pliccS+L9e86ZTbJdXm/5aZ4tepcZZSTO3k6RkkH+uz0xR7uXw==",
+                SecurityStamp = "DHWIYQLGJHBOHBSN6GFCGA6UIKAXF7QL",
+                ConcurrencyStamp = "05072c87-6375-4b1b-96f5-827e16d9bebc",
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                LockoutEnabled = true
+            };
+            var result = await UserManager.CreateAsync(user);
+            if (result.Succeeded == false)
+                throw new Exception("Error! Do not create  User!");
+            userToMakeUser = await UserManager.FindByNameAsync("user@sabatex.github");
+        }
+
+        if (!await UserManager.IsInRoleAsync(userToMakeUser, "User"))
+        {
+
+            await UserManager.AddToRoleAsync(userToMakeUser, "User");
+        }
+
         var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         string sendertest = "SenderTest";
         string destinationtest = "DestinationTest";

@@ -1,0 +1,94 @@
+{ // 
+  "IDKEY": "5923770", // первинний ключ?
+  "GIDKEY": "e6c0d53a-dbf1-4409-ad66-2207b7a7b9c4", // унікальне ID ? (можна якось вказувати прихід)
+  "IDDATE": "07.12.2021", // дата документа, без часу?
+  "IDNO": "30182", // номер документа
+  "COSTAMOUNT": "1389.258", // субівартість 
+  "SALEAMOUNT": "1813.67", // реалізація
+  "IDDEPOT": "7b3b1dd2-c61e-45a0-a618-37c02bc9abfc", // підрозділ отримувач
+  "IDSUPPLIER": "2c31cc31-c4ea-4b86-b586-1d2a7473c416", // твій ID? (потрібно з 1С) постачальник
+  "DEPOTTEXT": "КусКус Росвигово",
+  "SUPPLIERTEXT": "Рибак",
+  "params": [
+    {
+      "IDKEY": "55744ed7-6a5b-4390-a181-a648b0957c94", // унікальний рядка в накладній ? не int64?
+      "IDCOMMODITY": "d7e23248-704d-4b32-82cd-d9572ebfe00f", // твій ID? (потрібно з 1С) 
+      "COMMODITYTEXT": "Ковбаса Варена Лікарська Рибак ваг",
+      "BARCODE": "293341", 
+      "COSTPRICE": "121",
+      "SALEPRICE": "157.5",
+      "IDCOLOR": "0",
+      "QUANTITY": "1.544"
+    },
+    {
+      "IDKEY": "155c3341-fd55-4306-af5c-9f4bb42cce56",
+      "IDCOMMODITY": "fff5195d-ada3-49b6-a441-54152105cdfb",
+      "COMMODITYTEXT": "Ковбаса  Любительська Рибак ваг.",
+      "BARCODE": "293865",
+      "COSTPRICE": "102",
+      "SALEPRICE": "129.9",
+      "IDCOLOR": "0",
+      "QUANTITY": "1.491"
+    },
+    {
+      "IDKEY": "0395823b-47cf-4c4b-b049-d0dfbc9ad22f",
+      "IDCOMMODITY": "88d0bf54-103a-4d5d-9c8f-1da987c3f7e1",
+      "COMMODITYTEXT": "Буженина Домашня Рибак ваг",
+      "BARCODE": "293062",
+      "COSTPRICE": "130",
+      "SALEPRICE": "169.9",
+      "IDCOLOR": "0",
+      "QUANTITY": "0.6"
+    },
+    {
+      "IDKEY": "a8bb7cc3-97b7-4bd2-9ed3-e5748360bf28",
+      "IDCOMMODITY": "fc2bf844-0041-4963-995c-ce9445ab366e",
+      "COMMODITYTEXT": "Ковбаса Сервелат Рибак ваг.",
+      "BARCODE": "293559",
+      "COSTPRICE": "130",
+      "SALEPRICE": "169.9",
+      "IDCOLOR": "0",
+      "QUANTITY": "0.529"
+    },
+    {
+      "IDKEY": "d7f612d7-a527-427a-a617-05827de659a0",
+      "IDCOMMODITY": "c9a4c410-4bd0-47b6-b77f-f9cfcaeb92ea",
+      "COMMODITYTEXT": "Ковбаски Мисливські Рибак ваг.",
+      "BARCODE": "293715",
+      "COSTPRICE": "138",
+      "SALEPRICE": "174.9",
+      "IDCOLOR": "0",
+      "QUANTITY": "0.96"
+    },
+    {
+      "IDKEY": "1383213b-f7c5-4e16-91be-753e7bb3fb68",
+      "IDCOMMODITY": "7eec2790-1cd9-4ba0-bfde-c33a5e9e2047",
+      "COMMODITYTEXT": "К-са Дрогобицька Рибак Н\/К в\/г Ваг",
+      "BARCODE": "293854",
+      "COSTPRICE": "186",
+      "SALEPRICE": "242.5",
+      "IDCOLOR": "0",
+      "QUANTITY": "1.131"
+    },
+    {
+      "IDKEY": "d6b88681-7536-4eea-9aec-7d268e03ab73",
+      "IDCOMMODITY": "4445ce58-6fb6-4ed1-80c3-058f9ebc8c83",
+      "COMMODITYTEXT": "Сардельки Товстунчик  Рибак ваг",
+      "BARCODE": "293927",
+      "COSTPRICE": "99",
+      "SALEPRICE": "128.9",
+      "IDCOLOR": "0",
+      "QUANTITY": "1.744"
+    },
+    {
+      "IDKEY": "dc755ae7-045f-4e2a-8b1a-e9558770e0b3",
+      "IDCOMMODITY": "fdd53ea9-92ed-44d5-9dec-a1bbc031c0e0",
+      "COMMODITYTEXT": "Ковбаса Варена Екстра Рибак ваг.",
+      "BARCODE": "293864",
+      "COSTPRICE": "112",
+      "SALEPRICE": "149.5",
+      "IDCOLOR": "0",
+      "QUANTITY": "3.465"
+    }
+  ]
+}

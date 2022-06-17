@@ -10,10 +10,16 @@
 
     <RadzenMenu>
         <RadzenLabel Text=@version class="d-flex align-items-center bg-info p-1" Style="border-radius:10px 0 0 10px" />
-        <RadzenMenuItem Text="Home" Path="/" />
-        <RadzenMenuItem Text="Queries" Path="/queries" />
-        <RadzenMenuItem Text="Nodes" Path="Nodes"/>
-        <RadzenMenuItem Text="Swagger" Path="/swagger/index.html" Target="_blank"/>    
+        <AuthorizeView Roles="User, Admin">
+            <RadzenMenuItem Text="Objects" Path="/" />
+            <RadzenMenuItem Text="Queries" Path="/queries" />
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin">
+            <RadzenMenuItem Text="Nodes" Path="Nodes"/>
+            <RadzenMenuItem Text="Swagger" Path="/swagger/index.html" Target="_blank"/> 
+        </AuthorizeView>
+        
+           
         <AuthorizeView>
             <Authorized>
                 <RadzenMenuItem  Text=@($"Hello, {context.User.Identity?.Name}!") Path="Identity/Account/Manage" Style="margin-left:auto"/>
