@@ -1,5 +1,4 @@
 // Copyright (c) 2021 by Serhiy Lakas (github sabatex)
-// Призначений для полегшння роботи з WEBApi
 // version 1.0.2
 function ErrorConnectionString(conf)
 	return "Сервер https://" + conf.Host +":"+conf.Port; 	
@@ -49,13 +48,15 @@ endfunction
 function HTTPSGet(conf,url,queries=null) export
 	connection = CreateHTTPSConnection(conf);
 	request = CreateHTTPRequest(conf,url,queries);
-	response = connection.Get(request);
-	if response.StatusCode = 200 then
-		return response.GetBodyAsString();
-	else
-		raise "Помилка запиту "+ url + " with StatusCode " + response.StatusCode; 
-	endif;
+	return connection.Get(request);
 endfunction
+
+function HTTPSDelete(conf,url,id) export
+	connection = CreateHTTPSConnection(conf);
+	request = CreateHTTPRequest(conf,url+"/"+id);
+	return connection.Get(request);
+endfunction
+
 
 function HTTPSPostForm(conf,url,formParams=null) export
 	connection = CreateHTTPSConnection(conf);
@@ -96,12 +97,5 @@ function HTTPSPostJson(conf,url,jsonString) export
 	request.Headers.Insert("Content-Type", "application/json; charset=utf-8");
 	request.Headers.Insert("accept","*/*");
 	request.SetBodyFromString(jsonString,"UTF-8",ИспользованиеByteOrderMark.НеИспользовать);
-	response = connection.Post(request);
-	if response.StatusCode = 200 then
-		return response.GetBodyAsString();
-	else
-		raise "Помилка POST "+ url + " with StatusCode " + response.StatusCode; 
-	endif;
-
+	return connection.Post(request);
 endfunction	
-

@@ -1,5 +1,5 @@
 ﻿// Copyright © 2010-2019 Serhiy Lakas https://github.com/sabatex
-
+// Ver 1.0.0
 function Serialize(object) export
 	jsonWriter = new JSONWriter;
 	jsonParams = new JSONWriterSettings(ПереносСтрокJSON.Нет,,,,,,true);
