@@ -4,6 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<Authors>Serhiy Lakas</Authors>
+	<Product>Exchange API Helper</Product>
+	<Company>sabatex on git</Company>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <PackageId>sabatex.WebApiDocumentsExchange.Helper</PackageId>
+	  <Version>1.0.0</Version>
+
   </PropertyGroup>
 
   <ItemGroup>
