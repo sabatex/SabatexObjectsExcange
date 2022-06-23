@@ -32,10 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\WebApi1C8Exchange.Models\WebApiDocumentsExchange.Models.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-  </ItemGroup>
   <Target Name="HostPublish" AfterTargets="Build">
 		<!--<Message Importance="high" Text="*** Linux Publish             ... copying to LinuxVM ... " />
 		<Exec Command="call dotnet ..\SqlServerMigrations\SqlServerMigrations.csproj" />-->

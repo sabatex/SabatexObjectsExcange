@@ -15,10 +15,10 @@ namespace WebApiDocumentsExchange.Controllers;
 public class v0Controller : ControllerBase
 {
     private readonly ILogger<v0Controller> _logger;
-    protected readonly ApplicationDbContext _dbContext;
+    protected readonly ExchangeDbContext _dbContext;
     protected readonly ApiConfig _apiConfig;
 
-    public v0Controller(ApplicationDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig)
+    public v0Controller(ExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig)
     {
         _logger = logger;
         _dbContext = dbContext;

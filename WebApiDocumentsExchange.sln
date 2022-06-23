@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0105BEE-DA00-40CE-B6F6-D9D225BA7774}"
 	ProjectSection(SolutionItems) = preProject
 		demo1C.json = demo1C.json
+		removeMigration.cmd = removeMigration.cmd
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentEx.Test", "WebApiDocumentEx.Test\WebApiDocumentEx.Test.csproj", "{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}"
@@ -31,6 +32,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bagel", "Bagel", "{0F748872
 	ProjectSection(SolutionItems) = preProject
 		Прихіда список.json = Прихіда список.json
 		прихідна.json = прихідна.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Script", "Script", "{24228F57-59F2-4E31-9BAA-8BA7EABE9710}"
+	ProjectSection(SolutionItems) = preProject
+		add-migration.cmd = add-migration.cmd
 	EndProjectSection
 EndProject
 Global
@@ -62,6 +68,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{09DA94B8-D76D-4BD5-820B-3DA3BB56C427} = {A0105BEE-DA00-40CE-B6F6-D9D225BA7774}
 		{0F748872-E557-45F4-AD10-91B5C3CDCBA0} = {A0105BEE-DA00-40CE-B6F6-D9D225BA7774}
+		{24228F57-59F2-4E31-9BAA-8BA7EABE9710} = {A0105BEE-DA00-40CE-B6F6-D9D225BA7774}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0ED09FD-EEAF-4E3E-94C0-5BF69FC94CFC}

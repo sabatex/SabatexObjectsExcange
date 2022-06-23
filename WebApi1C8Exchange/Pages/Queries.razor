@@ -4,7 +4,7 @@
 @using WebApiDocumentsExchange.Models
 @using WebApiDocumentsExchange.Data
 
-@inject ApplicationDbContext dbContext
+@inject ExchangeDbContext dbContext
 
 <h3>Queries</h3>
 <RadzenDataGrid Data="@items" TItem="QueryObject"  @ref="grid"

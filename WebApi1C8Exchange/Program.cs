@@ -12,17 +12,29 @@ using WebApiDocumentsExchange.Areas.Identity;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<WebApiDocumentsExchange.Services.ApiConfig>(
     builder.Configuration.GetSection(nameof(WebApiDocumentsExchange.Services.ApiConfig)));
-var coonectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+var dbProvider = builder.Configuration.GetValue("DataBaseProvider", "Sqlite").ToLower();
+switch (dbProvider)
 {
-    options.UseNpgsql(coonectionString);
-});
+    case "sqlite":
+        builder.Services.AddDbContext<ExchangeDbContext, SQLiteDbContext>(options =>
+            options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
+        break;
+    case "mssql":
+        builder.Services.AddDbContext<ExchangeDbContext, MSSQLDbContext>(options =>
+             options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQLConnection")));
+        break;
+    case "postgres":
+        builder.Services.AddDbContext<ExchangeDbContext, PostgresDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+        break;
+    default: throw new Exception($"Unsupported provider: {dbProvider}");
+}
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ExchangeDbContext>();
 
 
 builder.Services.AddControllers();
@@ -183,7 +195,7 @@ async Task CreateDefaultRoles(WebApplication app)
             await UserManager.AddToRoleAsync(userToMakeUser, "User");
         }
 
-        var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<ExchangeDbContext>();
         string sendertest = "SenderTest";
         string destinationtest = "DestinationTest";
         var st = await dbContext.ClientNodes.FindAsync(sendertest.ToLower());

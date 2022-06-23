@@ -2,20 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebApiDocumentsExchange.Data;
 
 #nullable disable
 
-namespace WebApiDocumentsExchange.Data.Migrations
+namespace WebApiDocumentsExchange.Data.Migrations.PostgresMigrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220610121331_m7")]
-    partial class m7
+    [DbContext(typeof(PostgresDbContext))]
+    partial class PostgresDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
