@@ -13,7 +13,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>sabatex.WebApiDocumentsExchange.Models</PackageId>
 		<PackageTags>#Exchange #API #Blazor</PackageTags>
-		<Version>1.0.1</Version> 
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 </Project>
