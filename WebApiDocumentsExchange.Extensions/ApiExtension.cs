@@ -68,6 +68,8 @@ public static class ApiExtension
         var result = await response.Content.ReadAsStringAsync();
         return long.Parse(result);
     }
+    public static async Task<long> ApiPostQueryAsync(this HttpClient client, string destination, string objectTypeName, Guid objectId)=>await ApiPostQueryAsync(client, destination, objectTypeName,objectId.ToString());
+
     public static async Task<IEnumerable<QueryObject>> ApiGetQueryObjectAsync(this HttpClient client, string nodeName, int take = 10)
     {
         //client.DefaultRequestHeaders.Add("apiToken", token);

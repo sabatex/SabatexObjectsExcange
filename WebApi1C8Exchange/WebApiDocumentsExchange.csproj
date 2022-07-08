@@ -11,6 +11,7 @@
   <ItemGroup>
     <_WebToolingArtifacts Remove="Properties\PublishProfiles\BMHFolderProfile.pubxml" />
     <_WebToolingArtifacts Remove="Properties\PublishProfiles\DIKFolderProfile.pubxml" />
+    <_WebToolingArtifacts Remove="Properties\PublishProfiles\PalushkaFolderProfile.pubxml" />
   </ItemGroup>
 
   <ItemGroup>

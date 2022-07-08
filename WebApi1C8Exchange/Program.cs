@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<WebApiDocumentsExchange.Services.ApiConfig>(
     builder.Configuration.GetSection(nameof(WebApiDocumentsExchange.Services.ApiConfig)));
 
-var dbProvider = builder.Configuration.GetValue("DataBaseProvider", "Sqlite").ToLower();
+var dbProvider = builder.Configuration.GetValue("DataBaseProvider", "postgres").ToLower();
 switch (dbProvider)
 {
     case "sqlite":
