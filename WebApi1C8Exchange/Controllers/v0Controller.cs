@@ -84,13 +84,17 @@ public class v0Controller : ControllerBase
     {
         var node = await GetSecureNodeAsync(apiToken);
         var obj = await _dbContext.ObjectExchanges.FindAsync(id);
-        if (obj == null)
-            return NotFound();
-        if (obj.Destination !=node)
-            return BadRequest();
-        _dbContext.ObjectExchanges.Remove(obj);
-        await _dbContext.SaveChangesAsync();
-        return Ok();
+        
+        if (obj == null)  return NotFound();
+       
+        if (obj.Destination ==node || obj.Sender == node)
+        {
+            _dbContext.ObjectExchanges.Remove(obj);
+            await _dbContext.SaveChangesAsync();
+            return Ok();
+        }
+        return Conflict($"Нод {node} не може видалятидані чужих нодів {obj.Sender}-{obj.Destination}");
+
     }
    
  
@@ -148,14 +152,18 @@ public class v0Controller : ControllerBase
     {
         var sender = await GetSecureNodeAsync(apiToken);
         var obj = await _dbContext.QueryObjects.FindAsync(id);
+        
         if (obj ==null)
             return NotFound();
-        if (obj.Destination != sender)
-            return BadRequest();
-
+        
+        if (obj.Destination == sender || obj.Sender == sender)
+        {
         _dbContext.QueryObjects.Remove(obj);
         await _dbContext.SaveChangesAsync();
         return Ok();
+        }
+        return Conflict($"Нод {sender} не може видалятидані чужих нодів {obj.Sender}-{obj.Destination}");
+
     }
 
 
