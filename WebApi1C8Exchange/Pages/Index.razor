@@ -11,13 +11,21 @@
 
 
 <PageTitle>Index</PageTitle>
+<RadzenButton Icon="delete"
+              style="margin-bottom: 10px;margin-left:20px"
+              ButtonStyle="ButtonStyle.Danger"
+              Text="Видалити"
+              Click="@(args => DeleteRow(selectedItems !=null?selectedItems[0]:null))"
+              Disabled=@((selectedItems?.Count ?? 0) == 0) />
 <RadzenDataGrid Data="@items" TItem="ObjectExchange"  @ref="grid"
                 AllowFiltering="true"
                 AllowColumnResize="true"
                 AllowPaging="true"
                 PageSize="10"
                 AllowSorting="true"
-                SelectionMode="DataGridSelectionMode.Single">
+                SelectionMode="DataGridSelectionMode.Single"
+                @bind-Value=@selectedItems
+                >
     <Columns>
          <RadzenDataGridColumn TItem="ObjectExchange" Property="Sender" Title="Sender" MinWidth="200px"/>
          <RadzenDataGridColumn TItem="ObjectExchange" Property="Destination" Title="Destination" MinWidth="100px"/>
@@ -30,28 +38,29 @@
 
 
 @code {
-    RadzenDataGrid<ObjectExchange> grid;
-    private IEnumerable<ObjectExchange> items;
-    private string senderFilter = default!;
-
-    //private void SetFilter()
-    //{
-    //    var query = dbContext.ObjectExchanges.AsQueryable();
-    //    if (senderFilter != string.Empty)
-    //        query = query.Where(s => s.Sender.Id == int.Parse(senderFilter));
-    //    items = query.OrderByDescending(k=>k.DateStamp);
-    //}
+    private RadzenDataGrid<ObjectExchange>? grid;
+    private IEnumerable<ObjectExchange>? items;
+    private IList<ObjectExchange>? selectedItems;
 
     protected override void OnInitialized()
     {
         items = dbContext.ObjectExchanges;
     }
 
-    //void OnClientChange(object value)
-    //{
-    //    senderFilter = (string)value;
-    //    SetFilter();
-    //}    
+    async Task DeleteRow(ObjectExchange? item)
+    {
+        if (item == null) return;
+        var dialogResult = await DialogService.Confirm("Ви впевнені?",
+                                        "Видалення запису",
+                                        new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" });
+        if (dialogResult == true)
+        {
+               dbContext.Remove(item);
+               dbContext.SaveChanges();
+               if (grid != null)  await grid.Reload();
+        }
+    }
 
+  
 
 }

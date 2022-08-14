@@ -5,6 +5,7 @@
 @using WebApiDocumentsExchange.Data
 
 @inject ExchangeDbContext dbContext
+@inject DialogService DialogService
 
 <h3>Queries</h3>
 <RadzenDataGrid Data="@items" TItem="QueryObject"  @ref="grid"
@@ -20,17 +21,36 @@
         <RadzenDataGridColumn TItem="QueryObject" Property="Destination.Name" Title="Destination" MinWidth="200px"/>
         <RadzenDataGridColumn TItem="QueryObject" Property="ObjectType.Name" Title="Object type" MinWidth="100px"/>
         <RadzenDataGridColumn TItem="QueryObject" Property="ObjectId" Title="Object Id" MinWidth="100px"/>
+        <RadzenDataGridColumn TItem="QueryObject" Context="sampleBlazorModelsSampleOrder" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="client">
+                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger"  Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteRow(client))"  @onclick:stopPropagation="true"/>
+            </Template>
+        </RadzenDataGridColumn>
+
     </Columns>
 </RadzenDataGrid>
 
 
 @code {
-    private IEnumerable<QueryObject> items;
-    RadzenDataGrid<QueryObject> grid;
+    private IEnumerable<QueryObject> items=new QueryObject[] { };
+    RadzenDataGrid<QueryObject>? grid;
     
     protected override void OnInitialized()
     {
         items = dbContext.QueryObjects;
+    }
+    
+    async Task DeleteRow(QueryObject item)
+    {
+        var dialogResult = await DialogService.Confirm("Ви впевнені?",
+                                        "Видалення запису",
+                                        new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" });
+        if (dialogResult == true)
+        {
+           dbContext.Remove(item);
+           dbContext.SaveChanges();
+           if (grid != null) await grid.Reload();
+        }
     }
 
 }

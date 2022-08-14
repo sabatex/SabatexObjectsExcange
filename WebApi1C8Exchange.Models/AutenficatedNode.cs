@@ -11,8 +11,8 @@ public class AutenficatedNode
     /// <summary>
     /// key and access token
     /// </summary>
-    public string Id { get; set; }
-    public string Node { get; set; }
+    public string Id { get; set; }=String.Empty;
+    public string Node { get; set; } = String.Empty;
     public DateTime DateStamp { get; set; }
 
 }
