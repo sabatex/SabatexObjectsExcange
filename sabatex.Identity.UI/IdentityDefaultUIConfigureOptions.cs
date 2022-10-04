@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace sabatex.Identity.UI;
 
-internal sealed class IdentityDefaultUIConfigureOptions<TUser> :
+public sealed class IdentityDefaultUIConfigureOptions<TUser> :
     IPostConfigureOptions<RazorPagesOptions>,
     IConfigureNamedOptions<CookieAuthenticationOptions> where TUser : class
 {
@@ -45,6 +45,7 @@ internal sealed class IdentityDefaultUIConfigureOptions<TUser> :
     public void Configure(CookieAuthenticationOptions options)
     {
         // Nothing to do here as Configure(string name, CookieAuthenticationOptions options) is hte one setting things up.
+        var a = 10;
     }
 
     public void Configure(string? name, CookieAuthenticationOptions options)

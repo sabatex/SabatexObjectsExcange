@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Script", "Script", "{24228F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sabatex.Identity.UI", "sabatex.Identity.UI\sabatex.Identity.UI.csproj", "{335D818A-6AA2-4B82-8C4F-0B8DA4D75784}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1544734B-0275-41F4-B931-0E50BDF4E57A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{335D818A-6AA2-4B82-8C4F-0B8DA4D75784}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{335D818A-6AA2-4B82-8C4F-0B8DA4D75784}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{335D818A-6AA2-4B82-8C4F-0B8DA4D75784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1544734B-0275-41F4-B931-0E50BDF4E57A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1544734B-0275-41F4-B931-0E50BDF4E57A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1544734B-0275-41F4-B931-0E50BDF4E57A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1544734B-0275-41F4-B931-0E50BDF4E57A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

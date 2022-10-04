@@ -4,7 +4,7 @@
 namespace sabatex.Identity.UI;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-internal sealed class IdentityDefaultUIAttribute : Attribute
+public sealed class IdentityDefaultUIAttribute : Attribute
 {
     public IdentityDefaultUIAttribute(Type implementationTemplate)
     {

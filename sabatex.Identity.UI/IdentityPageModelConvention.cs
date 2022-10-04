@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace sabatex.Identity.UI;
 
-internal sealed class IdentityPageModelConvention<TUser> : IPageApplicationModelConvention where TUser : class
+public sealed class IdentityPageModelConvention<TUser> : IPageApplicationModelConvention where TUser : class
 {
     public void Apply(PageApplicationModel model)
     {

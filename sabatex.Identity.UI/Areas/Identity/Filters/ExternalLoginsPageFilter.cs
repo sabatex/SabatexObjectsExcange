@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace sabatex.Identity.UI.Areas.Identity.Filters;
 
-internal sealed class ExternalLoginsPageFilter<TUser> : IAsyncPageFilter where TUser : class
+public sealed class ExternalLoginsPageFilter<TUser> : IAsyncPageFilter where TUser : class
 {
     public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
     {

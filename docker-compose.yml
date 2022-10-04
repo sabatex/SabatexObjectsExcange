@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  webapidocumentsexchange:
+    image: ${DOCKER_REGISTRY-}webapidocumentsexchange
+    build:
+      context: .
+      dockerfile: WebApi1C8Exchange/Dockerfile
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 15432:5432
