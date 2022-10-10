@@ -9,7 +9,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["WebApi1C8Exchange/WebApiDocumentsExchange.csproj", "WebApi1C8Exchange/"]
-COPY ["sabatex.Identity.UI/sabatex.Identity.UI.csproj", "sabatex.Identity.UI/"]
 COPY ["WebApi1C8Exchange.Models/WebApiDocumentsExchange.Models.csproj", "WebApi1C8Exchange.Models/"]
 RUN dotnet restore "WebApi1C8Exchange/WebApiDocumentsExchange.csproj"
 COPY . .

@@ -12,24 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<WebApiDocumentsExchange.Services.ApiConfig>(
     builder.Configuration.GetSection(nameof(WebApiDocumentsExchange.Services.ApiConfig)));
 
-var dbProvider = builder.Configuration.GetValue("DataBaseProvider", "postgres").ToLower();
-switch (dbProvider)
-{
-    case "sqlite":
-        builder.Services.AddDbContext<ExchangeDbContext, SQLiteDbContext>(options =>
+builder.Services.AddDbContext<ExchangeDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
-        break;
-    case "mssql":
-        builder.Services.AddDbContext<ExchangeDbContext, MSSQLDbContext>(options =>
-             options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQLConnection")));
-        break;
-    case "postgres":
-        builder.Services.AddDbContext<ExchangeDbContext, PostgresDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
-        break;
-    default: throw new Exception($"Unsupported provider: {dbProvider}");
-}
-
+ 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
@@ -40,6 +25,8 @@ builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+
+builder.Services.AddLocalization();
 
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddScoped<DialogService>();
@@ -79,6 +66,14 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseRequestLocalization(
+new RequestLocalizationOptions() { ApplyCurrentCultureToResponseHeaders = true }
+    .AddSupportedCultures(new[] { "en-US", "uk-UA" })
+    .AddSupportedUICultures(new[] { "en-US", "uk-UA" })
+    .SetDefaultCulture("uk-UA")
+ );
+
+
 app.MapControllers();
 
 app.MapBlazorHub();
@@ -93,10 +88,13 @@ async Task CreateDefaultRoles(WebApplication app)
 {
     using (var serviceScope = app.Services.CreateScope())
     {
-        var services = serviceScope.ServiceProvider;
-        var RoleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        var UserManager = services.GetRequiredService<UserManager<IdentityUser>>();
-        
+        using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<ExchangeDbContext>())
+        {
+            if (!File.Exists(dbContext.Database.GetDbConnection().DataSource)) {
+                await dbContext.Database.EnsureCreatedAsync();
+                var services = serviceScope.ServiceProvider;
+                var RoleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var UserManager = services.GetRequiredService<UserManager<IdentityUser>>();
         // Admin
         var adminRole = await RoleManager.FindByNameAsync("Admin");
         if (adminRole == null)
@@ -194,7 +192,6 @@ async Task CreateDefaultRoles(WebApplication app)
             await UserManager.AddToRoleAsync(userToMakeUser, "User");
         }
 
-        var dbContext = serviceScope.ServiceProvider.GetRequiredService<ExchangeDbContext>();
         string sendertest = "SenderTest";
         string destinationtest = "DestinationTest";
         var st = await dbContext.ClientNodes.FindAsync(sendertest.ToLower());
@@ -226,6 +223,11 @@ async Task CreateDefaultRoles(WebApplication app)
             await dbContext.SaveChangesAsync();
 
         }
+
+            }
+        }
+ 
+
 
 
     }
