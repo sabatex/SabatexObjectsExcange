@@ -4,10 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	  <Version>1.2.0</Version>
-	  <UserSecretsId>248cabdc-e140-4997-8a0c-1cfaf7cb210b</UserSecretsId>
-	  <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	  <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	<Version>1.2.2</Version>
+	<UserSecretsId>248cabdc-e140-4997-8a0c-1cfaf7cb210b</UserSecretsId>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,8 +37,4 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
   </ItemGroup>
-  <Target Name="HostPublish" AfterTargets="Build">
-		<!--<Message Importance="high" Text="*** Linux Publish             ... copying to LinuxVM ... " />
-		<Exec Command="call dotnet ..\SqlServerMigrations\SqlServerMigrations.csproj" />-->
-	</Target>
 </Project>
