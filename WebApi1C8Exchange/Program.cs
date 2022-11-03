@@ -85,7 +85,22 @@ app.MapBlazorHub();
 
 app.MapFallbackToPage("/_Host");
 
-await CreateDefaultRoles(app);
+if (args.Length > 0)
+{
+    foreach (var arg in args)
+    {
+        switch (arg.ToLower())
+        {
+            case "initialize":
+                await CreateDefaultRoles(app);
+                break;
+        }
+
+    }
+
+}
+
+
 
 app.Run();
 
