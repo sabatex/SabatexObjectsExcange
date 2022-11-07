@@ -19,7 +19,7 @@ jobs:
       - name: build
         run: dotnet build sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
       - name: Create the package
-        run: dotnet pack --configuration sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
+        run: dotnet pack sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
       - name: Publish the package to GPR
         run: dotnet nuget push sabatex.Blazor.UIControls/bin/Release/*.nupkg
       - name: Publish the package to nuget.org
