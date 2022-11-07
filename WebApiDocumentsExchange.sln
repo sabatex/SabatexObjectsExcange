@@ -39,8 +39,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Script", "Script", "{24228F
 		add-migration.cmd = add-migration.cmd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sabatex.Blazor.UIConrols", "sabatex.Blazor.UIConrols\sabatex.Blazor.UIConrols.csproj", "{30C44A43-5156-4776-BD23-E00BC2B23E6D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Linux", "Linux", "{8B4D6B4C-B2E5-4085-BDDF-CB7C30EB6BD1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{7146FDE0-D4E9-4898-8F34-4AF3E15ACB43}"
@@ -51,6 +49,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{E45C54
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\..\OneDrive\FIRMS\DIK\servers\web\etc\systemd\system\WebApiDocumentsExchange.service = ..\..\..\..\OneDrive\FIRMS\DIK\servers\web\etc\systemd\system\WebApiDocumentsExchange.service
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sabatex.Blazor.UIControls", "sabatex.Blazor.UIControls\sabatex.Blazor.UIControls.csproj", "{8EA480D4-A25B-4859-B410-D55549312E9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,10 +74,10 @@ Global
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30C44A43-5156-4776-BD23-E00BC2B23E6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30C44A43-5156-4776-BD23-E00BC2B23E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30C44A43-5156-4776-BD23-E00BC2B23E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30C44A43-5156-4776-BD23-E00BC2B23E6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EA480D4-A25B-4859-B410-D55549312E9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA480D4-A25B-4859-B410-D55549312E9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EA480D4-A25B-4859-B410-D55549312E9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EA480D4-A25B-4859-B410-D55549312E9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
