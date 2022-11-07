@@ -17,7 +17,6 @@
 		<PackageId>sabatex.Blazor.UI.Controls</PackageId>
 		<PackageTags>#ASP.NET #Blazor #Razor</PackageTags>
 		<Version>1.0.0</Version>
-
 	</PropertyGroup>
 
   <ItemGroup>
