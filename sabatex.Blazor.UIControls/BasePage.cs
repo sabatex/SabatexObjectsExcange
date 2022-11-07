@@ -5,7 +5,7 @@ using Radzen;
 using Radzen.Blazor;
 
 
-namespace sabatex.Blazor.UIConrols;
+namespace sabatex.Blazor.UIControls;
 public abstract class BasePage<T,TIdentityDBContext>:ComponentBase where T:class,new() where TIdentityDBContext: IdentityDbContext
 {
     [Inject] protected TIdentityDBContext dbContext { get; set; } = default!;

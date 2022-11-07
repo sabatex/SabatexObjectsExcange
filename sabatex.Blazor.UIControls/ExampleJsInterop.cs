@@ -1,6 +1,6 @@
 using Microsoft.JSInterop;
 
-namespace sabatex.Blazor.UIConrols
+namespace sabatex.Blazor.UIControls
 {
     // This class provides an example of how JavaScript functionality can be wrapped
     // in a .NET class for easy consumption. The associated JavaScript module is
