@@ -5,7 +5,7 @@ on:
     branches: 
       - master
     paths:
-      - 'sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj'
+      - 'sabatex.Blazor.UIConrols/sabatex.Blazor.UIConrols.csproj'
 
 jobs:
   publish:
