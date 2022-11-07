@@ -19,7 +19,7 @@ jobs:
       - name: build
         run: dotnet build sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
       - name: Create the package
-        run: dotnet pack sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
+        run: dotnet pack --configuration Release sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
       - name: Publish the package to nuget.org
         run: dotnet nuget push sabatex.Blazor.UIControls/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:

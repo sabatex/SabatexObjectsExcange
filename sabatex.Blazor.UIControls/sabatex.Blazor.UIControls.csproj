@@ -10,7 +10,7 @@
 		<Copyright>2022, Serhiy Lakas</Copyright>
 		<Product>Blazor UI Controls</Product>
 		<Description>Blazor Helper UI Controls</Description>
-		<Company>sabatex on git </Company>
+		<Company>sabatex on git</Company>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/sabatex</RepositoryUrl>
 		<PackageId>sabatex.Blazor.UI.Controls</PackageId>
