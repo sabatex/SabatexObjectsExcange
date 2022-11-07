@@ -5,7 +5,7 @@ on:
     branches: 
       - master
     paths:
-      - 'sabatex.Blazor.UIConrols/sabatex.Blazor.UIConrols.csproj'
+      - 'sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj'
 
 jobs:
   publish:
@@ -21,7 +21,7 @@ jobs:
       - name: build
         run: dotnet build sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
       - name: Create the package
-        run: dotnet pack --configuration Release sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
+        run: dotnet pack --configuration sabatex.Blazor.UIControls/sabatex.Blazor.UIControls.csproj
       - name: Publish the package to GPR
         run: dotnet nuget push sabatex.Blazor.UIControls/bin/Release/*.nupkg
       - name: Publish the package to nuget.org
