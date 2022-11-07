@@ -18,27 +18,66 @@ public class v0Controller : ControllerBase
     protected readonly ExchangeDbContext _dbContext;
     protected readonly ApiConfig _apiConfig;
 
+    public static int TakeDefault = 50;
+
     public v0Controller(ExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig)
     {
         _logger = logger;
         _dbContext = dbContext;
         _apiConfig = apiConfig.Value;
-
     }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nodeName"></param>
+    /// <returns></returns>
+    private string CreateAccessToken(string nodeName)
+    {
+        return nodeName + Guid.NewGuid().ToString();
+    }
+
     /// <summary>
     /// Get current API version
     /// </summary>
-    /// <returns></returns>
+    /// <returns>string API version or empty</returns>
     [HttpGet]
     public IActionResult Get()
     {
         return Ok(Assembly.GetExecutingAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty);
     }
-   
+    /// <summary>
+    /// Autenficate in service
+    /// </summary>
+    /// <param name="nodeName">node name, ignore char register</param>
+    /// <param name="password">node password</param>
+    /// <returns>string access token or empty for fail</returns>
+    /// <exception cref="Exception"></exception>
     [HttpPost("login")]
     public async Task<IActionResult> PostLoginAsync([FromForm] string nodeName, [FromForm] string password)
     {
-        return Ok(await LoginAsync(nodeName, password));
+        var clientNode = await _dbContext.ClientNodes.FindAsync(nodeName.ToLower());
+        if (clientNode != null)
+        {
+            if (clientNode.Password == password)
+            {
+                var result = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Node == clientNode.Id);
+                if (result != null)
+                {
+                    _dbContext.AutenficatedNodes.Remove(result);
+                }
+                result = new AutenficatedNode 
+                {
+                    Node = clientNode.Id,
+                    DateStamp = DateTime.Now,
+                    Id = CreateAccessToken(clientNode.Id)
+                };
+                await _dbContext.AutenficatedNodes.AddAsync(result);
+                await _dbContext.SaveChangesAsync();
+                return Ok(result.Id);
+            }
+        }
+        return Ok(string.Empty);
     }
 
     #region ObjectExchange
@@ -101,18 +140,25 @@ public class v0Controller : ControllerBase
     #endregion
 
     #region queries
+    /// <summary>
+    /// Get 
+    /// </summary>
+    /// <param name="apiToken"></param>
+    /// <param name="nodeName"></param>
+    /// <param name="take"></param>
+    /// <returns></returns>
     [HttpGet("queries")]
-    public async Task<IActionResult> GetQueryesAsync([FromHeader] string apiToken, string nodeName, int? take)
+    public async Task<IActionResult> GetQueryesAsync([FromHeader] string apiToken, string? nodeName, int? take)
     {
         var clientNode = await GetSecureNodeAsync(apiToken);
-        var sender = await GetNodeAsync(nodeName);
-        
-        var result = await _dbContext.QueryObjects
-            .Where(s => s.Destination == clientNode && s.Sender == sender)
-            .Take(take ?? 10)
-            .ToArrayAsync();
-
-        return Ok(result);
+        var result = _dbContext.QueryObjects.Where(s => s.Destination == clientNode);
+        if (nodeName != null)
+        {
+            var sender = await GetNodeAsync(nodeName);
+            if (sender == null) return Ok(new QueryObject[] { });
+            result = result.Where(s => s.Sender == sender);
+        }
+        return Ok(await result.OrderBy(o=>o.Id).Take(take ?? 10).ToArrayAsync());
     }
 
     [HttpPost("queries")]
@@ -170,11 +216,11 @@ public class v0Controller : ControllerBase
     #endregion
 
  
-    private async Task<string> GetNodeAsync([NotNull] string node)
+    private async Task<string?> GetNodeAsync([NotNull] string node)
     {
         var result = await _dbContext.ClientNodes.FindAsync(node.ToLower());
         if (result == null)
-            throw new ArgumentException("Node {0} not exist!", node);
+           return null;
 
         return result.Id;
     }

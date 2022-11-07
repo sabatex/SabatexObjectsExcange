@@ -15,7 +15,7 @@ namespace WebApiDocumentsExchange.Data.Migrations.SqliteMigrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -287,6 +287,10 @@ namespace WebApiDocumentsExchange.Data.Migrations.SqliteMigrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Destination");
+
+                    b.HasIndex("Sender");
+
                     b.ToTable("ObjectExchanges");
                 });
 
@@ -316,6 +320,10 @@ namespace WebApiDocumentsExchange.Data.Migrations.SqliteMigrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Destination");
+
+                    b.HasIndex("Sender");
 
                     b.ToTable("QueryObjects");
                 });
@@ -367,6 +375,36 @@ namespace WebApiDocumentsExchange.Data.Migrations.SqliteMigrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.ObjectExchange", b =>
+                {
+                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", null)
+                        .WithMany()
+                        .HasForeignKey("Destination")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", null)
+                        .WithMany()
+                        .HasForeignKey("Sender")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApiDocumentsExchange.Models.QueryObject", b =>
+                {
+                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", null)
+                        .WithMany()
+                        .HasForeignKey("Destination")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApiDocumentsExchange.Models.ClientNode", null)
+                        .WithMany()
+                        .HasForeignKey("Sender")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

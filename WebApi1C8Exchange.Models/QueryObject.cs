@@ -12,12 +12,13 @@ namespace WebApiDocumentsExchange.Models;
 public class QueryObject
 {
     public long Id { get; set; }
-    public string ObjectId { get; set; } = default!; //must lovercase
-    [MaxLength(50)]
-    public string ObjectType { get; set; } = default!; // lovercase
-
     [MaxLength(50)]
     public string Sender { get; set; } = default!;
     [MaxLength(50)]
     public string Destination { get; set; } = default!;
+    
+    public string ObjectId { get; set; } = default!; //must lovercase
+    [MaxLength(50)]
+    public string ObjectType { get; set; } = default!; // lovercase
+
 }

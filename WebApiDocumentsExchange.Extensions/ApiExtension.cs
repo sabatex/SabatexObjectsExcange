@@ -29,8 +29,6 @@ public static class ApiExtension
 
     }
 
-
-
     #region objects
     public static async Task<long> ApiPostObjectExchangeAsync(this HttpClient client, PostObject obj)
     {

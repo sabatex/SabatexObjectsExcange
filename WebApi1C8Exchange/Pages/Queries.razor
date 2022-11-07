@@ -4,11 +4,12 @@
 @using WebApiDocumentsExchange.Models
 @using WebApiDocumentsExchange.Data
 
-@inject ExchangeDbContext dbContext
-@inject DialogService DialogService
+@inherits sabatex.Blazor.UIConrols.BasePage<QueryObject,ExchangeDbContext>
 
 <h3>Queries</h3>
-<RadzenDataGrid Data="@items" TItem="QueryObject"  @ref="grid"
+<RadzenDataGrid Data="@DataGridItems"
+                @ref="DataGrid"
+                TItem="QueryObject"
                 AllowFiltering="true"
                 AllowColumnResize="true"
                 AllowPaging="true"
@@ -32,25 +33,10 @@
 
 
 @code {
-    private IEnumerable<QueryObject> items=new QueryObject[] { };
-    RadzenDataGrid<QueryObject>? grid;
     
     protected override void OnInitialized()
     {
-        items = dbContext.QueryObjects;
-    }
-    
-    async Task DeleteRow(QueryObject item)
-    {
-        var dialogResult = await DialogService.Confirm("Ви впевнені?",
-                                        "Видалення запису",
-                                        new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" });
-        if (dialogResult == true)
-        {
-           dbContext.Remove(item);
-           dbContext.SaveChanges();
-           if (grid != null) await grid.Reload();
-        }
+        DataGridItems = dbContext.QueryObjects;
     }
 
 }

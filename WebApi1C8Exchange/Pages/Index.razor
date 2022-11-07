@@ -1,31 +1,25 @@
 ﻿@page "/"
 @attribute [Authorize(Roles ="Admin, User")]
+
 @using Microsoft.EntityFrameworkCore
 @using Radzen
 @using System.Text.Unicode
 @using WebApiDocumentsExchange.Models
 @using WebApiDocumentsExchange.Data
-@inject ExchangeDbContext dbContext
-@inject DialogService DialogService
-@inject IJSRuntime JSRuntime
 
+@inherits sabatex.Blazor.UIConrols.BasePage<ObjectExchange,ExchangeDbContext>
 
 <PageTitle>Index</PageTitle>
-<RadzenButton Icon="delete"
-              style="margin-bottom: 10px;margin-left:20px"
-              ButtonStyle="ButtonStyle.Danger"
-              Text="Видалити"
-              Click="@(args => DeleteRow(selectedItems !=null?selectedItems[0]:null))"
-              Disabled=@((selectedItems?.Count ?? 0) == 0) />
-<RadzenDataGrid Data="@items" TItem="ObjectExchange"  @ref="grid"
+<RadzenDataGrid Data="@DataGridItems"
+                TItem="ObjectExchange"
+                @ref="DataGrid"
                 AllowFiltering="true"
                 AllowColumnResize="true"
                 AllowPaging="true"
                 PageSize="10"
                 AllowSorting="true"
                 SelectionMode="DataGridSelectionMode.Single"
-                @bind-Value=@selectedItems
-                >
+                @bind-Value=@DataGridSelectedItems>
     <Columns>
          <RadzenDataGridColumn TItem="ObjectExchange" Property="Sender" Title="Sender" MinWidth="200px"/>
          <RadzenDataGridColumn TItem="ObjectExchange" Property="Destination" Title="Destination" MinWidth="100px"/>
@@ -33,34 +27,20 @@
          <RadzenDataGridColumn TItem="ObjectExchange" Property="ObjectType" Title="Object Type" MinWidth="200px"/>
          <RadzenDataGridColumn TItem="ObjectExchange" Property="DateStamp" Title="DateStamp" MinWidth="100px"/>
          <RadzenDataGridColumn TItem="ObjectExchange" Property="ObjectJSON" Title="JSON" MinWidth="100px"/>
-    </Columns>
+         <RadzenDataGridColumn TItem="ObjectExchange"  Filterable=false Sortable=false TextAlign="TextAlign.Center" Width="50px">
+             <Template Context="client">
+                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@(args => DeleteRow(client))"
+                          @onclick:stopPropagation="true" />
+             </Template>
+        </RadzenDataGridColumn>
+
+     </Columns>
 </RadzenDataGrid>
 
 
 @code {
-    private RadzenDataGrid<ObjectExchange>? grid;
-    private IEnumerable<ObjectExchange>? items;
-    private IList<ObjectExchange>? selectedItems;
-
     protected override void OnInitialized()
     {
-        items = dbContext.ObjectExchanges;
+        DataGridItems = dbContext.ObjectExchanges;
     }
-
-    async Task DeleteRow(ObjectExchange? item)
-    {
-        if (item == null) return;
-        var dialogResult = await DialogService.Confirm("Ви впевнені?",
-                                        "Видалення запису",
-                                        new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" });
-        if (dialogResult == true)
-        {
-               dbContext.Remove(item);
-               dbContext.SaveChanges();
-               if (grid != null)  await grid.Reload();
-        }
-    }
-
-  
-
 }

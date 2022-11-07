@@ -22,5 +22,14 @@ public abstract class ExchangeDbContext : IdentityDbContext
 
     }
 
- 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.Entity<QueryObject>().HasOne<ClientNode>().WithMany().HasForeignKey(p=>p.Sender).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<QueryObject>().HasOne<ClientNode>().WithMany().HasForeignKey(p=>p.Destination).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<ObjectExchange>().HasOne<ClientNode>().WithMany().HasForeignKey(p => p.Sender).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<ObjectExchange>().HasOne<ClientNode>().WithMany().HasForeignKey(p => p.Destination).OnDelete(DeleteBehavior.Cascade);
+    }
+
+
 }
