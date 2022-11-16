@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
 
@@ -10,6 +11,8 @@ public abstract class BasePage<T,TIdentityDBContext>:ComponentBase where T:class
 {
     [Inject] protected TIdentityDBContext dbContext { get; set; } = default!;
     [Inject] protected DialogService dialogService{get;set;} = default!;
+    [Inject] public JSRuntime   jSRuntime { get; set; }=default!;
+
 
     protected RadzenDataGrid<T>? DataGrid;
     protected T? ItemToInsertInGrid;
