@@ -11,7 +11,6 @@ public abstract class BasePage<T,TIdentityDBContext>:ComponentBase where T:class
 {
     [Inject] protected TIdentityDBContext dbContext { get; set; } = default!;
     [Inject] protected DialogService dialogService{get;set;} = default!;
-    [Inject] public JSRuntime   jSRuntime { get; set; }=default!;
 
 
     protected RadzenDataGrid<T>? DataGrid;

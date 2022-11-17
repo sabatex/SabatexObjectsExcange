@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sabatex.Blazor.UIConrols\sabatex.Blazor.UIConrols.csproj" />
+    <ProjectReference Include="..\sabatex.Blazor.UIControls\sabatex.Blazor.UIControls.csproj" />
     <ProjectReference Include="..\WebApi1C8Exchange.Models\WebApiDocumentsExchange.Models.csproj" />
   </ItemGroup>
   <Target Name="HostPublish" AfterTargets="Build">
