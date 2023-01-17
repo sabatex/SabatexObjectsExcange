@@ -1,0 +1,35 @@
+﻿@page "/"
+@attribute [Authorize(Roles ="Admin, User")]
+
+@using System.Text.Unicode
+
+@inherits BaseDataGridPage<WebApiDocumentsExchange.Models.ObjectExchange>
+
+<PageTitle>Index</PageTitle>
+<RadzenDataGrid @ref="grid" Count="@dataCollection.Count" Data="@dataCollection.Items"
+                TItem="WebApiDocumentsExchange.Models.ObjectExchange"
+                AllowFiltering="true"
+                AllowColumnResize="true"
+                AllowPaging="true"
+                PageSize="10"
+                AllowSorting="true"
+                SelectionMode="DataGridSelectionMode.Single"
+                IsLoading="@isGridDataLoading">
+    <Columns>
+        <RadzenDataGridColumn TItem="WebApiDocumentsExchange.Models.ObjectExchange" Property="Sender" Title="Sender" MinWidth="200px" />
+        <RadzenDataGridColumn TItem="WebApiDocumentsExchange.Models.ObjectExchange" Property="Destination" Title="Destination" MinWidth="100px" />
+        <RadzenDataGridColumn TItem="WebApiDocumentsExchange.Models.ObjectExchange" Property="ObjectId" Title="Object Id" MinWidth="100px" />
+        <RadzenDataGridColumn TItem="WebApiDocumentsExchange.Models.ObjectExchange" Property="ObjectType" Title="Object Type" MinWidth="200px" />
+        <RadzenDataGridColumn TItem="WebApiDocumentsExchange.Models.ObjectExchange" Property="DateStamp" Title="DateStamp" MinWidth="100px" />
+        <RadzenDataGridColumn TItem="WebApiDocumentsExchange.Models.ObjectExchange" Property="ObjectJSON" Title="JSON" MinWidth="100px" />
+        <RadzenColumnRowControls T="WebApiDocumentsExchange.Models.ObjectExchange" Width="50px" OnDeleteRow="GridDeleteButtonClick" />
+    </Columns>
+</RadzenDataGrid>
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        DataGridItems = dbContext.ObjectExchanges;
+    }
+}

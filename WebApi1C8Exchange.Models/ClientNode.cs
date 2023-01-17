@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sabatex.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApiDocumentsExchange.Models;
 
-public class ClientNode
+public class ClientNode : IEntityBase
 {
     [MaxLength(50)]
     public string Id { get; set; } = String.Empty;//key
@@ -10,4 +11,6 @@ public class ClientNode
     public string Name { get; set; } = default!; //index
     public string? Description { get; set; }
     public string Password { get; set; } = default!;
+
+    public string KeyAsString => Id.ToString();
 }

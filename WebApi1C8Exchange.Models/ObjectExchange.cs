@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sabatex.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApiDocumentsExchange.Models;
 
-public class ObjectExchange
+public class ObjectExchange:IEntityBase
 {
     public long Id { get; set; } //"Id":10
 
@@ -20,5 +21,6 @@ public class ObjectExchange
     /// </summary>
     public DateTime DateStamp { get; set; } = DateTime.Now;
     public string ObjectJSON { get; set; }=default!;
- 
+
+    public string KeyAsString => Id.ToString();
 }

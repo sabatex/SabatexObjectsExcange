@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<AuthorizeView>
+    <Authorized>
+        <RadzenProfileMenu Click="@BeginLogout">
+            <ChildContent>
+                <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+            </ChildContent>
+            <Template>
+                <RadzenLabel Text="@($"{(@context.User.Identity?.Name)}")" />
+            </Template>
+        </RadzenProfileMenu>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private async Task BeginLogout(dynamic args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+    private async Task BeginLogin()
+    {
+        Navigation.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(Navigation.Uri)}", true);
+    }
+}

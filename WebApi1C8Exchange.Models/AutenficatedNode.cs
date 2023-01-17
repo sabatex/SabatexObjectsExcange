@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sabatex.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebApiDocumentsExchange.Models;
 
-public class AutenficatedNode
+public class AutenficatedNode:IEntityBase
 {
     /// <summary>
     /// key and access token
@@ -15,4 +16,5 @@ public class AutenficatedNode
     public string Node { get; set; } = String.Empty;
     public DateTime DateStamp { get; set; }
 
+    public string KeyAsString => Id.ToString();
 }

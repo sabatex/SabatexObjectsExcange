@@ -1,0 +1,74 @@
+﻿@using System.Reflection;
+@inherits LayoutComponentBase
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+<RadzenContextMenu />
+
+<RadzenLayout>
+    <ChildContent>
+        <RadzenHeader>
+            <ChildContent>
+                <div class="row justify-content-start align-items-center">
+                    <div class="col-6 d-flex align-items-center">
+                        <RadzenSidebarToggle Click="@SidebarToggleClick">
+                        </RadzenSidebarToggle>
+                        <RadzenLabel Text="ЗНЦ">
+                        </RadzenLabel>
+                    </div>
+                    <div class="col-6 text-right">
+                        <LoginDisplay />
+                    </div>
+                </div>
+            </ChildContent>
+        </RadzenHeader>
+        <RadzenBody @ref="@body">
+            <ChildContent>
+                <RadzenContentContainer Name="main">
+                    @Body
+                </RadzenContentContainer>
+            </ChildContent>
+        </RadzenBody>
+        <RadzenSidebar @ref="sidebar">
+            <ChildContent>
+                <NavMenu />
+            </ChildContent>
+        </RadzenSidebar>
+        <RadzenFooter>
+            <ChildContent>
+                <div class="row justify-content-between">
+                    <RadzenLabel Text="Serhiy Lakas, Copyright Ⓒ 2023" class="col-7" />
+                    <RadzenLabel Text="@version" class="col-5 text-end" />
+                </div>
+            </ChildContent>
+        </RadzenFooter>
+    </ChildContent>
+</RadzenLayout>
+
+@code {
+    RadzenBody? body;
+    RadzenSidebar? sidebar;
+    string? version;
+
+    protected async Task SidebarToggleClick(dynamic args)
+    {
+        await InvokeAsync(() => { sidebar?.Toggle(); });
+
+        await InvokeAsync(() => { body?.Toggle(); });
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        AuthenticationStateProvider.AuthenticationStateChanged += StateChange;
+        version = "Version " + Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? String.Empty;
+    }
+    private void StateChange(Task<AuthenticationState> task)
+    {
+        StateHasChanged();
+    }
+
+}

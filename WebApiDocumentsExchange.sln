@@ -50,7 +50,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{E45C54
 		..\..\..\..\OneDrive\FIRMS\DIK\servers\web\etc\systemd\system\WebApiDocumentsExchange.service = ..\..\..\..\OneDrive\FIRMS\DIK\servers\web\etc\systemd\system\WebApiDocumentsExchange.service
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sabatex.RadzenBlazor", "..\sabatex.RadzenBlazor\src\sabatex.RadzenBlazor.csproj", "{7213DC34-2E99-4229-9143-D4A9DBAADBED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentsExchange.Client", "WebApiDocumentsExchange.Client\WebApiDocumentsExchange.Client.csproj", "{0933977D-B3B4-4725-87B1-B84D4214D94A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sabatex.WebApiDocumentsExchange.Core", "sabatex.WebApiDocumentsExchange.Core\sabatex.WebApiDocumentsExchange.Core.csproj", "{A9589491-0CE3-4282-BF93-236BED5BC2B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.Core", "Sabatex.Core\Sabatex.Core.csproj", "{6E5D2E28-C556-418C-A627-5A608F800BA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,10 +78,18 @@ Global
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7213DC34-2E99-4229-9143-D4A9DBAADBED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7213DC34-2E99-4229-9143-D4A9DBAADBED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7213DC34-2E99-4229-9143-D4A9DBAADBED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7213DC34-2E99-4229-9143-D4A9DBAADBED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0933977D-B3B4-4725-87B1-B84D4214D94A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0933977D-B3B4-4725-87B1-B84D4214D94A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0933977D-B3B4-4725-87B1-B84D4214D94A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0933977D-B3B4-4725-87B1-B84D4214D94A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E5D2E28-C556-418C-A627-5A608F800BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E5D2E28-C556-418C-A627-5A608F800BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E5D2E28-C556-418C-A627-5A608F800BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E5D2E28-C556-418C-A627-5A608F800BA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

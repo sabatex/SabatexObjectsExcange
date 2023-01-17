@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sabatex.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace WebApiDocumentsExchange.Models;
 /// <summary>
 /// обєкти які потрібно отримати з нода
 /// </summary>
-public class QueryObject
+public class QueryObject : IEntityBase
 {
     public long Id { get; set; }
     [MaxLength(50)]
@@ -21,4 +22,5 @@ public class QueryObject
     [MaxLength(50)]
     public string ObjectType { get; set; } = default!; // lovercase
 
+    public string KeyAsString => Id.ToString();
 }
