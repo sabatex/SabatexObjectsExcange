@@ -27,14 +27,8 @@
          <RadzenDataGridColumn TItem="ObjectExchange" Property="ObjectType" Title="Object Type" MinWidth="200px"/>
          <RadzenDataGridColumn TItem="ObjectExchange" Property="DateStamp" Title="DateStamp" MinWidth="100px"/>
          <RadzenDataGridColumn TItem="ObjectExchange" Property="ObjectJSON" Title="JSON" MinWidth="100px"/>
-         <RadzenDataGridColumn TItem="ObjectExchange"  Filterable=false Sortable=false TextAlign="TextAlign.Center" Width="50px">
-             <Template Context="client">
-                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@(args => DeleteRow(client))"
-                          @onclick:stopPropagation="true" />
-             </Template>
-        </RadzenDataGridColumn>
-
-     </Columns>
+        <RadzenColumnRowControls T="ObjectExchange" Width="50px" OnDeleteRow="DeleteRow" />
+    </Columns>
 </RadzenDataGrid>
 
 

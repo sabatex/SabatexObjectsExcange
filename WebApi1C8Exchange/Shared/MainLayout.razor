@@ -20,7 +20,7 @@
         </AuthorizeView>
         
            
-        <AuthorizeView>
+        <AuthorizeView class="d-flex align-content-end">
             <Authorized>
                 <RadzenMenuItem  Text=@($"Hello, {context.User.Identity?.Name}!") Path="Identity/Account/Manage" Style="margin-left:auto"/>
                 <RadzenMenuItem Text="Log out"  Style="margin-right:1rem" Path="Identity/Account/LogOut"/>
