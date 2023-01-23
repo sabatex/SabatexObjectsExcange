@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
+using Sabatex.Core;
 
 namespace sabatex.RadzenBlazor;
 
-public abstract class BaseDataGridPage<TItem> : ComponentBase where TItem : class
+public abstract class BaseDataGridPage<TItem> : ComponentBase where TItem : class,IEntityBase
 {
     [Inject] protected IRadzenDataAdapter DataAdapter { get; set; }=default!;
     [Inject] protected DialogService? DialogService { get; set; }
@@ -40,7 +41,7 @@ public abstract class BaseDataGridPage<TItem> : ComponentBase where TItem : clas
         {
             if (await DialogService.Confirm("Ви впевнені?", "Видалення запису", new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" }) == true)
             {
-                var tgDeleteTgClientResult = await DataAdapter.DeleteAsync<TItem>(data.Id);
+                var tgDeleteTgClientResult = await DataAdapter.DeleteAsync<TItem>(data.KeyAsString);
                 if (tgDeleteTgClientResult != null && tgDeleteTgClientResult.StatusCode == System.Net.HttpStatusCode.NoContent)
                 {
                     await GridReload();

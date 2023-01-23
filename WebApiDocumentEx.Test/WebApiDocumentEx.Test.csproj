@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApi1C8Exchange\WebApiDocumentsExchange.csproj" />
-    <ProjectReference Include="..\WebApiDocumentsExchange.Extensions\WebApiDocumentsExchange.Extensions.csproj" />
+    <ProjectReference Include="..\WebApiDocumentsExchange.Extensions\Sabatex.WebApiDocumentsExchange.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

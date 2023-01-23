@@ -1,4 +1,5 @@
 echo off
+del WebApi1C8Exchange.Models\bin\Release\*.nupkg
 call %HOMEPATH%\.scripts\SetSecret.cmd
 dotnet pack --configuration Release WebApi1C8Exchange.Models\WebApiDocumentsExchange.Models.csproj
 if %ERRORLEVEL% neq 0 goto error

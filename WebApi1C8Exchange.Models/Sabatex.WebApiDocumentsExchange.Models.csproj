@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<NeutralLanguage>en-US</NeutralLanguage>
@@ -13,11 +13,11 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageId>sabatex.WebApiDocumentsExchange.Models</PackageId>
 		<PackageTags>#Exchange #API #Blazor</PackageTags>
-		<Version>1.0.2</Version>
+		<Version>1.1.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Sabatex.Core" Version="6.0.0" />
+	  <PackageReference Include="sabatex.Core" Version="1.0.0-alpha5" />
 	</ItemGroup>
 
 </Project>
