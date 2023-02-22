@@ -13,22 +13,9 @@ builder.Services.Configure<WebApiDocumentsExchange.Services.ApiConfig>(
     builder.Configuration.GetSection(nameof(WebApiDocumentsExchange.Services.ApiConfig)));
 
 var dbProvider = builder.Configuration.GetValue("DataBaseProvider", "postgres").ToLower();
-switch (dbProvider)
-{
-    case "sqlite":
-        builder.Services.AddDbContext<ExchangeDbContext, SQLiteDbContext>(options =>
-            options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
-        break;
-    case "mssql":
-        builder.Services.AddDbContext<ExchangeDbContext, MSSQLDbContext>(options =>
-             options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQLConnection")));
-        break;
-    case "postgres":
-        builder.Services.AddDbContext<ExchangeDbContext, PostgresDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
-        break;
-    default: throw new Exception($"Unsupported provider: {dbProvider}");
-}
+builder.Services.AddDbContext<ExchangeDbContext, SQLiteDbContext>(options =>
+options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -61,12 +48,7 @@ else
 {
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    //app.UseHsts();
-
-    //temporary
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();

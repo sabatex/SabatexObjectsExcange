@@ -41,16 +41,8 @@ public abstract class BaseDataGridPage<TItem> : ComponentBase where TItem : clas
         {
             if (await DialogService.Confirm("Ви впевнені?", "Видалення запису", new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" }) == true)
             {
-                var tgDeleteTgClientResult = await DataAdapter.DeleteAsync<TItem>(data.KeyAsString);
-                if (tgDeleteTgClientResult != null && tgDeleteTgClientResult.StatusCode == System.Net.HttpStatusCode.NoContent)
-                {
-                    await GridReload();
-                }
-
-                if (tgDeleteTgClientResult != null && tgDeleteTgClientResult.StatusCode != System.Net.HttpStatusCode.NoContent)
-                {
-                    NotificationService?.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to delete TgClient" });
-                }
+                await DataAdapter.DeleteAsync<TItem>(data.KeyAsString);
+                await GridReload();
             }
         }
         catch (System.Exception e)

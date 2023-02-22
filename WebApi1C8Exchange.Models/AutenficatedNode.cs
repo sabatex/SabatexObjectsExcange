@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebApiDocumentsExchange.Models;
 
-public class AutenficatedNode:IEntityBase
+public class AutenficatedNode
 {
     /// <summary>
     /// key and access token
@@ -15,6 +15,4 @@ public class AutenficatedNode:IEntityBase
     public string Id { get; set; }=String.Empty;
     public string Node { get; set; } = String.Empty;
     public DateTime DateStamp { get; set; }
-
-    public string KeyAsString => Id.ToString();
 }

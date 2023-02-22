@@ -10,11 +10,10 @@
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageId>Sabatex.WebApiDocumentsExchange.Helper</PackageId>
 	<Version>1.1.0</Version>
-
+	<SabatexNugetKeyPath></SabatexNugetKeyPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApi1C8Exchange.Models\Sabatex.WebApiDocumentsExchange.Models.csproj" />
+    <ProjectReference Include="..\sabatex.ObjectsExchange.Models\sabatex.ObjectsExchange.Models.csproj" />
   </ItemGroup>
-
 </Project>

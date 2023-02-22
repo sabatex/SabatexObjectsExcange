@@ -13,4 +13,9 @@ public class ClientNode : IEntityBase
     public string Password { get; set; } = default!;
 
     public string KeyAsString => Id.ToString();
+
+    string IEntityBase.KeyAsString()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -23,4 +23,9 @@ public class ObjectExchange:IEntityBase
     public string ObjectJSON { get; set; }=default!;
 
     public string KeyAsString => Id.ToString();
+
+    string IEntityBase.KeyAsString()
+    {
+        throw new NotImplementedException();
+    }
 }
