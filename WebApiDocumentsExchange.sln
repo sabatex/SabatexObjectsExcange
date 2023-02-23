@@ -8,11 +8,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.WebApiDocumentsExchange.Models", "WebApi1C8Exchange.Models\Sabatex.WebApiDocumentsExchange.Models.csproj", "{852B5825-929F-4FCA-B292-CD0393708AF1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0105BEE-DA00-40CE-B6F6-D9D225BA7774}"
-	ProjectSection(SolutionItems) = preProject
-		demo1C.json = demo1C.json
-		Sabatex.Core\src\LICENSE.txt = Sabatex.Core\src\LICENSE.txt
-		removeMigration.cmd = removeMigration.cmd
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentEx.Test", "WebApiDocumentEx.Test\WebApiDocumentEx.Test.csproj", "{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}"
 EndProject
@@ -29,28 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1C8", "1C8", "{09DA94B8-D76
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.WebApiDocumentsExchange.Extensions", "WebApiDocumentsExchange.Extensions\Sabatex.WebApiDocumentsExchange.Extensions.csproj", "{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bagel", "Bagel", "{0F748872-E557-45F4-AD10-91B5C3CDCBA0}"
-	ProjectSection(SolutionItems) = preProject
-		Прихіда список.json = Прихіда список.json
-		прихідна.json = прихідна.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Script", "Script", "{24228F57-59F2-4E31-9BAA-8BA7EABE9710}"
-	ProjectSection(SolutionItems) = preProject
-		add-migration.cmd = add-migration.cmd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Linux", "Linux", "{8B4D6B4C-B2E5-4085-BDDF-CB7C30EB6BD1}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{7146FDE0-D4E9-4898-8F34-4AF3E15ACB43}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "systemd", "systemd", "{36DDA363-4A55-455D-AE07-E1C5211C94A5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{E45C54D8-6416-4977-BDCF-61553381902C}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\OneDrive\FIRMS\DIK\servers\web\etc\systemd\system\WebApiDocumentsExchange.service = ..\..\..\..\OneDrive\FIRMS\DIK\servers\web\etc\systemd\system\WebApiDocumentsExchange.service
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentsExchange.Client", "WebApiDocumentsExchange.Client\WebApiDocumentsExchange.Client.csproj", "{0933977D-B3B4-4725-87B1-B84D4214D94A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.WebApiDocumentsExchange.Core", "sabatex.WebApiDocumentsExchange.Core\Sabatex.WebApiDocumentsExchange.Core.csproj", "{A9589491-0CE3-4282-BF93-236BED5BC2B2}"
@@ -59,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sabatex.ObjectsExchange.Models", "sabatex.ObjectsExchange.Models\sabatex.ObjectsExchange.Models.csproj", "{95D5B8BA-E4AA-4CFC-B175-3C028A23F78C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectsExchange.ApiHelper", "Sabatex.ObjectsExchange.ApiHelper\Sabatex.ObjectsExchange.ApiHelper.csproj", "{9EA19E90-887F-4FAC-8E02-06F31033FA83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.ApiHelper", "Sabatex.ObjectsExchange.ApiHelper\Sabatex.ObjectsExchange.ApiHelper.csproj", "{9EA19E90-887F-4FAC-8E02-06F31033FA83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,12 +82,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{09DA94B8-D76D-4BD5-820B-3DA3BB56C427} = {A0105BEE-DA00-40CE-B6F6-D9D225BA7774}
-		{0F748872-E557-45F4-AD10-91B5C3CDCBA0} = {A0105BEE-DA00-40CE-B6F6-D9D225BA7774}
-		{24228F57-59F2-4E31-9BAA-8BA7EABE9710} = {A0105BEE-DA00-40CE-B6F6-D9D225BA7774}
-		{8B4D6B4C-B2E5-4085-BDDF-CB7C30EB6BD1} = {A0105BEE-DA00-40CE-B6F6-D9D225BA7774}
-		{7146FDE0-D4E9-4898-8F34-4AF3E15ACB43} = {8B4D6B4C-B2E5-4085-BDDF-CB7C30EB6BD1}
-		{36DDA363-4A55-455D-AE07-E1C5211C94A5} = {7146FDE0-D4E9-4898-8F34-4AF3E15ACB43}
-		{E45C54D8-6416-4977-BDCF-61553381902C} = {36DDA363-4A55-455D-AE07-E1C5211C94A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0ED09FD-EEAF-4E3E-94C0-5BF69FC94CFC}
