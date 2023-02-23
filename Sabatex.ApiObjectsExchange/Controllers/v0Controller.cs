@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace Sabatex.ApiObjectsExchange.Controllers;
 
@@ -51,7 +52,7 @@ public class v0Controller : ControllerBase
         var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(nodeId);
         if (clientAutenficate != null)
         {
-            if (apiToken == clientAutenficate.Token)
+            if (apiToken != clientAutenficate.Token)
             {
                 _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  try use invalid token {apiToken}");
                 return null;
@@ -85,7 +86,7 @@ public class v0Controller : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> PostLoginAsync(Login login)
     {
-        var clientNode = await _dbContext.ClientNodes.FindAsync(login.NodeId);
+        var clientNode = await _dbContext.ClientNodes.FindAsync(login.ClientId);
         if (clientNode != null)
         {
             var hmac = new HMACSHA256(hashKey);
@@ -94,7 +95,7 @@ public class v0Controller : ControllerBase
             if (clientNode.Password == passwordBase64)
             {
                 // remove old autenficated token
-                var result = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Id == login.NodeId);
+                var result = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Id == login.ClientId);
                 if (result != null)
                 {
                     _dbContext.AutenficatedNodes.Remove(result);
@@ -134,25 +135,13 @@ public class v0Controller : ControllerBase
     /// <returns>incoming objects </returns>
     [HttpGet("objects")]
     public async Task<IActionResult> GetObjectsAsync([FromHeader] string apiToken,
-                                                     [FromHeader] Guid nodeId,
-                                                     [FromQuery]string incomingNodesId,
+                                                     [FromHeader] Guid clientId,
                                                      [FromQuery]int take = 10)
     {
-        var clientNode = await GetClientNodeByTokenAsync(nodeId, apiToken);
-        if (clientNode == null)
-            return Unauthorized();
-        IEnumerable<Guid> nodes;
-        try
-        {
-            nodes = incomingNodesId.Split(',').Select(s=>new Guid(s));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         var result = await _dbContext.ObjectExchanges
-                        .Where(s => s.Destination==nodeId &&  nodes.Contains(s.Sender))
-                        .OrderBy(d => d.DateStamp) // priority
+                        .Where(s => s.Destination==clientId)
+                        .OrderBy(d => d.Id) // priority
                         .Take(take).ToArrayAsync();
         return Ok(result);
     }
@@ -160,47 +149,63 @@ public class v0Controller : ControllerBase
     [HttpPost("objects")]
     
     public async Task<IActionResult> PostAsync([FromHeader] string apiToken,
-                                               [FromHeader] Guid nodeId,
-                                               [FromBody] PostObject postObject)
+                                               [FromHeader] Guid clientId,
+                                               [FromHeader] Guid destinationId,
+                                               JsonDocument json)
     {
-        var clientNode = await GetClientNodeByTokenAsync (nodeId, apiToken);
+ 
+        string? objectId = json.RootElement.GetProperty("objectId").GetString();
+        if (objectId == null)
+            return BadRequest("The not defined objectId");
+        string? objectType = json.RootElement.GetProperty("objectType").GetString();
+        if (objectType == null)
+            return BadRequest("The not defined objectType");
+        string? text = json.RootElement.GetProperty("text").GetString();
+        if (text == null)
+            return BadRequest("The not defined text");
+
+        var clientNode = await GetClientNodeByTokenAsync (clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
- 
+
         var validNodes = clientNode.GetClientAccess();
-        if (validNodes.Contains(postObject.Destination))
+
+        if (validNodes.Contains(destinationId))
         {
             var doc = new ObjectExchange
             {
-                Sender = nodeId,
-                Destination = postObject.Destination,
-                ObjectId = postObject.ObjectId,
-                ObjectType = postObject.ObjectType,
-                ObjectAsText = postObject.ObjectAsText,
-                DateStamp = postObject.DateStamp
+                Sender = clientId,
+                Destination = destinationId,
+                ObjectId = objectId,
+                ObjectType = objectType,
+                ObjectAsText = text,
+                DateStamp = DateTime.UtcNow
             };
             await _dbContext.ObjectExchanges.AddAsync(doc);
+            await _dbContext.SaveChangesAsync();
         }
         else
         {
-            _logger.LogError($"The node {nodeId} try send message to invalid node {postObject.Destination}");
+            string error = $"The node {clientId} try send message to invalid node {destinationId}";
+            _logger.LogError(error);
+            return BadRequest(error);
         }
-        await _dbContext.SaveChangesAsync();
+        
         return Ok();
     }
 
     [HttpDelete("objects/{id}")]
-    public async Task<IActionResult> DeleteAsync([FromHeader] string apiToken, [FromHeader] Guid nodeId, long id)
+    public async Task<IActionResult> DeleteAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
     {
-        var clientNode = await GetClientNodeByTokenAsync(nodeId, apiToken);
+        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
         var obj = await _dbContext.ObjectExchanges.FindAsync(id);
         if (obj == null)
             return NotFound();
-        if (obj.Destination != nodeId)
+        if (obj.Destination != clientId)
         {
-            var error = $"Нод {nodeId} не може видалятидані чужих нодів {obj.Destination}";
+            var error = $"Нод {clientId} не може видалятидані чужих нодів {obj.Destination}";
             _logger.LogError(error);
             return BadRequest(error);
         }
@@ -222,14 +227,14 @@ public class v0Controller : ControllerBase
     /// <returns></returns>
     [HttpGet("queries")]
     public async Task<IActionResult> GetQueryesAsync([FromHeader] string apiToken,
-                                                     [FromHeader] Guid nodeId,
+                                                     [FromHeader] Guid clientId,
                                                      [FromQuery] int take = 10)
     {
-        var clientNode = await GetClientNodeByTokenAsync(nodeId, apiToken);
+        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
         var result = await _dbContext.QueryObjects
-                .Where(s => s.Destination == nodeId)
+                .Where(s => s.Destination == clientId)
                 .Take(take)
                 .ToArrayAsync();
             return Ok(result);
@@ -237,10 +242,18 @@ public class v0Controller : ControllerBase
 
     [HttpPost("queries")]
     public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken,
-                                                    [FromHeader] Guid nodeId,
-                                                    [FromBody] PostObject postObject)
+                                                    [FromHeader] Guid clientId,
+                                                    [FromHeader] Guid destinationId,
+                                                    JsonDocument json)
     {
-        var clientNode = await GetClientNodeByTokenAsync(nodeId, apiToken);
+        string? objectId = json.RootElement.GetProperty("objectId").GetString();
+        if (objectId == null)
+            return BadRequest("The not defined objectId");
+        string? objectType = json.RootElement.GetProperty("objectType").GetString();
+        if (objectType == null)
+            return BadRequest("The not defined objectType");
+
+        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
         
@@ -248,10 +261,10 @@ public class v0Controller : ControllerBase
            // check exist same query 
             var obj = new QueryObject
             {
-                Sender = nodeId,
-                Destination = postObject.Destination,
-                ObjectId = postObject.ObjectId,
-                ObjectType = postObject.ObjectType
+                Sender = clientId,
+                Destination = destinationId,
+                ObjectId = objectId,
+                ObjectType = objectType
             };
             await _dbContext.QueryObjects.AddAsync(obj);
 
@@ -262,18 +275,18 @@ public class v0Controller : ControllerBase
 
 
     [HttpDelete("queries/{id}")]
-    public async Task<IActionResult> DeleteQueryAsync([FromHeader] string apiToken, [FromHeader] Guid nodeId, long id)
+    public async Task<IActionResult> DeleteQueryAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
     {
-        var clientNode = await GetClientNodeByTokenAsync(nodeId, apiToken);
+        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
 
              var obj = await _dbContext.QueryObjects.FindAsync(id);
             if (obj ==null)
                 return NotFound();
-            if (obj.Destination !=nodeId)
+            if (obj.Destination !=clientId)
         {
-            var error = $"Нод {clientNode.Name} з id={nodeId} не може видалятидані чужих нодів {obj.Destination}";
+            var error = $"Нод {clientNode.Name} з id={clientId} не може видаляти дані чужих нодів {obj.Destination}";
             _logger.LogError($"{DateTime.Now}: {error}");
             return Conflict(error);
 

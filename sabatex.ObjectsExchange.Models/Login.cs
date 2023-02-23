@@ -11,7 +11,7 @@ namespace sabatex.ObjectsExchange.Models
     /// </summary>
     public class Login
     {
-        public Guid NodeId { get; set; }
+        public Guid ClientId { get; set; }
         public string Password { get; set; }= default!;
     }
 }
