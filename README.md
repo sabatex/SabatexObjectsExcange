@@ -67,7 +67,7 @@
 
 # QUERY exchange service
 ## POST query to service
-### POST  [host]api/v0/queries
+### POST  [host]/api/v0/queries
 #### Headers:
 		"Content-Type":"application/json; charset=utf-8"
         "accept", "*/*"
@@ -85,7 +85,7 @@
     200
 
 ## GET objects from service
-### GET [host]api/v0/queries?take={1..200}  - default 10
+### GET [host]/api/v0/queries?take={1..200}  - default 10
 #### Headers:
         "Content-Type":"application/json; charset=utf-8"
         "accept", "*/*"
@@ -103,7 +103,7 @@
     }]
 ```
 ## DELETE object from service
-### DELETE [host]api/v0/queries/{id}
+### DELETE [host]/api/v0/queries/{id}
 #### Headers:
         "accept", "*/*"
         "clientId":<client GUID>
