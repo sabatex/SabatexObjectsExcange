@@ -12,8 +12,4 @@
 	<Version>1.1.0</Version>
 	<SabatexNugetKeyPath></SabatexNugetKeyPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\sabatex.ObjectsExchange.Models\sabatex.ObjectsExchange.Models.csproj" />
-  </ItemGroup>
 </Project>

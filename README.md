@@ -13,7 +13,7 @@
 		"password":<string>
 	}
 ```
-#### responce:
+#### response:
     string apiToken (live time 15 minutes)
 
 # Objects exchange service
@@ -33,7 +33,7 @@
         "text":"string"        // unlimited (system limit)
     }
 ```
-#### responce:
+#### response:
     200
 
 ## GET objects from service
@@ -81,7 +81,7 @@
         "objectId":"string"   // max 50
     }
 ```
-#### responce:
+#### response:
     200
 
 ## GET objects from service
