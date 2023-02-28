@@ -1,12 +1,12 @@
 ﻿// sabatex Copyright (c) 2021 by Serhiy Lakas
 // https://github.com/sabatex-1C
 // version 1.2.0 (28.09.2022)
-#region code
 #region Logged
-// conf - sabatexNodeConfig
+// Log data 
+// conf - structure (use)
 // level - 0..3 message level (o - error,1 - warning, 2- information, 3 - Note
-// source - text source name
-//
+// sourceName - text source name
+// message - 
 procedure Logged(conf,level,sourceName,message) export
 	try
 		if level <= conf.LogLevel then
@@ -19,19 +19,26 @@ procedure Logged(conf,level,sourceName,message) export
 				logLevel = УровеньЖурналаРегистрации.Информация;
 			endif;	
 			
-			ЗаписьЖурналаРегистрации("sabatexExchange",
-			logLevel,
-			sourceName,
+			ЗаписьЖурналаРегистрации("sabatexExchange",logLevel,sourceName,
 			,
 			message);
+			conf.Log.Add(message);
 		endif;
 	except
-		ЗаписьЖурналаРегистрации("sabatexExchange." + sourceName,
-			УровеньЖурналаРегистрации.Ошибка,
-			Метаданные.РегистрыСведений.sabatexNodeConfig,
-			,
-			"Не прочитано конфігураційний запис з ID=1");
+		
 	endtry;
+endprocedure
+procedure LogError(conf,sourceName,message) export
+	Logged(conf,0,sourceName,message);		
+endprocedure	
+procedure LogWarning(conf,sourceName,message) export
+	Logged(conf,1,sourceName,message);		
+endprocedure
+procedure LogInformation(conf,sourceName,message) export
+	Logged(conf,2,sourceName,message);		
+endprocedure
+procedure LogNote(conf,sourceName,message) export
+	Logged(conf,3,sourceName,message);		
 endprocedure
 #endregion
 
@@ -41,7 +48,7 @@ function ErrorConnectionString(conf)
 endfunction	
 
 function CreateHTTPSConnection(conf)
-	https = Неопределено;
+	https = undefined;
 	if conf.https then
 		https =	 new ЗащищенноеСоединениеOpenSSL( неопределено, неопределено );
 	endif;	
@@ -72,30 +79,24 @@ function BuildUrl(url,queries=null)
 		endif;
 	return result;
 endfunction	
-
-function CreateHTTPRequest(conf,url,queries=null)
-	var headers;
+// Cteate HTTP Request 
+// params:
+//    url - complete url for service
+//    headers - map headers for request
+//    queries - url queries  
+function CreateHTTPRequest(url,headers,queries=null)
 	request = new HTTPRequest(BuildUrl(url,queries));
-	if conf.Property("headers",headers) then
-		if headers <> null then
-			for each header in headers do
-				request.Headers.Insert(header.Ключ, header.Значение);
-			enddo;
-		endif;
-	endif;
+	for each header in headers do
+		request.Headers.Insert(header.Ключ, header.Значение);
+	enddo;
 	return request;
 endfunction	
-
-function HTTPSGet(conf,url,queries=null) export
+// Get HTTP Reuest
+// 
+function HTTPSGet(conf,url,headers,queries=null) export
 	connection = CreateHTTPSConnection(conf);
-	request = CreateHTTPRequest(conf,url,queries);
+	request = CreateHTTPRequest(url,headers,queries);
 	return connection.Get(request);
-endfunction
-
-function HTTPSDelete(conf,url,id) export
-	connection = CreateHTTPSConnection(conf);
-	request = CreateHTTPRequest(conf,url+"/"+XMLСтрока(id));
-	return connection.Delete(request);
 endfunction
 function HTTPSPostForm(conf,url,formParams=null) export
 	connection = CreateHTTPSConnection(conf);
@@ -129,7 +130,6 @@ function HTTPSPostForm(conf,url,formParams=null) export
 	
 	return response;
 endfunction
-
 function HTTPSPostJson(conf,url,jsonString) export
 	connection = CreateHTTPSConnection(conf);
 	request = CreateHTTPRequest(conf,url);
@@ -142,7 +142,6 @@ function POSTObject(conf,url,object) export
 	jsonText = Serialize(object);
 	return HTTPSPostJson(conf,url,jsonText);
 endfunction
-
 #endregion
 
 #region JSON
@@ -176,19 +175,27 @@ endfunction
 #endregion
 
 #region ExchangeWebApi
-
 procedure Login(conf) export
-	form = new Map;
-	form.Insert("nodeName",conf.nodeName);
-	form.Insert("password",conf.APIPassword);
+	connection = CreateHTTPSConnection(conf);
+	request = new HTTPRequest(BuildUrl("api/v0/login"));
+	request.Headers.Insert("accept","*/*");
+	request.Headers.Insert("Content-Type","application/json; charset=utf-8");
+	jsonString = Serialize(new structure("clientId,password",string(conf.clientId),conf.password));
 	try
-		token = HTTPSPostForm(conf,"api/v0/login",form);
-		headers=new Map;
-		headers.Insert("apiToken",token);
-		conf.Insert("headers",headers);
+		request.SetBodyFromString(jsonString,"UTF-8",ИспользованиеByteOrderMark.НеИспользовать);
+		response = connection.Post(request);
+		if response.StatusCode <> 200 then
+			raise "Login error request with StatusCode="+ response.StatusCode;
+		endif;
+
+		apiToken = response.GetBodyAsString();
+		if apiToken = "" then
+			raise "Не отримано токен";
+		endif;	
+		conf.Insert("apiToken",apiToken);
 	except
 		error = "Помилка ідентифікації на сервері! Error:"+ОписаниеОшибки();
-		 sabatexExchange.Logged(conf,0,"Login",error);
+		LogError(conf,"Login",error);
 		raise error;
 	endtry;	
 endprocedure	
@@ -196,65 +203,97 @@ endprocedure
 #region objects
 // download objects from server bay sender nodeName
 function GetObjectsExchange(conf) export
-	query = new Map;
-	query.Insert("take",conf.take);
-	query.Insert("nodeName",conf.sender);
-	response = HTTPSGet(conf,"/api/v0/objects",query);
-	if response.StatusCode = 200 then
-		datefields = new array;
-	    datefields.Add("dateStamp");
-		return Deserialize(response.GetBodyAsString(),datefields);	
-	else
-		sabatexExchange.Logged(conf,0,"GetIncomingObjects","Помилка запиту with StatusCode " + response.StatusCode);
-		return new array;
-	endif;	
+	var responce;
+	connection = CreateHTTPSConnection(conf);
+	request = new HTTPRequest(BuildUrl("api/v0/objects",new structure("take",conf.take)));
+	request.Headers.Insert("accept","*/*");
+	request.Headers.Insert("clientId",conf.clientId);
+	request.Headers.Insert("apiToken",conf.apiToken);
+	request.Headers.Insert("Content-Type","application/json; charset=utf-8");
+	try
+		response = connection.Get(request);
+		if response.StatusCode <> 200 then
+			raise "GetObjectsExchange error request with StatusCode="+ response.StatusCode;
+		endif;
+	except
+		raise "GetObjectsExchange error request with error:"+ОписаниеОшибки();
+	endtry;	
+	
+	datefields = new array;
+	datefields.Add("dateStamp");
+	return Deserialize(response.GetBodyAsString(),datefields);	
 endfunction
-function DeleteExchangeObject(conf,id) export
-	response = HTTPSDelete(conf,"/api/v0/objects",id);
-	if response.StatusCode = 200 then
-		return true;	
+procedure DeleteExchangeObject(conf,id) export
+	connection = CreateHTTPSConnection(conf);
+	request = new HTTPRequest(BuildUrl("/api/v0/objects/"+id));
+	request.Headers.Insert("accept","*/*");
+	request.Headers.Insert("clientId",conf.clientId);
+	request.Headers.Insert("apiToken",conf.apiToken);
+ 	response = connection.Delete(request);
+	if response.StatusCode <> 200 then
+		raise "Помилка запиту /api/v0/objects with id=" +id+ " with StatusCode: "+ response.StatusCode;	
 	endif;
-	sabatexExchange.Logged(conf,0,"DeleteExchangeObject","Помилка видалення Обєкта з id=" +id+" with StatusCode " + response.StatusCode);
-	return false;
-endfunction	
-function POSTObject1C(conf, // налаштування
-	                  destination, // отримувач (string)
-					  objectType,// тип обєкта string
-					  objectId,  // внутрішнє ІД обєкта (string)
-					  dateStamp, // object date stamp
-					  objectJSON) export
-	postObject = new structure;
-	postObject.Insert("Destination",destination);
- 	postObject.Insert("ObjectType",objectType);
-	postObject.Insert("ObjectId",String(objectId));
-	postObject.Insert("ObjectJson",objectJSON);
-	postObject.Insert("DateStamp",dateStamp);
-	
-	response = POSTObject(conf,"/api/v0/objects",postObject);
-	if response.StatusCode = 200 then
-		return true;	
-	endif;
-	
-	sabatexExchange.Logged(conf,0,"POSTObject1C","Помилка POSTObject1C with StatusCode " + response.StatusCode);
-	return false;		
-endfunction	
+endprocedure
+// POST Object to exchange service
+// params:
+//	 conf 			- structure (configuration)
+//   destinationId  - string destination node id
+//   objectType     - string(50) object type
+//   objectId		- string(50) object Id
+//   dateStamp      - DateTime The registered moment
+//   textJSON       - The serialized object to JSON 
+procedure POSTExchangeObject(conf, destinationId, objectType, objectId, dateStamp,textJSON) export
+	var response;
+	connection = CreateHTTPSConnection(conf);
+	request = new HTTPRequest(BuildUrl("api/v0/objects"));
+	request.Headers.Insert("accept","*/*");
+	request.Headers.Insert("Content-Type","application/json; charset=utf-8");
+	request.Headers.Insert("clientId",conf.clientId);
+	request.Headers.Insert("apiToken",conf.apiToken);
+	request.Headers.Insert("destinationId",destinationId);
+				  
+	jsonString = Serialize(new structure("objectType,objectId,dateStamp,text",objectType,objectId,dateStamp,textJSON));
+	try
+		request.SetBodyFromString(jsonString,"UTF-8",ИспользованиеByteOrderMark.НеИспользовать);
+		response = connection.Post(request);
+		if response.StatusCode <> 200 then
+			raise "Помилка POST /api/v0/objects  with StatusCode: "+ response.StatusCode;	
+		endif;
+	except
+		error = "Помилка ідентифікації на сервері! Error:"+ОписаниеОшибки();
+		LogError(conf,"PostObject1C",error);
+		raise error;
+	endtry;	
+endprocedure	
 
 #endregion
 
 #region quries
 // get queried objects
 function GetQueriedObjects(conf) export
-	query = new Map;
-	query.Insert("take",conf.take);
-	query.Insert("nodeName",conf.sender);
-	response = HTTPSGet(conf,"/api/v0/queries",query);
-	if response.StatusCode = 200 then
-		return Deserialize(response.GetBodyAsString());	
-	endif;
-	raise "Помилка запиту /api/v0/queries " + response.StatusCode;
+	var response;
+	connection = CreateHTTPSConnection(conf);
+	request = new HTTPRequest(BuildUrl("/api/v0/queries",new structure("take",conf.take)));
+	request.Headers.Insert("accept","*/*");
+	request.Headers.Insert("clientId",string(conf.clientId));
+	request.Headers.Insert("apiToken",conf.apiToken);
+	try
+		response = connection.Get(request);
+		if response.StatusCode <> 200 then
+			raise "Помилка запиту /api/v0/queries " + response.StatusCode;		
+		endif;
+	except  
+		raise "Error GetQueriedObjects: "+ ОписаниеОшибки();	
+	endtry;
+	return Deserialize(response.GetBodyAsString());
 endfunction	
 procedure DeleteQueriesObject(conf,id) export
-	response = HTTPSDelete(conf,"/api/v0/queries",id);
+	connection = CreateHTTPSConnection(conf);
+	request = new HTTPRequest(BuildUrl("/api/v0/queries/"+id));
+	request.Headers.Insert("accept","*/*");
+	request.Headers.Insert("clientId",conf.clientId);
+	request.Headers.Insert("apiToken",conf.apiToken);
+ 	response = connection.Delete(request);
 	if response.StatusCode <> 200 then
 		raise "Помилка запиту /api/v0/queries with id=" +id+ " with StatusCode: "+ response.StatusCode;	
 	endif;
@@ -287,7 +326,8 @@ endfunction
 // type - Catalog,Document
 procedure AddObjectToCashe(objectExchange,objectRef) export
 	result = РегистрыСведений.sabatex_ExternalObjects.СоздатьМенеджерЗаписи();
-	result.Node = objectExchange["sender"];
+	result.destination = objectExchange["destination"];
+	result.sender = objectExchange["sender"];
 	result.DateStamp = objectExchange["dateStamp"];
 	result.ObjectId = objectExchange["objectId"];
 	result.ObjectType = lower(objectExchange["objectType"]);
@@ -362,7 +402,6 @@ procedure AddToMapDifferObjects(conf,localName,destinationName) export
 		conf.MapDifferObjects.Insert("Forward",new map);
 		conf.MapDifferObjects.Insert("Backward",new map);
 	endif;	
-
 	conf.MapDifferObjects.Forward.Insert(lower(localName),lower(destinationName));
 	conf.MapDifferObjects.Backward.Insert(lower(destinationName),lower(localName));
 endprocedure
@@ -436,8 +475,6 @@ endfunction
 
 
 #region queriedObject
-
-
 function GetDocumentById(conf,objectName,objectId)
 	objRef = Documents[objectName].GetRef(new UUID(objectId));
 	if objRef.GetObject() = undefined then
@@ -446,7 +483,6 @@ function GetDocumentById(conf,objectName,objectId)
 	endif;
 	return objRef;
 endfunction
-
 function GetCatalogById(conf,objectName,objectId)
 	objRef = Catalogs[objectName].GetRef(new UUID(objectId));
 	if objRef.GetObject() = undefined then
@@ -455,8 +491,6 @@ function GetCatalogById(conf,objectName,objectId)
 	endif;
 	return objRef;
 endfunction
-
-
 function GetQueryObject(conf,objectType,objectId)
 	pos = Найти(objectType,".");
 	if pos = -1 then
@@ -478,7 +512,6 @@ function GetQueryObject(conf,objectType,objectId)
 		return undefined;
 	endif;
 endfunction	
-
 function ParseQueriedObject(conf,queryObject) export
 	objectType = lower(queryObject["objectType"]);
 	objectId = queryObject["objectId"];
@@ -510,17 +543,22 @@ procedure DoQueriedObjects(conf)
 			endtry;	
 		enddo;	
 endprocedure	
+procedure defaultQueryParser(conf,queryName,queryParams,result)
+	Logged(conf,0,"sabatexExchange.defaultQueryParser","Не задано QueryParser! ");
+	result = undefined; 
+endprocedure	
+
 procedure AddQueryForExchange(conf,objectType,objectId) export
 	Запрос = Новый Запрос;
 	Запрос.Текст = 
-		"ВЫБРАТЬ ПЕРВЫЕ 1
-		|	sabatexExchangeUnresolvedObjects.objectId КАК objectId
-		|ИЗ
-		|	РегистрСведений.sabatexExchangeUnresolvedObjects КАК sabatexExchangeUnresolvedObjects
-		|ГДЕ
+		"SELECT TOP 1
+		|	sabatexExchangeUnresolvedObjects.objectId AS objectId
+		|FROM
+		|	InformationRegister.sabatexExchangeUnresolvedObjects AS sabatexExchangeUnresolvedObjects
+		|WHERE
 		|	sabatexExchangeUnresolvedObjects.objectId = &objectId
-		|	И sabatexExchangeUnresolvedObjects.sender = &sender
-		|	И sabatexExchangeUnresolvedObjects.objectType = &objectType";
+		|	AND sabatexExchangeUnresolvedObjects.sender = &sender
+		|	AND sabatexExchangeUnresolvedObjects.objectType = &objectType";
 	
 	Запрос.УстановитьПараметр("objectId", objectId);
 	Запрос.УстановитьПараметр("objectType", objectType);
@@ -544,17 +582,187 @@ endprocedure
 
 #endregion
 
-#region config
-function GetConfigFromRegister()
-	try
-		filter = new structure;
-		filter.Insert("id",1);
-		return  РегистрыСведений.sabatexNodeConfig.Получить(filter);
-	except 
-		return new structure;
-	endtry;	
-endfunction
 
+
+#region ExchangeObjects
+// Register object in cashe for send to destination
+// params:
+// 	obj           - object (Catalog or Documrnt)
+//  destinationId - UUID destination clientId  
+procedure RegisterObjectForNode(obj,destinationId) export
+	reg = InformationRegisters.sabatexExchangeObject.CreateRecordManager();
+	reg.Id = new UUID();
+	reg.destinationId  = destinationId;
+	reg.dateStamp = CurrentDate();
+	ref	= obj.Ref;
+	reg.objectType = Upper(ref.Metadata().FullName());
+	reg.objectId = ref.UUID();
+	reg.objectJSON =Serialize(ref.GetObject());
+	reg.Write(true);
+endprocedure	
+// Delete object from cashe
+// params:
+//	destinationId - 
+//  dateStamp     - 
+procedure DeleteObjectForExchange(Id)
+	reg = InformationRegisters.sabatexExchangeObject.CreateRecordManager();
+	reg.Id = Id;
+	reg.Delete();
+endprocedure	
+function GetRegisteredObjects(conf)
+	query = new Query; // "+ conf.take + "
+	query.Text = 
+		"SELECT TOP "+ conf.take + "
+		|	sabatexExchangeObject.objectId AS objectId,
+		|	sabatexExchangeObject.dateStamp AS dateStamp,
+		|	sabatexExchangeObject.destinationId AS destinationId,
+		|	sabatexExchangeObject.objectType AS objectType,
+		|	sabatexExchangeObject.objectJSON AS objectJSON
+		|FROM
+		|	InformationRegister.sabatexExchangeObject AS sabatexExchangeObject
+		|
+		|ORDER BY
+		|	dateStamp";
+	
+	return query.Execute().Select();
+endfunction	
+// завантаження обєктів в систему
+// conf - конфігурація
+procedure ReciveObjects(conf)
+		// read incoming objects 
+		incoming = GetObjectsExchange(conf);
+		for each item in incoming do
+			objectId = "";
+			objectType = "";
+			BeginTransaction();
+			try
+				AddUnresolvedObject(conf,item);
+				DeleteExchangeObject(conf,item["id"]);
+				CommitTransaction();
+			except
+				Logged(conf,0,"Recive Object","Do not load objectId=" + objectId + ";objectType="+ objectType + " Error Message: " + ОписаниеОшибки());
+				RollbackTransaction();
+			endtry;
+		enddo;
+endprocedure
+procedure PostObjects(conf)
+	// post queries
+	for each query in conf.queryList do 
+		PostQueries(conf,query.nodeName,query.objectId,query.objectType);
+	enddo;	
+	
+	Запрос = Новый Запрос;
+	Запрос.Текст = 
+		"SELECT TOP 200
+		|	sabatexExchangeObject.Id AS Id,
+		|	sabatexExchangeObject.objectId AS objectId,
+		|	sabatexExchangeObject.objectType AS objectType,
+		|	sabatexExchangeObject.objectJSON AS objectJSON,
+		|	sabatexExchangeObject.dateStamp AS dateStamp,
+		|	sabatexExchangeObject.destinationId AS destinationId
+		|FROM
+		|	InformationRegister.sabatexExchangeObject AS sabatexExchangeObject";
+	
+	РезультатЗапроса = Запрос.Выполнить();
+	
+	items = РезультатЗапроса.Выбрать();
+	
+	while items.Next() do
+		try
+			POSTExchangeObject(conf,items.destinationId,items.objectType,items.objectId,items.dateStamp,items.objectJSON);
+			DeleteObjectForExchange(items.Id);
+		except
+			
+		endtry;
+	enddo;
+endprocedure	
+#endregion
+#region AnalizeObjects
+procedure defaultIncomingParser(conf,exchangeObject,success) export
+	Logged(conf,0,"sabatexExchange.defaultIncomingParser","Не задано IncomingParser!");
+	success = false; 
+endprocedure	
+procedure AddUnresolvedObject(conf,item,newObject = true)
+	reg = InformationRegisters.sabatexExchangeUnresolvedObjects.CreateRecordManager();
+	reg.Id = item["id"];
+	reg.sender = new UUID(item["sender"]);
+	reg.destination = new UUID(item["destination"]);
+	reg.objectId = Upper(item["objectId"]);
+	reg.objectType = Upper(item["objectType"]);
+	reg.dateStamp = CurrentDate();
+	reg.serverDateStamp = item["dateStamp"];
+	reg.objectAsText = item["objectAsText"];
+	reg.Log = ?(newObject,"",conf.Log);
+	reg.Write();
+endprocedure
+procedure LevelUpUnresolvedObject(conf,item)
+	reg = InformationRegisters.sabatexExchangeUnresolvedObjects.CreateRecordManager();
+	reg.sender = item.sender;
+	reg.Id = item.id;
+	reg.Read();
+	reg.levelLive = reg.levelLive +1;
+	reg.Write();
+endprocedure
+procedure DeleteUnresolvedObject(conf,item)
+	reg = InformationRegisters.sabatexExchangeUnresolvedObjects.CreateRecordManager();;
+	reg.sender = item.sender;
+	reg.Id = item.Id;
+	reg.dateStamp = item.dateStamp;
+	reg.Delete();
+endprocedure	
+procedure AnalizeUnresolvedObjects(conf)
+	Query = New Query;
+	Query.Text = 
+		"SELECT TOP 200
+		|	sabatexExchangeUnresolvedObjects.sender AS sender,
+		|	sabatexExchangeUnresolvedObjects.destination AS destination,
+		|	sabatexExchangeUnresolvedObjects.dateStamp AS dateStamp,
+		|	sabatexExchangeUnresolvedObjects.objectId AS objectId,
+		|	sabatexExchangeUnresolvedObjects.objectType AS objectType,
+		|	sabatexExchangeUnresolvedObjects.objectAsText AS objectAsText,
+		|	sabatexExchangeUnresolvedObjects.Log AS Log,
+		|	sabatexExchangeUnresolvedObjects.senderDateStamp AS senderDateStamp,
+		|	sabatexExchangeUnresolvedObjects.serverDateStamp AS serverDateStamp,
+		|	sabatexExchangeUnresolvedObjects.Id AS Id
+		|FROM
+		|	InformationRegister.sabatexExchangeUnresolvedObjects AS sabatexExchangeUnresolvedObjects
+		|
+		|ORDER BY
+		|	dateStamp";
+	
+	QueryResult = Query.Execute();
+	
+	SelectionDetailRecords = QueryResult.Select();
+	
+	While SelectionDetailRecords.Next() Do
+		objectId = "";
+		objectType = "";
+
+		НачатьТранзакцию();
+		try
+			objectId = SelectionDetailRecords["objectId"];
+			objectType = SelectionDetailRecords["objectType"];
+
+			success = true;
+			conf.Log = "";
+			Execute(conf.IncomingParser+"(conf,SelectionDetailRecords,success)");
+			
+			if success then
+				DeleteUnresolvedObject(conf,SelectionDetailRecords);
+			else
+				LevelUpUnresolvedObject(conf,SelectionDetailRecords);
+			endif;
+			
+		except
+				Logged(conf,0,"Recive Object","Do not load objectId=" + objectId + ";objectType="+ objectType + " Error Message: " + ОписаниеОшибки());
+				ОтменитьТранзакцию();
+				continue;
+		endtry;
+		ЗафиксироватьТранзакцию();
+	enddo;
+endprocedure
+#endregion
+#region Config
 procedure SetSenderValueIfDestinationEmpty(valueName,sender,destination)
 	var propValue;
 	if sender.Property(valueName,propValue) then
@@ -563,50 +771,49 @@ procedure SetSenderValueIfDestinationEmpty(valueName,sender,destination)
 		endif;	
 	endif	
 endprocedure
-
 procedure FillStructFromSenderIsEmpty(sender,destination)
 	for each item in sender do
 		SetSenderValueIfDestinationEmpty(string(item.key),sender,destination);
 	enddo;	
-	
-endprocedure	
-
-procedure defaultQueryParser(conf,queryName,queryParams,result)
-	Logged(conf,0,"sabatexExchange.defaultQueryParser","Не задано QueryParser! ");
-	result = undefined; 
-endprocedure	
-procedure defaultIncomingParser(conf,exchangeObject,success) export
-	Logged(conf,0,"sabatexExchange.defaultIncomingParser","Не задано IncomingParser!");
-	success = false; 
 endprocedure	
 // return config struct and check
-function GetConfig(config=null) export
+function GetConfig(config = null) export
 	if config = null then
 		config = new structure;
 	endif;
 	
-	localConfig = GetConfigFromRegister();
-	
-	FillStructFromSenderIsEmpty(localConfig,config);
+	try
+		filter = new structure;
+		filter.Insert("Id",1);
+		lConfig = РегистрыСведений.sabatexNodeConfig.Получить(filter);
+		if lConfig.Host <> "" then
+			FillStructFromSenderIsEmpty(lConfig,config);
+		endif;	
+	except
+	endtry;	
 	
 	if not config.Property("https") then
 		config.Insert("https",false);
 	endif;
 	
 	if not config.Property("Host") then
-		config.Insert("Host","localhost");	
+		config.Insert("Host","sabatex.francecentral.cloudapp.azure.com");	
 	endif;	
 	
 	if not config.Property("Port") then
-		config.Insert("Port",5000);	
+		if config.https then
+			config.Insert("Port",443);
+		else
+			config.Insert("Port",80);
+		endif;	
 	endif;	
 
 	if not config.Property("NodeName") then
 		config.Insert("NodeName","1C8");	
 	endif;
 	
-	if not config.Property("APIPassword") then
-		config.Insert("APIPassword","1");	
+	if not config.Property("password") then
+		config.Insert("password","1");	
 	endif;
 	
 	if not config.Property("Take") then
@@ -622,7 +829,6 @@ function GetConfig(config=null) export
 	endif;	
 	
 	if not config.Property("MapDifferObjects") then
-		
 		config.Insert("MapDifferObjects",new structure);
 		config.MapDifferObjects.Insert("Forward",new map);
 		config.MapDifferObjects.Insert("Backward",new map);
@@ -640,170 +846,17 @@ function GetConfig(config=null) export
 endfunction	
 #endregion
 
-#region unresolvedObjects
-procedure DeleteUnresolvedObject(conf,item)
-	reg = РегистрыСведений.sabatexExchangeUnresolvedObjects.СоздатьМенеджерЗаписи();
-	reg.sender = Lower(item.sender);
-	reg.objectId = Lower(item.objectId);
-	reg.objectType = Lower(item.objectType);
-	reg.dateStamp = item.dateStamp;
-	reg.TaskDateStamp = item.TaskDateStamp;
-	reg.Delete();
-endprocedure	
-procedure AddUnresolvedObject(conf,item)
-	reg = РегистрыСведений.sabatexExchangeUnresolvedObjects.СоздатьМенеджерЗаписи();
-	reg.sender = Lower(conf.sender);
-	reg.objectId = Lower(item["objectId"]);
-	reg.objectType = Lower(item["objectType"]);
-	reg.dateStamp = item["dateStamp"];
-	reg.TaskDateStamp = conf["TaskDateStamp"];
-	reg.objectJSON = item["objectJSON"];
-	reg.Log = conf.Log;
-	reg.Write(true);
-endprocedure
-// get strored unresolved objects
-function GetUnresolvedObjects(conf)
-	// read incoming objects
-	Запрос = Новый Запрос;
-	Запрос.Текст = 
-		"ВЫБРАТЬ ПЕРВЫЕ "+ conf.take + "
-		|	sabatexExchangeUnresolvedObjects.objectId КАК objectId,
-		|	sabatexExchangeUnresolvedObjects.sender КАК sender,
-		|	sabatexExchangeUnresolvedObjects.objectType КАК objectType,
-		|	sabatexExchangeUnresolvedObjects.dateStamp КАК dateStamp,
-		|	sabatexExchangeUnresolvedObjects.TaskDateStamp КАК TaskDateStamp,
-		|	sabatexExchangeUnresolvedObjects.objectJSON КАК objectJSON
-		|ИЗ
-		|	РегистрСведений.sabatexExchangeUnresolvedObjects КАК sabatexExchangeUnresolvedObjects
-		|ГДЕ
-		|	sabatexExchangeUnresolvedObjects.sender = &sender
-		|	И sabatexExchangeUnresolvedObjects.TaskDateStamp <> &TaskDateStamp";
-	
-	Запрос.УстановитьПараметр("sender",conf.sender);
-	Запрос.УстановитьПараметр("TaskDateStamp",conf.TaskDateStamp);
-	return  Запрос.Выполнить().Выгрузить();
-endfunction	
-#endregion
-
-#region OutObjects
-procedure DeleteObjectForExchange(objectId,node,objectType,dateStamp)
-	reg = РегистрыСведений.sabatexExchange.СоздатьМенеджерЗаписи();
-	reg.node = Lower(node);
-	reg.objectId = Lower(objectId);
-	reg.objectType = Lower(objectType);
-	reg.dateStamp = dateStamp;
-	reg.Delete();
-endprocedure	
-procedure RegisterObjectForNode(obj,destination,objectType) export
-	reg = РегистрыСведений.sabatexExchange.СоздатьМенеджерЗаписи();
-	reg.node = Lower(destination);
-	reg.objectType = Lower(objectType);
-	reg.dateStamp = CurrentDate();
-	ref	= obj.Ref;
-	reg.objectId = Lower(ref.UUID());
-	reg.objectJSON =Serialize(obj);
-	reg.Write(true);
-endprocedure	
-#endregion
-
-
-#region Exchange
-// завантаження обєктів в систему
-// conf - конфігурація
-procedure ReciveObjects(conf)
-		// read incoming objects 
-		incoming = GetObjectsExchange(conf);
-		for each item in incoming do
-			objectId = "";
-			objectType = "";
-			НачатьТранзакцию();
-			try
-				success = true;
-				objectId = item["objectId"];
-				objectType = item["objectType"];
-				conf.Log = "";
-				Execute(conf.IncomingParser+"(conf,item,success)");
-				if not success then
-					AddUnresolvedObject(conf,item);	
-				endif;
-				if DeleteExchangeObject(conf,item["id"]) then
-					ЗафиксироватьТранзакцию();
-				else
-					ОтменитьТранзакцию();
-				endif;
-			except
-				Logged(conf,0,"Recive Object","Do not load objectId=" + objectId + ";objectType="+ objectType + " Error Message: " + ОписаниеОшибки());
-				ОтменитьТранзакцию();
-			endtry;
-		enddo;
-endprocedure
-procedure PostObjects(conf)
-	// post queries
-	for each query in conf.queryList do 
-		PostQueries(conf,query.nodeName,query.objectId,query.objectType);
-	enddo;	
-	
-	Запрос = Новый Запрос;
-	Запрос.Текст = 
-		"ВЫБРАТЬ  ПЕРВЫЕ "+ conf.take + "
-		|	sabatexExchange.objectId КАК objectId,
-		|	sabatexExchange.dateStamp КАК dateStamp,
-		|	sabatexExchange.node КАК node,
-		|	sabatexExchange.objectType,
-		|	sabatexExchange.objectJSON
-		|ИЗ
-		|	РегистрСведений.sabatexExchange КАК sabatexExchange
-		|
-		|УПОРЯДОЧИТЬ ПО
-		|	dateStamp";
-	
-	РезультатЗапроса = Запрос.Выполнить();
-	
-	items = РезультатЗапроса.Выбрать();
-	
-	while items.Next() do
-		if POSTObject1C(conf,items.node,items.objectType,items.objectId,items.dateStamp,items.objectJSON) then
-			DeleteObjectForExchange(items.objectId,items.node,items.objectType,items.dateStamp);				 
-		endif;
-	enddo;
-endprocedure	
-procedure AnalizeUnresolvedObjects(conf)
-	for each item in GetUnresolvedObjects(conf) do
-		objectId = "";
-		objectType = "";
-
-		НачатьТранзакцию();
-		try
-			objectId = item["objectId"];
-			objectType = item["objectType"];
-
-			success = true;
-			conf.Log = "";
-			Execute(conf.IncomingParser+"(conf,item,success)");
-			if not success then
-				AddUnresolvedObject(conf,item);		
-			endif;
-			DeleteUnresolvedObject(conf,item);
-		except
-				Logged(conf,0,"Recive Object","Do not load objectId=" + objectId + ";objectType="+ objectType + " Error Message: " + ОписаниеОшибки());
-				ОтменитьТранзакцию();
-				continue;
-		endtry;
-		ЗафиксироватьТранзакцию();
-	enddo;
-endprocedure
 // Start exchange process
 // conf - config for exchange (struct)
 // node - destination node name
 // analizer - procedure name  for analize incoming objects
 procedure ExchangeProcess(conf) export
 	start = ТекущаяДата();
-	conf = GetConfig(conf);
+	//conf = GetConfig(conf);
 	conf.Insert("ImportObjects",0);
 	conf.Insert("ExportObjects",0);
 	conf.Insert("MissObjects",0);
 	conf.Insert("QueriedObjects",0);
-	conf.Insert("TaskDateStamp",ТекущаяДата());
     conf.Insert("queryList",new array);
 	conf.Insert("Log","");
 	
@@ -832,10 +885,7 @@ procedure ExchangeProcess(conf) export
 	    sabatexExchange.Logged(conf,3,"ExchangeProcess",log); 
 	
 	except
-		Logged(conf,0,"ExchangeProcess",conf.sender + " - " + ОписаниеОшибки());
+		Logged(conf,0,"ExchangeProcess",string(conf.clientId) + " - " + ОписаниеОшибки());
 	endtry;
 endprocedure
-#endregion
-
-#endregion
 

@@ -59,10 +59,13 @@
 		<ChildObjects>
 			<Language>Украинский</Language>
 			<Subsystem>sabatex</Subsystem>
+			<Role>АдминистраторСистемы</Role>
+			<Role>sabatexExchange</Role>
 			<CommonModule>sabatexExchange</CommonModule>
+			<Catalog>Контрагенты</Catalog>
 			<Enum>sabatex_ExchangeObjectType</Enum>
 			<DataProcessor>sabatexExchange</DataProcessor>
-			<InformationRegister>sabatexExchange</InformationRegister>
+			<InformationRegister>sabatexExchangeObject</InformationRegister>
 			<InformationRegister>sabatexNodeConfig</InformationRegister>
 			<InformationRegister>sabatexExchangeUnresolvedObjects</InformationRegister>
 			<ChartOfAccounts>Хозрасчетный</ChartOfAccounts>

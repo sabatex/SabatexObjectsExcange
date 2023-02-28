@@ -24,7 +24,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.sabatex_ExchangeObjectType</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.sabatexExchangeUnresolvedObjects</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">22f33704-b086-470b-8dae-2f7880c3f7d0</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.sabatexExchange</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.sabatexExchangeObject</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

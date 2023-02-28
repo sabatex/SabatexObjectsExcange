@@ -55,7 +55,7 @@
 			</SearchControlAddition>
 			<ChildItems>
 				<LabelField name="Id" id="14">
-					<DataPath>~Список.Id</DataPath>
+					<DataPath>Список.Id</DataPath>
 					<DefaultItem>true</DefaultItem>
 					<ContextMenu name="IdКонтекстноеМеню" id="15"/>
 					<ExtendedTooltip name="IdРасширеннаяПодсказка" id="16"/>
@@ -73,7 +73,7 @@
 					<ExtendedTooltip name="dateStampРасширеннаяПодсказка" id="22"/>
 				</LabelField>
 				<LabelField name="node" id="35">
-					<DataPath>Список.node</DataPath>
+					<DataPath>~Список.node</DataPath>
 					<DefaultItem>true</DefaultItem>
 					<ContextMenu name="nodeКонтекстноеМеню" id="36"/>
 					<ExtendedTooltip name="nodeРасширеннаяПодсказка" id="37"/>
@@ -114,7 +114,7 @@
 			<Settings xsi:type="DynamicList">
 				<ManualQuery>false</ManualQuery>
 				<DynamicDataRead>true</DynamicDataRead>
-				<MainTable>InformationRegister.sabatexExchange</MainTable>
+				<MainTable>InformationRegister.sabatexExchangeObject</MainTable>
 				<ListSettings>
 					<dcsset:filter>
 						<dcsset:viewMode>Normal</dcsset:viewMode>
