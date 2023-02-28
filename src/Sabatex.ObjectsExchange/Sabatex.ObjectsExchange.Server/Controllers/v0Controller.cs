@@ -163,7 +163,9 @@ public class v0Controller : ControllerBase
         string? text = json.RootElement.GetProperty("text").GetString();
         if (text == null)
             return BadRequest("The not defined text");
-
+        DateTime? dateStamp=null;
+        if (json.RootElement.GetProperty("dateStamp").TryGetDateTime(out DateTime tdateStamp))
+            dateStamp = tdateStamp;
         var clientNode = await GetClientNodeByTokenAsync (clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
@@ -179,7 +181,8 @@ public class v0Controller : ControllerBase
                 ObjectId = objectId,
                 ObjectType = objectType,
                 ObjectAsText = text,
-                DateStamp = DateTime.UtcNow
+                DateStamp = DateTime.UtcNow,
+                SenderDateStamp = dateStamp
             };
             await _dbContext.ObjectExchanges.AddAsync(doc);
             await _dbContext.SaveChangesAsync();

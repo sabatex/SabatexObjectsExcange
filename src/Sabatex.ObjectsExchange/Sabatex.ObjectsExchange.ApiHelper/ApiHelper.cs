@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
-
-namespace Sabatex.ObjectsExchange.ApiHelper
+﻿namespace Sabatex.ObjectsExchange.ApiHelper
 {
+#if NET6_0_OR_GREATER
+    using System.Net.Http;
+    using System.Net.Http.Json;
+    using System;
+    using System.Threading.Tasks;
     public static class ApiHelper
     {
-#if NET6_0_OR_GREATER
+
         /// <summary>
         /// login with api 0
         /// </summary>
@@ -26,11 +23,12 @@ namespace Sabatex.ObjectsExchange.ApiHelper
             var token = await response.Content.ReadAsStringAsync();
             client.DefaultRequestHeaders.Add("apiToken", token);
             return true;
-        }
+        } 
+    }
 #else
 #endif
 
  
 
-    }
+   
 }

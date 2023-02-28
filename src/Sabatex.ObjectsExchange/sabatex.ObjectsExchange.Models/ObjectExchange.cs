@@ -20,6 +20,9 @@ namespace sabatex.ObjectsExchange.Models
         /// внутрішня позначка часу створення обєкта
         /// </summary>
         public DateTime DateStamp { get; set; } = DateTime.Now;
+
+        public DateTime? SenderDateStamp { get; set; }
+
         public string ObjectAsText { get; set; } = default!;
 
         string IEntityBase.KeyAsString() => Id.ToString();
@@ -38,6 +41,7 @@ namespace sabatex.ObjectsExchange.Models
         /// внутрішня позначка часу створення обєкта
         /// </summary>
         public DateTime DateStamp { get; set; }
+        public DateTime SenderDateStamp { get; set; }
         public string ObjectAsText { get; set; }
     }
 #endif

@@ -12,6 +12,16 @@ public class ObjectsExchangeDbContext:DbContext
     public DbSet<QueryObject> QueryObjects { get; set; }
     public ObjectsExchangeDbContext(DbContextOptions options) : base(options){}
 #pragma warning restore CS8618
+    
+    IEnumerable<ClientNode> GetDefaultClientNodes()
+    {
+        yield return new ClientNode
+        {
+            Id = new Guid("8F830B0C-BF60-4A4D-B9C7-9D86C60DB75D"),
+            Name = "Demo "
+        };
+    }
+    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<QueryObject>().HasOne<ClientNode>().WithMany().HasForeignKey(p => p.Sender).OnDelete(DeleteBehavior.Cascade);

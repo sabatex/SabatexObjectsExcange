@@ -26,6 +26,12 @@ public class ClientNode : IEntityBase
     public void SetClientAccess(Guid[] nodesList)=>ClientAccess=string.Join(",", nodesList);
     public IEnumerable<Guid> GetClientAccess()=> ClientAccess?.Split(',').Select(s=>new Guid(s)) ?? new Guid[] { };
 
+    public bool IsDemo { get; set; } = true;
+
+    public uint Counter { get; set; }
+    public uint MaxOperationPerMounth { get; set; } = 1000;
+
+
 
 
     string IEntityBase.KeyAsString()=>Id.ToString();
