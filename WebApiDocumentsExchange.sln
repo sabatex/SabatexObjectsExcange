@@ -24,19 +24,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1C8", "1C8", "{09DA94B8-D76
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.WebApiDocumentsExchange.Extensions", "WebApiDocumentsExchange.Extensions\Sabatex.WebApiDocumentsExchange.Extensions.csproj", "{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentsExchange.Client", "WebApiDocumentsExchange.Client\WebApiDocumentsExchange.Client.csproj", "{0933977D-B3B4-4725-87B1-B84D4214D94A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.WebApiDocumentsExchange.Core", "sabatex.WebApiDocumentsExchange.Core\Sabatex.WebApiDocumentsExchange.Core.csproj", "{A9589491-0CE3-4282-BF93-236BED5BC2B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sabatex.ObjectsExchange", "Sabatex.ObjectsExchange", "{4EB068BC-32D4-4597-8F87-77538C0D0776}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sabatex.ObjectsExchange.Models", "src\Sabatex.ObjectsExchange\sabatex.ObjectsExchange.Models\sabatex.ObjectsExchange.Models.csproj", "{0EF3693A-C592-4A6C-BD48-7EF3B76677CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "src\Sabatex.ObjectsExchange\sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{0EF3693A-C592-4A6C-BD48-7EF3B76677CC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Server", "src\Sabatex.ObjectsExchange\Sabatex.ObjectsExchange.Server\Sabatex.ObjectsExchange.Server.csproj", "{AB3844E7-E46E-489B-9956-40F85E56296F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.ApiHelper", "src\Sabatex.ObjectsExchange\Sabatex.ObjectsExchange.ApiHelper\Sabatex.ObjectsExchange.ApiHelper.csproj", "{879CA851-311C-42DA-A9EC-0C40614C545C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BASApi", "BASApi", "{858ADCA4-7DF4-41E0-B89B-D71AA076BF6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Client", "src\Sabatex.ObjectsExchange\Sabatex.ObjectsExchange.Client\Sabatex.ObjectsExchange.Client.csproj", "{8C981BBB-6922-4418-A040-6A68A6C5D531}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,10 +60,6 @@ Global
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0933977D-B3B4-4725-87B1-B84D4214D94A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0933977D-B3B4-4725-87B1-B84D4214D94A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0933977D-B3B4-4725-87B1-B84D4214D94A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0933977D-B3B4-4725-87B1-B84D4214D94A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -80,6 +76,10 @@ Global
 		{879CA851-311C-42DA-A9EC-0C40614C545C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{879CA851-311C-42DA-A9EC-0C40614C545C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{879CA851-311C-42DA-A9EC-0C40614C545C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C981BBB-6922-4418-A040-6A68A6C5D531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C981BBB-6922-4418-A040-6A68A6C5D531}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C981BBB-6922-4418-A040-6A68A6C5D531}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C981BBB-6922-4418-A040-6A68A6C5D531}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +89,7 @@ Global
 		{0EF3693A-C592-4A6C-BD48-7EF3B76677CC} = {4EB068BC-32D4-4597-8F87-77538C0D0776}
 		{AB3844E7-E46E-489B-9956-40F85E56296F} = {4EB068BC-32D4-4597-8F87-77538C0D0776}
 		{879CA851-311C-42DA-A9EC-0C40614C545C} = {4EB068BC-32D4-4597-8F87-77538C0D0776}
+		{8C981BBB-6922-4418-A040-6A68A6C5D531} = {4EB068BC-32D4-4597-8F87-77538C0D0776}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0ED09FD-EEAF-4E3E-94C0-5BF69FC94CFC}

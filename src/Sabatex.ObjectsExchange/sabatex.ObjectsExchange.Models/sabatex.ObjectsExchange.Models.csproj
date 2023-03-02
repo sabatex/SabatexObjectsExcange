@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net3.5</TargetFrameworks>
+	<NeutralLanguage>en-US</NeutralLanguage>
+	<Authors>Serhiy Lakas</Authors>
+	<Copyright>2022, Serhiy Lakas</Copyright>
+	<Product>Models for Exchange APi</Product>
+	<Description>Models for Exchange APi</Description>
+	<Company>sabatex on git</Company>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageId>Sabatex.ObjectsExchange.Models</PackageId>
+	<PackageTags>#Exchange #API </PackageTags>
+	<Version>1.0.0-alpha1</Version>
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
 	<ImplicitUsings>enable</ImplicitUsings>
@@ -13,16 +24,15 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Sabatex.Core">
-      <Version>1.1.0-alpha3</Version>
-    </PackageReference>
-  </ItemGroup>
+	<PackageReference Include="Sabatex.Core" Version="1.1.0"/>
+   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Include="Sabatex.Core">
-      <Version>1.1.0-alpha3</Version>
-    </PackageReference>
-  </ItemGroup>
+    <PackageReference Include="Sabatex.Core" Version="1.1.0"/>
+   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net3.5'">
+	<PackageReference Include="Sabatex.Core" Version="1.1.0"/>
+ </ItemGroup>
 
   <ItemGroup>
     <Content Remove="C:\Users\serhi\.nuget\packages\sabatex.core\1.1.0-alpha3\contentFiles\any\net6.0\SabatexSettings.json" />
