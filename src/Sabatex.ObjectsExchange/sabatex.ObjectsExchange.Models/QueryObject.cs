@@ -1,14 +1,11 @@
-﻿#if NET6_0_OR_GREATER
+﻿namespace sabatex.ObjectsExchange.Models
+{
+#if NET6_0_OR_GREATER
 using Sabatex.Core;
 using System.ComponentModel.DataAnnotations;
-#endif
-
-namespace sabatex.ObjectsExchange.Models
-{
     /// <summary>
     /// обєкти які потрібно отримати з нода
     /// </summary>
-#if NET6_0_OR_GREATER
     public class QueryObject : IEntityBase
     {
         public long Id { get; set; }
@@ -24,6 +21,9 @@ namespace sabatex.ObjectsExchange.Models
     }
 #else
     using System;
+       /// <summary>
+    /// обєкти які потрібно отримати з нода
+    /// </summary>
     public class QueryObject
     {
         public long Id { get; set; }

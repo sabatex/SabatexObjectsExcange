@@ -1,11 +1,9 @@
-﻿#if NET6_0_OR_GREATER
-using Sabatex.Core;
-using System.ComponentModel.DataAnnotations;
-#endif
-
-namespace sabatex.ObjectsExchange.Models
+﻿namespace sabatex.ObjectsExchange.Models
 {
 #if NET6_0_OR_GREATER
+    using Sabatex.Core;
+    using System.ComponentModel.DataAnnotations;
+
     public class ObjectExchange : IEntityBase
     {
         public long Id { get; set; }

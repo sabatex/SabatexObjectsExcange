@@ -23,17 +23,9 @@
 	<Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+  <ItemGroup>
 	<PackageReference Include="Sabatex.Core" Version="1.1.0"/>
-   </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Include="Sabatex.Core" Version="1.1.0"/>
-   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net3.5'">
-	<PackageReference Include="Sabatex.Core" Version="1.1.0"/>
- </ItemGroup>
-
+  </ItemGroup>
   <ItemGroup>
     <Content Remove="C:\Users\serhi\.nuget\packages\sabatex.core\1.1.0-alpha3\contentFiles\any\net6.0\SabatexSettings.json" />
   </ItemGroup>
