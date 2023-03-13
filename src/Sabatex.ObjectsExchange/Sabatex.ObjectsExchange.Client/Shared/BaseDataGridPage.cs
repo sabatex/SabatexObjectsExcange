@@ -2,6 +2,7 @@
 using Radzen;
 using Radzen.Blazor;
 using Sabatex.Core;
+using Sabatex.RadzenBlazor;
 
 namespace sabatex.RadzenBlazor;
 
@@ -41,7 +42,7 @@ public abstract class BaseDataGridPage<TItem> : ComponentBase where TItem : clas
         {
             if (await DialogService.Confirm("Ви впевнені?", "Видалення запису", new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" }) == true)
             {
-                await DataAdapter.DeleteAsync<TItem>(data.KeyAsString);
+                await DataAdapter.DeleteAsync<TItem>(data.KeyAsString());
                 await GridReload();
             }
         }

@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Sabatex.ObjectsExchange.Server.Data;
 using Sabatex.ObjectsExchange.Server.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Identity.Web;
 
 namespace Sabatex.ApiObjectsExchange
 {
@@ -9,6 +13,8 @@ namespace Sabatex.ApiObjectsExchange
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
             builder.Services.Configure<Sabatex.ObjectsExchange.Services.ApiConfig>(
                builder.Configuration.GetSection(nameof(Sabatex.ObjectsExchange.Services.ApiConfig)));
             builder.Services.AddDbContext<ObjectsExchangeDbContext>(options =>

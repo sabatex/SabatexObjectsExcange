@@ -25,6 +25,7 @@
             {
                 var result = await response.Content.ReadFromJsonAsync<object>();
             }
+            return false;
          }
 
      }

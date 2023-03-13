@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -306,7 +307,7 @@ public class v0Controller : ControllerBase
 
 
     #region client manager
-#if DEBUG
+    [Authorize]
     [HttpPost("client")]
     public async Task<IActionResult> AddClientAsync(string clientName,
                                                     string description,
@@ -319,7 +320,6 @@ public class v0Controller : ControllerBase
         else
             return Ok();
     }
-    #endif
     #endregion
 
 }

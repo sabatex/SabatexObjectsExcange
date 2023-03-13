@@ -1,6 +1,5 @@
 ﻿namespace sabatex.ObjectsExchange.Models
 {
-#if NET6_0_OR_GREATER
     using Sabatex.Core;
     using System.ComponentModel.DataAnnotations;
 
@@ -26,21 +25,5 @@
         string IEntityBase.KeyAsString() => Id.ToString();
 
     }
-#else
-    using System;
-    public class ObjectExchange
-    {
-        public long Id { get; set; }
-        public Guid Sender { get; set; }
-        public Guid Destination { get; set; }
-        public string ObjectId { get; set; }
-        public string ObjectType { get; set; }
-        /// <summary>
-        /// внутрішня позначка часу створення обєкта
-        /// </summary>
-        public DateTime DateStamp { get; set; }
-        public DateTime SenderDateStamp { get; set; }
-        public string ObjectAsText { get; set; }
-    }
-#endif
+
 }
