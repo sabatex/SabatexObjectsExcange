@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "src\Sabatex.ObjectsExchange\sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{5BEBD9DA-BCD9-463D-8148-D464820FE73E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "ObjectsExchange\ObjectsExchange.csproj", "{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{5BEBD9DA-BCD9-463D-8148-D464820FE73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BEBD9DA-BCD9-463D-8148-D464820FE73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BEBD9DA-BCD9-463D-8148-D464820FE73E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{879CA851-311C-42DA-A9EC-0C40614C545C} = {4EB068BC-32D4-4597-8F87-77538C0D0776}
 		{8C981BBB-6922-4418-A040-6A68A6C5D531} = {4EB068BC-32D4-4597-8F87-77538C0D0776}
 		{5BEBD9DA-BCD9-463D-8148-D464820FE73E} = {4EB068BC-32D4-4597-8F87-77538C0D0776}
+		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601} = {4EB068BC-32D4-4597-8F87-77538C0D0776}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0ED09FD-EEAF-4E3E-94C0-5BF69FC94CFC}

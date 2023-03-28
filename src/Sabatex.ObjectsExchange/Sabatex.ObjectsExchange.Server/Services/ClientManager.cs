@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using sabatex.ObjectsExchange.Models;
 using Sabatex.ApiObjectsExchange.Controllers;
+using Sabatex.ObjectsExchange.Models;
 using Sabatex.ObjectsExchange.Server.Data;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -87,5 +88,24 @@ namespace Sabatex.ObjectsExchange.Server.Services
 
         }
 
+        public async Task<IEnumerable<ClientNodeBase>> GetClients(int skip,int take)
+        {
+            return await _dbContext.ClientNodes.Skip(skip).Take(take).Select(s => new ClientNodeBase
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Description=s.Description,
+                ClientAccess = s.ClientAccess,
+                IsDemo = s.IsDemo,
+                Counter= s.Counter,
+                MaxOperationPerMounth= s.MaxOperationPerMounth
+
+            }).ToArrayAsync();
+        }
+
+        public async Task<int> Count()
+        {
+            return await _dbContext.ClientNodes.CountAsync();
+        }
     }
 }

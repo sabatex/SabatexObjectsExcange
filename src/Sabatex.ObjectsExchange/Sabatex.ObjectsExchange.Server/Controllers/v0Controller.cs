@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web.Resource;
 using sabatex.ObjectsExchange.Models;
+using Sabatex.ObjectsExchange.Models;
 using Sabatex.ObjectsExchange.Server.Data;
 using Sabatex.ObjectsExchange.Server.Services;
 using Sabatex.ObjectsExchange.Services;
@@ -308,7 +310,7 @@ public class v0Controller : ControllerBase
 
     #region client manager
     [Authorize]
-    [HttpPost("client")]
+    [HttpPost("clients")]
     public async Task<IActionResult> AddClientAsync(string clientName,
                                                     string description,
                                                     string? accessNodes,
@@ -320,6 +322,19 @@ public class v0Controller : ControllerBase
         else
             return Ok();
     }
+    [Authorize]
+    //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+    [HttpGet("clients")]
+    public async Task<IActionResult> GetClientsAsync(int skip=0,int take = 10)
+    {
+        var result = new ResultCollection<ClientNodeBase>
+        {
+            Items = await _clientManager.GetClients(skip, take),
+            Count = await _clientManager.Count()
+         };
+        return Ok(result);
+    }
+
     #endregion
 
 }

@@ -4,7 +4,7 @@ using Radzen.Blazor;
 using Sabatex.Core;
 using Sabatex.RadzenBlazor;
 
-namespace sabatex.RadzenBlazor;
+namespace Sabatex.ObjectsExchange.Client.Shared;
 
 public abstract class BaseDataGridPage<TItem> : ComponentBase where TItem : class,IEntityBase
 {
@@ -38,6 +38,7 @@ public abstract class BaseDataGridPage<TItem> : ComponentBase where TItem : clas
     }
     protected async Task GridDeleteButtonClick(TItem data)
     {
+        if (DialogService == null) return;
         try
         {
             if (await DialogService.Confirm("Ви впевнені?", "Видалення запису", new ConfirmOptions() { OkButtonText = "Так", CancelButtonText = "Ні" }) == true)
@@ -48,12 +49,17 @@ public abstract class BaseDataGridPage<TItem> : ComponentBase where TItem : clas
         }
         catch (System.Exception e)
         {
-            NotificationService.Notify(new NotificationMessage()
+            string errorMessage = $"Не можливо видалити Error:{e.Message}";
+            Console.WriteLine(errorMessage);
+            if (NotificationService != null)
             {
-                Severity = NotificationSeverity.Error,
-                Summary = $"Помилка",
-                Detail = $"Не можливо видалити Error:{e.Message}"
-            });
+                NotificationService.Notify(new NotificationMessage()
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = $"Помилка",
+                    Detail = $"Не можливо видалити Error:{e.Message}"
+                });
+            }
 
         }
     }

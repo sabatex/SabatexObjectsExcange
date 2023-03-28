@@ -1,0 +1,67 @@
+﻿@page
+@model ObjectsExchange.Pages.Clients.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>ClientNode</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientNode.NormalizedName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientNode.NormalizedName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientNode.Password)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientNode.Password)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientNode.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientNode.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientNode.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientNode.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientNode.ClientAccess)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientNode.ClientAccess)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientNode.IsDemo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientNode.IsDemo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientNode.Counter)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientNode.Counter)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientNode.MaxOperationPerMounth)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientNode.MaxOperationPerMounth)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.ClientNode?.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
