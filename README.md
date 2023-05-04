@@ -16,10 +16,10 @@
 #### response:
 ```
     {
-        "accessToken":<string>,
-        "refreshToken":<string>,
-        "tokenType":"Bearer",
-        "expiresIn":<int>
+        "access_token":<string>,
+        "refresh_token":<string>,
+        "token_type":"Bearer",
+        "expires_in":<int>
      }
 ```
 
@@ -37,10 +37,10 @@
 #### response:
 ```
     {
-        "accessToken":<string>,
-        "refreshToken":<string>,
-        "tokenType":"Bearer",
-        "expiresIn":<int>
+        "access_token":<string>,
+        "refresh_token":<string>,
+        "token_type":"Bearer",
+        "expires_in":<int>
      }
 ```
 
