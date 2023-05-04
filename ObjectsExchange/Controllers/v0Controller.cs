@@ -26,7 +26,7 @@ public class v0Controller : ControllerBase
     private readonly ApiConfig _apiConfig;
     private readonly ClientManager _clientManager;
     public static int maxTake = 50;
-    
+    private const string _tokenType = "BEARER";
     public v0Controller(ObjectsExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig,ClientManager clientManager )
     {
         _logger = logger;
@@ -35,6 +35,15 @@ public class v0Controller : ControllerBase
         _clientManager = clientManager;
     }
     
+    private string extractToken(string authorizationToken)
+    {
+        var r = authorizationToken.Split(' ');
+        if (r.Length != 2) return string.Empty;
+        if (r[0].ToUpper() != _tokenType) return string.Empty;
+        return r[1];
+    }
+
+
     /// <summary>
     /// Random GUID access token generate
     /// </summary>
@@ -273,7 +282,7 @@ public class v0Controller : ControllerBase
 
 
 
-    [HttpDelete("queries/{id}")]
+    [HttpDelete("queries/{id:long}")]
     public async Task<IActionResult> DeleteQueryAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
     {
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);

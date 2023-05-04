@@ -13,6 +13,13 @@ public class ClientNode : ClientNodeBase
     [MaxLength(100)]
     public string NormalizedName { get; set; } = default!;
     public string Password { get; set; } = default!;
-
+    public void FillFromBase(ClientNodeBase baseNode){
+        Name = baseNode.Name;
+        Description = baseNode.Description;
+        ClientAccess = baseNode.ClientAccess;
+        NormalizedName = baseNode.Name.ToUpper();
+        IsDemo = baseNode.IsDemo;
+        MaxOperationPerMounth = baseNode.MaxOperationPerMounth;
+    }
 
 }

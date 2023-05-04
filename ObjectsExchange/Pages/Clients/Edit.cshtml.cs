@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ObjectsExchange.Data;
+using Sabatex.ObjectsExchange.Models;
 
 namespace ObjectsExchange.Pages.Clients
 {
@@ -20,7 +21,7 @@ namespace ObjectsExchange.Pages.Clients
         }
 
         [BindProperty]
-        public ClientNode ClientNode { get; set; } = default!;
+        public ClientNodeBase ClientNode { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -47,24 +48,12 @@ namespace ObjectsExchange.Pages.Clients
                 return Page();
             }
 
-            _context.Attach(ClientNode).State = EntityState.Modified;
+            var clientNode = await _context.ClientNodes.FindAsync(ClientNode.Id);
+            if (clientNode == null)
+                return NotFound();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClientNodeExists(ClientNode.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            clientNode.FillFromBase(ClientNode);
+            await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
 

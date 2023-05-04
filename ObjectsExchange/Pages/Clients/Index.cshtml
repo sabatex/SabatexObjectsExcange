@@ -14,12 +14,9 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ClientNode[0].NormalizedName)
+                @Html.DisplayNameFor(model => model.ClientNode[0].Id)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ClientNode[0].Password)
-            </th>
-            <th>
+             <th>
                 @Html.DisplayNameFor(model => model.ClientNode[0].Name)
             </th>
             <th>
@@ -37,17 +34,30 @@
             <th>
                 @Html.DisplayNameFor(model => model.ClientNode[0].MaxOperationPerMounth)
             </th>
+            <th>
+                QueriesCount
+            </th>
+            <th>
+                ObjectsCount
+            </th>
+
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.ClientNode) {
+      int queriesCount;
+            int objectsCount;
+
+            if (!Model.QuriesCount.TryGetValue(item.Id, out queriesCount))
+                            queriesCount = 0;
+            if (!Model.ObjectsCount.TryGetValue(item.Id, out objectsCount))
+                objectsCount = 0;
+
+
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.NormalizedName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
+                @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -67,6 +77,14 @@
             <td>
                 @Html.DisplayFor(modelItem => item.MaxOperationPerMounth)
             </td>
+            <td>
+                     @queriesCount
+            </td>
+                <td>
+                    @objectsCount
+                </td>
+
+
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |

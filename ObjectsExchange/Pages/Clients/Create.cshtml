@@ -15,14 +15,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="ClientNode.NormalizedName" class="form-control" hidden />
             <div class="form-group">
-                <label asp-for="ClientNode.Password" class="control-label"></label>
-                <input asp-for="ClientNode.Password" class="form-control" />
-                <span asp-validation-for="ClientNode.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ClientNode.Name" class="control-label"></label>
                 <input asp-for="ClientNode.Name" class="form-control" />
                 <span asp-validation-for="ClientNode.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClientNode.Password" class="control-label"></label>
+                <input asp-for="ClientNode.Password" class="form-control" />
+                <span asp-validation-for="ClientNode.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ClientNode.Description" class="control-label"></label>

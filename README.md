@@ -14,7 +14,35 @@
 	}
 ```
 #### response:
-    string apiToken (live time 15 minutes)
+```
+    {
+        "accessToken":<string>,
+        "refreshToken":<string>,
+        "tokenType":"Bearer",
+        "expiresIn":<int>
+     }
+```
+
+### POST [host]/api/v0/RefresToken
+#### Headers:
+    "Content-Type":"application/json; charset=utf-8"
+    "accept": "*/*"
+#### Body:
+```
+	{	
+		"clientId":<client GUID>,
+		"password":<refreshToken>
+	}
+```
+#### response:
+```
+    {
+        "accessToken":<string>,
+        "refreshToken":<string>,
+        "tokenType":"Bearer",
+        "expiresIn":<int>
+     }
+```
 
 # Objects exchange service
 ## POST object to service

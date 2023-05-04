@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ObjectsExchange.Data;
+using Sabatex.ObjectsExchange.Models;
 
 namespace ObjectsExchange.Pages.Clients
 {
@@ -18,7 +19,10 @@ namespace ObjectsExchange.Pages.Clients
             _context = context;
         }
 
-      public ClientNode ClientNode { get; set; } = default!; 
+      public ClientNodeBase ClientNode { get; set; } = default!;
+      public int QuriesCount { get; set; }
+      public int ObjectsCount { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -35,8 +39,31 @@ namespace ObjectsExchange.Pages.Clients
             else 
             {
                 ClientNode = clientnode;
+                QuriesCount = _context.QueryObjects.Where(w => w.Destination == id).Count();
+                ObjectsCount = _context.ObjectExchanges.Where(w => w.Destination == id).Count();
+ 
             }
             return Page();
         }
+    
+        public async Task<IActionResult> OnPostCleanQueriesAsync(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                string cmd = "DELETE FROM " + _context.QueryObjects.EntityType.GetTableName() + " WHERE destination = {0}";
+                await _context.Database.ExecuteSqlRawAsync(cmd, id);
+            }
+            return await OnGetAsync(id);
+        }
+        public async Task<IActionResult> OnPostCleanObjectsAsync(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                string cmd = "DELETE FROM " +_context.ObjectExchanges.EntityType.GetTableName() + " WHERE destination = {0}";
+                await _context.Database.ExecuteSqlRawAsync(cmd,id);
+            }
+            return await OnGetAsync(id);
+        }
     }
+
 }
