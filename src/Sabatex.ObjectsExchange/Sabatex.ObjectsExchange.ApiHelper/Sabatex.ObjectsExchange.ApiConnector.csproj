@@ -1,13 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net3.5</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Sabatex.ObjectsExchange.Models" Version="1.0.0-alpha1" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net3.5'">
-	<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-  </ItemGroup>
-</Project>
+ </Project>

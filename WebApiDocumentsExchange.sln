@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentsExchange", "WebApi1C8Exchange\WebApiDocumentsExchange.csproj", "{E1BD8BB5-8181-4E4C-941D-DCB459B74751}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.WebApiDocumentsExchange.Models", "WebApi1C8Exchange.Models\Sabatex.WebApiDocumentsExchange.Models.csproj", "{852B5825-929F-4FCA-B292-CD0393708AF1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0105BEE-DA00-40CE-B6F6-D9D225BA7774}"
@@ -46,10 +44,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E1BD8BB5-8181-4E4C-941D-DCB459B74751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1BD8BB5-8181-4E4C-941D-DCB459B74751}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1BD8BB5-8181-4E4C-941D-DCB459B74751}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1BD8BB5-8181-4E4C-941D-DCB459B74751}.Release|Any CPU.Build.0 = Release|Any CPU
 		{852B5825-929F-4FCA-B292-CD0393708AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{852B5825-929F-4FCA-B292-CD0393708AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{852B5825-929F-4FCA-B292-CD0393708AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU

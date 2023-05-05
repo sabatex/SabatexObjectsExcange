@@ -1,6 +1,5 @@
 ﻿namespace Sabatex.ObjectsExchange.ApiConnector
 {
-    #if NET5_0_OR_GREATER
     using System.Net.Http;
     using System.Net.Http.Json;
     using System;
@@ -29,6 +28,18 @@
          }
 
      }
-#endif
+
+    public class ObjectExchangeHttpClient: HttpClient
+    {
+        public ObjectExchangeHttpClient():base() { }
+        public ObjectExchangeHttpClient(HttpMessageHandler handler):base(handler)
+        {
+            
+        }
+
+        public ObjectExchangeHttpClient(HttpMessageHandler handler, bool disposeHandler):base(handler,disposeHandler { }
+ 
+
+    }
 
 }
