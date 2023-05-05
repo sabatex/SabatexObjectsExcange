@@ -22,8 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1C8", "1C8", "{09DA94B8-D76
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.WebApiDocumentsExchange.Extensions", "WebApiDocumentsExchange.Extensions\Sabatex.WebApiDocumentsExchange.Extensions.csproj", "{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.WebApiDocumentsExchange.Core", "sabatex.WebApiDocumentsExchange.Core\Sabatex.WebApiDocumentsExchange.Core.csproj", "{A9589491-0CE3-4282-BF93-236BED5BC2B2}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sabatex.ObjectsExchange", "Sabatex.ObjectsExchange", "{4EB068BC-32D4-4597-8F87-77538C0D0776}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Server", "src\Sabatex.ObjectsExchange\Sabatex.ObjectsExchange.Server\Sabatex.ObjectsExchange.Server.csproj", "{AB3844E7-E46E-489B-9956-40F85E56296F}"
@@ -56,10 +54,6 @@ Global
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71879F6A-5FED-427A-BA4F-4EA4686B6CEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9589491-0CE3-4282-BF93-236BED5BC2B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB3844E7-E46E-489B-9956-40F85E56296F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB3844E7-E46E-489B-9956-40F85E56296F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB3844E7-E46E-489B-9956-40F85E56296F}.Release|Any CPU.ActiveCfg = Release|Any CPU
