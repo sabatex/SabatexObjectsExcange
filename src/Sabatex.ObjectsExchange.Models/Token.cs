@@ -1,13 +1,8 @@
-﻿#if NET6_0_OR_GREATER
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace Sabatex.ObjectsExchange.Models
+﻿namespace Sabatex.ObjectsExchange.Models
 {
+#if NET6_0_OR_GREATER
+#nullable enable
+    using System.Text.Json.Serialization;
     public class Token
     {
         [JsonPropertyName("access_token")]
@@ -18,7 +13,7 @@ namespace Sabatex.ObjectsExchange.Models
         public string? RefreshToken { get; set; }
         [JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
-        public Token(string accessToken,string refreshToken,int expiresIn,string tokenType="Bearer")
+        public Token(string accessToken, string refreshToken, int expiresIn, string tokenType = "Bearer")
         {
             AccessToken = accessToken ?? string.Empty;
             RefreshToken = refreshToken ?? string.Empty;
@@ -27,5 +22,5 @@ namespace Sabatex.ObjectsExchange.Models
         }
 
     }
-}
 #endif
+}

@@ -3,26 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentEx.Test", "WebApiDocumentEx.Test\WebApiDocumentEx.Test.csproj", "{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1C8", "1C8", "{09DA94B8-D76D-4BD5-820B-3DA3BB56C427}"
-	ProjectSection(SolutionItems) = preProject
-		complect.json = complect.json
-		module.sabatexExchange.txt = module.sabatexExchange.txt
-		module.sabatexExchangeActions.txt = module.sabatexExchangeActions.txt
-		module.sabatexJSON.txt = module.sabatexJSON.txt
-		1C8Api\module.sabatexWebApi.txt = 1C8Api\module.sabatexWebApi.txt
-		nomenclature.json = nomenclature.json
-		РасходнаяНакладнаяUNF.json = РасходнаяНакладнаяUNF.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BASApi", "BASApi", "{858ADCA4-7DF4-41E0-B89B-D71AA076BF6F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "src\Sabatex.ObjectsExchange\sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{5BEBD9DA-BCD9-463D-8148-D464820FE73E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "ObjectsExchange\ObjectsExchange.csproj", "{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.ApiConnector", "src\Sabatex.ObjectsExchange.ApiConnector\Sabatex.ObjectsExchange.ApiConnector.csproj", "{B5658388-0AEF-4447-A3D2-3725338D26DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "src\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{3AF42961-4628-4301-B439-76939F2E7D40}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "src\ObjectsExchange\ObjectsExchange.csproj", "{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentEx.Test", "src\WebApiDocumentEx.Test\WebApiDocumentEx.Test.csproj", "{13F51846-4395-43B8-AC0C-F1EAEB176CC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,28 +17,25 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B9A08B3-CDFF-47B6-BA8B-26F2A0F04CD4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BEBD9DA-BCD9-463D-8148-D464820FE73E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BEBD9DA-BCD9-463D-8148-D464820FE73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BEBD9DA-BCD9-463D-8148-D464820FE73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BEBD9DA-BCD9-463D-8148-D464820FE73E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F300F60B-8B03-4D9B-8D4C-34B06A4CA601}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5658388-0AEF-4447-A3D2-3725338D26DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5658388-0AEF-4447-A3D2-3725338D26DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5658388-0AEF-4447-A3D2-3725338D26DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5658388-0AEF-4447-A3D2-3725338D26DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AF42961-4628-4301-B439-76939F2E7D40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AF42961-4628-4301-B439-76939F2E7D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AF42961-4628-4301-B439-76939F2E7D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AF42961-4628-4301-B439-76939F2E7D40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13F51846-4395-43B8-AC0C-F1EAEB176CC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13F51846-4395-43B8-AC0C-F1EAEB176CC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13F51846-4395-43B8-AC0C-F1EAEB176CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13F51846-4395-43B8-AC0C-F1EAEB176CC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{09DA94B8-D76D-4BD5-820B-3DA3BB56C427} = {858ADCA4-7DF4-41E0-B89B-D71AA076BF6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0ED09FD-EEAF-4E3E-94C0-5BF69FC94CFC}

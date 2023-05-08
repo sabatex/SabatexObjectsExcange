@@ -1,7 +1,7 @@
 ﻿namespace sabatex.ObjectsExchange.Models
 {
-using Sabatex.Core;
-using System.ComponentModel.DataAnnotations;
+#if NET3_5
+    using Sabatex.Core;
     /// <summary>
     /// обєкти які потрібно отримати з нода
     /// </summary>
@@ -10,13 +10,9 @@ using System.ComponentModel.DataAnnotations;
         public long Id { get; set; }
         public Guid Sender { get; set; }
         public Guid Destination { get; set; }
-        [MaxLength(50)]
-        public string ObjectId { get; set; } = default!; //must lovercase
-        [MaxLength(50)]
-        public string ObjectType { get; set; } = default!; // lovercase
-
+        public string ObjectId { get; set; } = string.Empty; //must lovercase
+        public string ObjectType { get; set; } = string.Empty; // lovercase
         string IEntityBase.KeyAsString() => Id.ToString();
-
     }
-
+#endif
 }
