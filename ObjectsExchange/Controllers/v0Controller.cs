@@ -114,8 +114,8 @@ public class v0Controller : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Login client {login.ClientId} error:{ex.Message}");
-            return BadRequest(ex.Message);
+            _logger.LogError($"Refresh token fail for client {login.ClientId} error:{ex.Message}");
+            return Unauthorized();
         }
     }
 
