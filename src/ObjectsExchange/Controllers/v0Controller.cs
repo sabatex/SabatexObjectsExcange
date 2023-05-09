@@ -43,7 +43,6 @@ public class v0Controller : ControllerBase
         return r[1];
     }
 
-
     /// <summary>
     /// Random GUID access token generate
     /// </summary>

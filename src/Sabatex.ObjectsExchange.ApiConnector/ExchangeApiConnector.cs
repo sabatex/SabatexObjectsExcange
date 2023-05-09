@@ -1,26 +1,29 @@
-﻿#if NET6_0_OR_GREATER
+﻿namespace Sabatex.ObjectsExchange.ApiConnector
+{
+    using sabatex.ObjectsExchange.Models;
+    using Sabatex.ObjectsExchange.Models;
+#if NET6_0_OR_GREATER
 #nullable enable
-using System;
+    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
+    using System.Net.Http.Headers;
+    using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace Sabatex.ObjectsExchange.ApiConnector
-{
     public class ExchangeApiConnector:IDisposable
     {
         private string? accessToken;
-        private readonly string clientId;
+        private readonly Guid clientId;
         private string? refreshToken;
-        private readonly Func<string> passwordGeter;
-        private readonly DateTime expired_token;
+        private readonly Func<Task<string>> passwordGeter;
+        private readonly Func<Token,Task> tokenUpdate;
+        private DateTime? expired_token;
 
         private readonly HttpClient httpClient;
-        private readonly HttpClientHandler httpClientHandler;
+        private readonly HttpClientHandler? httpClientHandler;
 
         public static ExchangeApiConnector GetApiConnector(string baseUri, ExchangeApiSettings settings,bool acceptFailCertificates,Func<string> getPassword)
         {
@@ -29,9 +32,10 @@ namespace Sabatex.ObjectsExchange.ApiConnector
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            httpClient?.Dispose();
+            httpClientHandler?.Dispose();
         }
-
+        #region constructor
         private ExchangeApiConnector(ExchangeApiSettings settings, bool acceptFailCertificates,Func<string> passwordGetter) :base()
         {
             accessToken = settings.AccessToken;
@@ -44,58 +48,87 @@ namespace Sabatex.ObjectsExchange.ApiConnector
             httpClient.BaseAddress = new Uri(settings.BaseUri);
 
         }
+        #endregion
+
+        #region Autorization
+        private async Task UpdateAccessTokenAsync(Token token)
+        {
+            if (tokenUpdate != null)
+                await tokenUpdate.Invoke(token);
+            accessToken = token.AccessToken;
+            refreshToken = token.RefreshToken;
+            expired_token = DateTime.UtcNow+TimeSpan.FromSeconds(token.ExpiresIn);
+            httpClient.DefaultRequestHeaders.Add("apiToken", token.AccessToken);
+        }
 
         private async Task<bool> AutorizeAsync()
         {
-            return true;
+            var login = new Login 
+            {
+                ClientId = clientId,
+                Password = await passwordGeter.Invoke()
+            };
+            var response = await httpClient.PostAsJsonAsync("api/v0/login", login);
+            if (response == null) return false;
+            if (response.IsSuccessStatusCode)
+            {
+                var token = await response.Content.ReadFromJsonAsync<Token>();
+                if (token == null) return false;
+                await UpdateAccessTokenAsync(token);
+                return true;
+            }
+            return false;
         }
 
         private async Task<bool> RefreshTokenAsync()
         {
             if (refreshToken == null) return false;
             var response = await httpClient.PostAsJsonAsync("api/v0/refresh_token",new
+            Login
             {
-                clientId = clientId,
-                password = refreshToken
+                ClientId = clientId,
+                Password = refreshToken
             });
             if (response.IsSuccessStatusCode)
             {
-                //var rt = await response.Content.ReadFromJsonAsync<Token>();
+                var rt = await response.Content.ReadFromJsonAsync<Token>();
+                if (rt == null) return false;
+                await UpdateAccessTokenAsync(rt);
                 return true;
             }
-            return true;
-
+            return false;
         }
 
         /// <summary>
-        /// check exist access valid access token
+        /// speed check valid token and update invalid
         /// </summary>
         /// <returns></returns>
         private async Task CheckAutorized()
         {
-            if (accessToken != null && expired_token > DateTime.UtcNow) return;
-            if (accessToken != null)
+           if (accessToken != null)
             {
                 if (expired_token > DateTime.UtcNow)
-                    return;
+                {
+                    return; // token is valid
+                }
                 else
-                return;
-
+                {
+                    if (refreshToken != null)
+                    {
+                        if (await RefreshTokenAsync()) return; // update access token
+                    }
+                }
             } 
-
-
-
-            if (accessToken == null) 
-            {
-                await AutorizeAsync();
-            }
-            
+            await AutorizeAsync(); // login with password
         }
+        #region
+
+
         /// <summary>
         /// renev access_token by refresh token or login by password
         /// </summary>
         /// <returns></returns>
- 
+
         private async Task<HttpResponseMessage> PostAsync<T>(string? uriString,T value)
         {
             await CheckAutorized();
@@ -120,5 +153,6 @@ namespace Sabatex.ObjectsExchange.ApiConnector
 
 
     }
-}
+
 #endif
+}

@@ -47,28 +47,35 @@
 			</UsePurposes>
 			<ScriptVariant>English</ScriptVariant>
 			<Vendor>sabatex</Vendor>
-			<Version>2.0.0.1</Version>
+			<Version>2.0.1.5</Version>
 			<DefaultLanguage>Language.Украинский</DefaultLanguage>
 			<BriefInformation/>
 			<DetailedInformation/>
-			<Copyright/>
-			<VendorInformationAddress/>
+			<Copyright>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>(c) 2022 Serhiy Lakas</v8:content>
+				</v8:item>
+			</Copyright>
+			<VendorInformationAddress>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>https://sabatex.github.io</v8:content>
+				</v8:item>
+			</VendorInformationAddress>
 			<ConfigurationInformationAddress/>
 			<InterfaceCompatibilityMode>Taxi</InterfaceCompatibilityMode>
 		</Properties>
 		<ChildObjects>
 			<Language>Украинский</Language>
-			<Subsystem>sabatex</Subsystem>
+			<Subsystem>Администрирование</Subsystem>
 			<Role>АдминистраторСистемы</Role>
 			<Role>sabatexExchange</Role>
 			<CommonModule>sabatexExchange</CommonModule>
-			<Catalog>Контрагенты</Catalog>
-			<Enum>sabatex_ExchangeObjectType</Enum>
-			<DataProcessor>sabatexExchange</DataProcessor>
+			<CommonModule>sabatexLog</CommonModule>
 			<InformationRegister>sabatexExchangeObject</InformationRegister>
 			<InformationRegister>sabatexNodeConfig</InformationRegister>
 			<InformationRegister>sabatexExchangeUnresolvedObjects</InformationRegister>
-			<ChartOfAccounts>Хозрасчетный</ChartOfAccounts>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>

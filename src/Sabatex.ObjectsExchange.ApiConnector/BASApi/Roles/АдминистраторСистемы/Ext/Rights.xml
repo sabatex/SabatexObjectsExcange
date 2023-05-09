@@ -145,31 +145,6 @@
 		</right>
 	</object>
 	<object>
-		<name>Subsystem.sabatex</name>
-		<right>
-			<name>View</name>
-			<value>true</value>
-		</right>
-	</object>
-	<object>
-		<name>DataProcessor.sabatexExchange</name>
-		<right>
-			<name>Use</name>
-			<value>true</value>
-		</right>
-		<right>
-			<name>View</name>
-			<value>true</value>
-		</right>
-	</object>
-	<object>
-		<name>Subsystem.sabatex.Subsystem.Exchange</name>
-		<right>
-			<name>View</name>
-			<value>true</value>
-		</right>
-	</object>
-	<object>
 		<name>InformationRegister.sabatexExchangeObject</name>
 		<right>
 			<name>Read</name>
