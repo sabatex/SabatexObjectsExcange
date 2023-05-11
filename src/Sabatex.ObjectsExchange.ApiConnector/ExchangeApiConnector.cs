@@ -1,4 +1,5 @@
-﻿namespace Sabatex.ObjectsExchange.ApiConnector
+﻿//(c) Serhiy Lakas (https://sabatex.github.io)
+namespace Sabatex.ObjectsExchange.ApiConnector
 {
 
 
@@ -14,7 +15,6 @@
     using System.Net.Http.Json;
     using System.Text;
     using System.Threading.Tasks;
-    using sabatex.ObjectsExchange.Models;
 
     public class ExchangeApiConnector : IDisposable
     {
