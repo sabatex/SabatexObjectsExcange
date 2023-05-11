@@ -7,8 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using WebApiDocumentsExchange.Extensions;
-using WebApiDocumentsExchange.Models;
+using ObjectsExchange;
 using Xunit;
 
 namespace WebApiDocumentEx.Test;

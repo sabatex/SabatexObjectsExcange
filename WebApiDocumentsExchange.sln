@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Mod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "src\ObjectsExchange\ObjectsExchange.csproj", "{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDocumentEx.Test", "src\WebApiDocumentEx.Test\WebApiDocumentEx.Test.csproj", "{13F51846-4395-43B8-AC0C-F1EAEB176CC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Tests", "src\WebApiDocumentEx.Test\Sabatex.ObjectsExchange.Tests.csproj", "{13F51846-4395-43B8-AC0C-F1EAEB176CC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

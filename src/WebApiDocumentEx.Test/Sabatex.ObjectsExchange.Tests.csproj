@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApi1C8Exchange\WebApiDocumentsExchange.csproj" />
-    <ProjectReference Include="..\WebApiDocumentsExchange.Extensions\Sabatex.WebApiDocumentsExchange.Extensions.csproj" />
+    <ProjectReference Include="..\ObjectsExchange\ObjectsExchange.csproj" />
+    <ProjectReference Include="..\Sabatex.ObjectsExchange.ApiConnector\Sabatex.ObjectsExchange.ApiConnector.csproj" />
   </ItemGroup>
 
 </Project>
