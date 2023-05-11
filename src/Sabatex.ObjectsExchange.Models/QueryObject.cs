@@ -1,4 +1,4 @@
-﻿namespace sabatex.ObjectsExchange.Models
+﻿namespace Sabatex.ObjectsExchange.Models
 {
 #if NET6_0_OR_GREATER
 #nullable enable
