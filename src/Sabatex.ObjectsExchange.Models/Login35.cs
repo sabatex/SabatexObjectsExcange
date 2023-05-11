@@ -1,6 +1,7 @@
 ﻿namespace sabatex.ObjectsExchange.Models
 {
-#if NET3_5
+#if NET3_5 || NETSTANDARD2_0
+
     using System;
     public class Login
     {

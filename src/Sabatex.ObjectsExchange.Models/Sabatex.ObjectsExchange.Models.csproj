@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net3.5</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net3.5;netstandard2.0</TargetFrameworks>
 	<NeutralLanguage>en-US</NeutralLanguage>
 	<Authors>Serhiy Lakas</Authors>
 	<Copyright>2022, Serhiy Lakas</Copyright>
@@ -11,11 +11,11 @@
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageId>Sabatex.ObjectsExchange.Models</PackageId>
 	<PackageTags>#Exchange #API </PackageTags>
-	<Version>1.0.0-rc1</Version>
+	<Version>1.0.0-rc3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Sabatex.Core" Version="1.1.0"/>
+	<PackageReference Include="Sabatex.Core" Version="1.1.1" />
   </ItemGroup>
   
 </Project>

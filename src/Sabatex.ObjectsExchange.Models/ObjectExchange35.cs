@@ -1,8 +1,8 @@
 ﻿namespace sabatex.ObjectsExchange.Models
 {
-#if NET3_5
+#if NET3_5 || NETSTANDARD2_0
     using Sabatex.Core;
-    using System.ComponentModel.DataAnnotations;
+    using System;
 
     public class ObjectExchange : IEntityBase
     {
@@ -16,7 +16,7 @@
         /// </summary>
         public DateTime DateStamp { get; set; } = DateTime.Now;
         public DateTime SenderDateStamp { get; set; }
-        public string ObjectAsText { get; set; } = default!;
+        public string ObjectAsText { get; set; }
         string IEntityBase.KeyAsString() => Id.ToString();
     }
 #endif

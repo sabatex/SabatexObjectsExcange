@@ -2,11 +2,24 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net3.5</TargetFrameworks>
+    <NeutralLanguage>en-US</NeutralLanguage>
+	<Authors>Serhiy Lakas</Authors>
+	<Copyright>2022, Serhiy Lakas</Copyright>
+	<Product>Models for Exchange APi</Product>
+	<Description>API Connector for ObjectExchange service</Description>
+	<Company>sabatex on git</Company>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageId>Sabatex.ObjectsExchange.ApiConnector</PackageId>
+	<PackageTags>#sabatex #Exchange #API </PackageTags>
+	<Version>1.0.0-alpha1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Sabatex.ObjectsExchange.Models" Version="1.0.0-rc1" />
-	
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BASApi\" />
   </ItemGroup>
 
  </Project>

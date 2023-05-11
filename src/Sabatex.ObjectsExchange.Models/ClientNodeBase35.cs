@@ -1,6 +1,6 @@
 ﻿namespace Sabatex.ObjectsExchange.Models
 {
-#if NET3_5
+#if NET3_5 || NETSTANDARD2_0
     using Sabatex.Core;
     using System;
     using System.Collections.Generic;

@@ -40,14 +40,14 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Sabatex exchange unresolved objects</v8:content>
+					<v8:content>Чергобєктів на імпорт</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment>Обєкти для яких існують не розвязані посилання</Comment>
 			<UseStandardCommands>true</UseStandardCommands>
 			<EditType>InDialog</EditType>
-			<DefaultRecordForm/>
-			<DefaultListForm/>
+			<DefaultRecordForm>InformationRegister.sabatexExchangeUnresolvedObjects.Form.RecordForm</DefaultRecordForm>
+			<DefaultListForm>InformationRegister.sabatexExchangeUnresolvedObjects.Form.ListForm</DefaultListForm>
 			<AuxiliaryRecordForm/>
 			<AuxiliaryListForm/>
 			<StandardAttributes>
@@ -182,6 +182,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Object id</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>ID обєкта</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Type>
@@ -224,6 +228,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Object type</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Тип обєкта</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -270,7 +278,7 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Object as text</v8:content>
+							<v8:content>Серіалізований обєкт</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment>object for send</Comment>
@@ -313,7 +321,7 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Log</v8:content>
+							<v8:content>Стан імпрту</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -356,7 +364,7 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Sender date stamp</v8:content>
+							<v8:content>дата відправлення</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -398,7 +406,7 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Server date stamp</v8:content>
+							<v8:content>Дата реєстраціїї на сервері</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -440,10 +448,10 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Level live</v8:content>
+							<v8:content>кільть спроб</v8:content>
 						</v8:item>
 					</Synonym>
-					<Comment/>
+					<Comment>кількість спроб опрацювань</Comment>
 					<Type>
 						<v8:Type>xs:decimal</v8:Type>
 						<v8:NumberQualifiers>
@@ -526,7 +534,7 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Destination</v8:content>
+							<v8:content>отримувач</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -569,7 +577,7 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Sender</v8:content>
+							<v8:content>Відправник</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment>Client node</Comment>
@@ -652,6 +660,8 @@
 					<DataHistory>Use</DataHistory>
 				</Properties>
 			</Dimension>
+			<Form>RecordForm</Form>
+			<Form>ListForm</Form>
 		</ChildObjects>
 	</InformationRegister>
 </MetaDataObject>

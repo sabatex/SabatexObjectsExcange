@@ -33,3 +33,4 @@ endprocedure
 procedure LogNote(conf,sourceName,message) export
 	Logged(conf,3,sourceName,message);		
 endprocedure
+

@@ -179,7 +179,7 @@ procedure Login(conf)
 			raise "Не отримано токен";
 		endif;	
 		token = Deserialize(apiToken);
-		SetAccessToken(conf,token);
+		sabatexExchangeConfig.SetAccessToken(conf,token);
 	except
 		error = "Помилка ідентифікації на сервері! Error:"+ОписаниеОшибки();
 		sabatexLog.LogError(conf,"Login",error);
@@ -204,7 +204,7 @@ procedure RefreshToken(conf)
 			raise "Не отримано токен";
 		endif;
 		token = Deserialize(apiToken);
-		SetAccessToken(conf,token);
+		sabatexExchangeConfig.SetAccessToken(conf,token);
 	except
 		error = "Помилка ідентифікації на сервері! Error:"+ОписаниеОшибки();
 		sabatexLog.LogError(conf,"Login",error);
@@ -614,7 +614,7 @@ procedure AddQueryForExchange(conf,objectType,objectId) export
 	
 	Запрос.УстановитьПараметр("objectId", objectId);
 	Запрос.УстановитьПараметр("objectType", objectType);
-	Запрос.УстановитьПараметр("sender", conf.destinationId);
+	Запрос.УстановитьПараметр("sender", new UUID(conf.destinationId));
 	
 	РезультатЗапроса = Запрос.Выполнить();
 	
@@ -629,6 +629,7 @@ procedure AddQueryForExchange(conf,objectType,objectId) export
 	query.nodeName = conf.destinationId;
 	query.objectType = objectType;
 	query.objectId = objectId;
+	sabatexLog.LogInformation(conf,"AddQueryForExchange","Відправлено запит на отримання "+ objectType + " з Id=" + objectId);
 endprocedure	
 
 #endregion
@@ -801,10 +802,9 @@ procedure AnalizeUnresolvedObjects(conf)
 		|	sabatexExchangeUnresolvedObjects.sender = &sender
 		|
 		|ORDER BY
-		|	levelLive,
-		|	dateStamp DESC";
+		|	levelLive";
 		
-		Query.SetParameter("sender",conf.destinationId);
+		Query.SetParameter("sender",new UUID(conf.destinationId));
 		QueryResult = Query.Execute();
 		
 		SelectionDetailRecords = QueryResult.Select();
@@ -840,131 +840,21 @@ procedure AnalizeUnresolvedObjects(conf)
 	endtry;
 endprocedure
 #endregion
-#region Config
-procedure SetSenderValueIfDestinationEmpty(valueName,sender,destination)
-	var propValue;
-	if sender.Property(valueName,propValue) then
-		if not destination.Property(valueName) then
-			destination.Insert(valueName,sender[ValueName]);
-		endif;	
-	endif	
-endprocedure
-procedure FillStructFromSenderIsEmpty(sender,destination)
-	for each item in sender do
-		SetSenderValueIfDestinationEmpty(string(item.key),sender,destination);
-	enddo;	
+
+// parse incoming object and return 
+// true - object is Ok
+// false - missed object
+// unresolved - array structure queried objects
+procedure IncomingDefaultParser(conf,obj,success)
 endprocedure	
-// return config struct and check
-function GetConfig(config) export
-	if config = null then
-		raise "The config not initialized";
-	endif;
-	if TypeOf(config) <> Type("structure") then
-		raise "The config must be type structure";
-	endif;
-	if not config.Property("destinationId") then
-		raise "The config must be initialize DestinationId!";
-	endif;	
-	
-	
-	try
-		filter = new structure;
-		filter.Insert("Id",1);
-		lConfig = РегистрыСведений.sabatexNodeConfig.Получить(filter);
-		if lConfig.Host <> "" then
-			FillStructFromSenderIsEmpty(lConfig,config);
-		endif;	
-	except
-	endtry;	
-	
-	if not config.Property("https") then
-		config.Insert("https",false);
-	endif;
-	
-	if not config.Property("Host") then
-		config.Insert("Host","sabatex.francecentral.cloudapp.azure.com");	
-	endif;	
-	
-	if not config.Property("Port") then
-		if config.https then
-			config.Insert("Port",443);
-		else
-			config.Insert("Port",80);
-		endif;	
-	endif;	
 
-	if not config.Property("NodeName") then
-		config.Insert("NodeName","1C8");	
-	endif;
-	
-	if not config.Property("password") then
-		config.Insert("password","1");	
-	endif;
-	
-	if not config.Property("Take") then
-		config.Insert("Take",50);	
-	endif;	
-	
-	if not config.Property("LogLevel") then
-		config.Insert("LogLevel",4);	
-	endif;	
-	
-	if not config.Property("useObjectCashe") then
-		config.Insert("useObjectCashe",false);	
-	endif;	
-	
-	if not config.Property("MapDifferObjects") then
-		config.Insert("MapDifferObjects",new structure);
-		config.MapDifferObjects.Insert("Forward",new map);
-		config.MapDifferObjects.Insert("Backward",new map);
-	endif;	
-	
-	if not config.Property("IncomingParser") then
-		config.Insert("IncomingParser","sabatexExchange.defaultIncomingParser");
-	endif;
-
-	
-	if not config.Property("QueryParser") then
-		config.Insert("QueryParser","sabatexExchange.defaultQueryParser");
-	endif;
-	
-	config.Insert("ExportObjects",0);
-	config.Insert("ImportObjects",0);
-	config.Insert("MissObjects",0);
-	config.Insert("QueriedObjects",0);
-	config.Insert("Log","");
-	
-	table = new ValueTable;
-	table.Columns.Add("nodeName");
-	table.Columns.Add("objectType");
-	table.Columns.Add("objectId");
-
-	config.Insert("queryList",table);
-	return config;
-endfunction	
-procedure SetAccessToken(conf,token)
-	reg = InformationRegisters.sabatexNodeConfig.CreateRecordManager();
-	reg.Id = 1;
-	reg.Read();
-	reg.access_token = token["access_token"];
-	conf.Insert("access_token",token["access_token"]);
-	reg.refresh_token = token["refresh_token"];
-	conf.Insert("refresh_token",token["refresh_token"]);
-	reg.token_type = token["token_type"];
-	expires_in = CurrentDate()+token["expires_in"];
-	conf.Insert("expires_in",expires_in);
-	reg.expires_in = expires_in;
-    reg.Write();
-endprocedure
-
-#endregion
-
-// Start exchange process
-// conf - config for exchange (struct)
-procedure ExchangeProcess(conf) export
+// Розпочати процесс обміну
+// params:
+// 		nodeName - назва нода обміну в регістрі sabatexNodeConfig
+procedure ExchangeProcess(nodeName,incomingParser="sabatexExchange.IncomingDefaultParser",queryParser="sabatexExchange.defaultQueryParser") export
 	try
 		start = CurrentDate();
-		conf = GetConfig(conf);
+		conf = sabatexExchangeConfig.GetConfig(nodeName,incomingParser,queryParser);
 
 		// ansver the query and set to queue
 		DoQueriedObjects(conf);

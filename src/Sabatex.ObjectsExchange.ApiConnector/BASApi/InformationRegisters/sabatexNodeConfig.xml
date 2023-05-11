@@ -36,7 +36,7 @@
 			<Synonym>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Sabatex node config</v8:content>
+					<v8:content>Налаштування обміну</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment>Configuration for exchange (take Id = 1)</Comment>
@@ -199,7 +199,7 @@
 					<MaxValue xsi:nil="true"/>
 					<FillFromFillingValue>false</FillFromFillingValue>
 					<FillValue xsi:nil="true"/>
-					<FillChecking>DontCheck</FillChecking>
+					<FillChecking>ShowError</FillChecking>
 					<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
 					<ChoiceParameterLinks/>
 					<ChoiceParameters/>
@@ -213,16 +213,16 @@
 					<DataHistory>Use</DataHistory>
 				</Properties>
 			</Resource>
-			<Resource uuid="0c3d391b-4557-4175-b168-e8a44ea27d1d">
+			<Resource uuid="e387f02c-480b-4cd2-9f81-ac879c13cf75">
 				<Properties>
-					<Name>NodeName</Name>
+					<Name>destinationId</Name>
 					<Synonym>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Node name</v8:content>
+							<v8:content>Destination id</v8:content>
 						</v8:item>
 					</Synonym>
-					<Comment>current node name in exchange server</Comment>
+					<Comment>Вузел призначення обміну</Comment>
 					<Type>
 						<v8:Type>xs:string</v8:Type>
 						<v8:StringQualifiers>
@@ -723,23 +723,22 @@
 					<DataHistory>Use</DataHistory>
 				</Properties>
 			</Resource>
-			<Dimension uuid="b9e1af9d-1291-43c6-a6b7-cf9c30e7d102">
+			<Dimension uuid="35b5196a-43a1-4242-bda3-2b131b6f3c75">
 				<Properties>
-					<Name>Id</Name>
+					<Name>NodeName</Name>
 					<Synonym>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Id</v8:content>
+							<v8:content>Node name</v8:content>
 						</v8:item>
 					</Synonym>
-					<Comment/>
+					<Comment>current node name in exchange server</Comment>
 					<Type>
-						<v8:Type>xs:decimal</v8:Type>
-						<v8:NumberQualifiers>
-							<v8:Digits>2</v8:Digits>
-							<v8:FractionDigits>0</v8:FractionDigits>
-							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
-						</v8:NumberQualifiers>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>50</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
 					</Type>
 					<PasswordMode>false</PasswordMode>
 					<Format/>
@@ -752,7 +751,7 @@
 					<MinValue xsi:nil="true"/>
 					<MaxValue xsi:nil="true"/>
 					<FillFromFillingValue>false</FillFromFillingValue>
-					<FillValue xsi:nil="true"/>
+					<FillValue xsi:type="xs:string"/>
 					<FillChecking>DontCheck</FillChecking>
 					<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
 					<ChoiceParameterLinks/>
@@ -764,7 +763,7 @@
 					<ChoiceHistoryOnInput>Auto</ChoiceHistoryOnInput>
 					<Master>false</Master>
 					<MainFilter>true</MainFilter>
-					<DenyIncompleteValues>true</DenyIncompleteValues>
+					<DenyIncompleteValues>false</DenyIncompleteValues>
 					<Indexing>DontIndex</Indexing>
 					<FullTextSearch>Use</FullTextSearch>
 					<DataHistory>Use</DataHistory>
