@@ -25,6 +25,9 @@ namespace Sabatex.ObjectsExchange.ApiConnector
             this.clientId = clientId;
             this.token = token;
         }
+
+
+
         /// <summary>
         /// Login to service
         /// </summary>

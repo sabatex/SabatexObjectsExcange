@@ -9,12 +9,15 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ObjectsExchange;
 using Xunit;
+using Sabatex.ObjectsExchange.ApiConnector;
 
 namespace WebApiDocumentEx.Test;
 [TestCaseOrderer("WebApiDocumentEx.Test.PriorityOrderer", "WebApiDocumentEx.Test")]
 public class v0Test : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
+    private readonly HttpClient _senderClient;
+    private readonly HttpClient _receiverClient;
 
     private const string senderNodeName = "sendertest";
     private const string destinationNodeName = "destinationtest";
@@ -22,23 +25,24 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
     public v0Test(WebApplicationFactory<Program> factory)
     {
         _factory = factory;
+        _senderClient = _factory.CreateClient();
+        _receiverClient = _factory.CreateClient();
     }
 
 
-    private async Task<long[]> SendObjectsAsync(HttpClient client, string destination,int count)
+    private async Task SendObjectsAsync(ExchangeApiConnector client, int count)
     {
-        var sendedObjects = new List<long>();
         for (int i = 0; i < 100; i++)
         {
-            var postObject = new PostObject(Destination: destination,
-                               ObjectType: "Довідник.Номенклатура",
-                               ObjectId: Guid.NewGuid().ToString(),
-                               ObjectJSON: TestConst.TestConstString,
-                               DateStamp:DateTime.Now);
-            var r = await client.ApiPostObjectExchangeAsync(postObject);
-            sendedObjects.Add(r);
+            var postObject = new
+            {
+                objectType = "Довідник.Номенклатура",
+                objectId = Guid.NewGuid().ToString(),
+                text = TestConst.TestConstString,
+                dateStamp = DateTime.Now
+            };
+            await client.PostObjectAsync("Довідник.Номенклатура", Guid.NewGuid().ToString(), TestConst.TestConstString);
         }
-        return sendedObjects.ToArray();
     }
 
     private async Task RandomAnalize(HttpClient client, string destination,ObjectExchange objectExchange)
@@ -82,7 +86,7 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
 
     
     [Fact, Priority(1)]
-    public async void TestInitialize()
+    public async void TestLogin()
     {
         // логінимось на сервері
         var senderHTTPClient = _factory.CreateClient();

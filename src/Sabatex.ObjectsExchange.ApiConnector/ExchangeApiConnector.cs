@@ -28,10 +28,6 @@ namespace Sabatex.ObjectsExchange.ApiConnector
         private readonly HttpClient httpClient;
         private readonly HttpClientHandler? httpClientHandler;
 
-        public static ExchangeApiConnector GetApiConnector(string baseUri, ExchangeApiSettings settings, bool acceptFailCertificates, Func<string> getPassword)
-        {
-            return new ExchangeApiConnector(settings, acceptFailCertificates, getPassword);
-        }
 
         public void Dispose()
         {
@@ -39,7 +35,7 @@ namespace Sabatex.ObjectsExchange.ApiConnector
             httpClientHandler?.Dispose();
         }
         #region constructor
-        private ExchangeApiConnector(ExchangeApiSettings settings, bool acceptFailCertificates, Func<string> passwordGetter) : base()
+        public ExchangeApiConnector(ExchangeApiSettings settings, bool acceptFailCertificates, Func<string> passwordGetter) : base()
         {
             accessToken = settings.AccessToken;
             clientId = new Guid(settings.ClientId);

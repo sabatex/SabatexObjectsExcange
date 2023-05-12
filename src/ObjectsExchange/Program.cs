@@ -1,3 +1,4 @@
+namespace ObjectsExchange;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +10,10 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using ObjectsExchange.Data;
 
+public class Program
+{
+    public static void Main(string[] args)
+    {
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ObjectsExchangeDbContext>(options =>
@@ -55,3 +60,6 @@ app.MapRazorPages();
 app.MapControllers();
 
 app.Run();
+
+    }
+}

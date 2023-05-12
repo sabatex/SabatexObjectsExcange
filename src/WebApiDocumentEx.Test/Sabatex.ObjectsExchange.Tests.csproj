@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+	  <GenerateInternalsVisibleToAttribute>true</GenerateInternalsVisibleToAttribute>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,12 @@
   <ItemGroup>
     <ProjectReference Include="..\ObjectsExchange\ObjectsExchange.csproj" />
     <ProjectReference Include="..\Sabatex.ObjectsExchange.ApiConnector\Sabatex.ObjectsExchange.ApiConnector.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+		    <_Parameter1>"ObjectsExchange"</_Parameter1>
+	    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>
