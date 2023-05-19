@@ -1,6 +1,5 @@
-﻿// sabatex Copyright (c) 2021 by Serhiy Lakas
-// https://github.com/sabatex-1C
-// version 1.2.0 (28.09.2022)
+﻿// Copyright (c) 2021 by Serhiy Lakas
+// https://sabatex.github.io
 #region Logged
 // Log data 
 // conf - structure (use)

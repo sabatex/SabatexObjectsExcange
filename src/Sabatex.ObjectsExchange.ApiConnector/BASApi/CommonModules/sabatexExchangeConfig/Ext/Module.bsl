@@ -1,4 +1,6 @@
-﻿procedure SetSenderValueIfDestinationEmpty(valueName,sender,destination)
+﻿// Copyright (c) 2021 by Serhiy Lakas
+// https://sabatex.github.io
+procedure SetSenderValueIfDestinationEmpty(valueName,sender,destination)
 	var propValue;
 	if sender.Property(valueName,propValue) then
 		if not destination.Property(valueName) then
@@ -6,15 +8,13 @@
 		endif;	
 	endif	
 endprocedure
-
 procedure FillStructFromSenderIsEmpty(sender,destination)
 	for each item in sender do
 		SetSenderValueIfDestinationEmpty(string(item.key),sender,destination);
 	enddo;	
 endprocedure
-
 // return config struct and check
-function GetConfig(nodeName,incomingParser,queryParser) export
+function GetConfig(nodeName,incomingParser="sabatexExchange.IncomingDefaultParser",queryParser="sabatexExchange.defaultQueryParser") export
 	if TypeOf(nodeName) <> Type("string") then
 		raise "Параметр nodeName повинен бути типу string!";
 	endif;

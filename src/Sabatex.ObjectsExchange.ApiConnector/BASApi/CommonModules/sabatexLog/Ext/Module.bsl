@@ -1,5 +1,5 @@
-﻿// sabatex Copyright (c) 2021 by Serhiy Lakas
-// https://github.com/sabatex-1C
+﻿// Copyright (c) 2021 by Serhiy Lakas
+// https://sabatex.github.io
 procedure Logged(conf,level,sourceName,message) export
 	try
 		if level <= conf.LogLevel then
