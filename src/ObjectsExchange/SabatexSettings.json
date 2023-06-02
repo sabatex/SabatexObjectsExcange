@@ -1,7 +1,19 @@
 {
-  "nugetAuthTokenPath": "C:\\Users\\serhi\\.scripts\\NUGET_AUTH_TOKEN",
-  "NGINXPublish": {
+  "Linux": {
+    "UserHomeFolder": "/home/azureuser",
     "BitviseTlpFile": "C:\\Users\\serhi\\OneDrive\\SSH\\ZNCUbuntuAzure.tlp",
+    "PublishFolder": "/var/www/ObjectsExchange",
+    "FrontEnd": false,
+    "Service": {
+      "ServiceName": "ObjectsExchange",
+      "Port": 7000,
+      "UpdateService": false
+    }
+
+  },
+
+  "NGINXPublish": {
+    
     "HostName": "sabatex.francecentral.cloudapp.azure.com",
     "SSLPrivate": "C:\\Users\\serhi\\OneDrive\\Особистий сейф\\SSL\\sabatex.francecentral.cloudapp.azure.com.key",
     "SSLPublic": "C:\\Users\\serhi\\OneDrive\\Особистий сейф\\SSL\\sabatex.francecentral.cloudapp.azure.com.crt",

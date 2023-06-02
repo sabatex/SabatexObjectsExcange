@@ -27,6 +27,12 @@
 	  <PackageReference Include="Microsoft.Identity.Web" Version="2.6.1" />
 	<PackageReference Include="Microsoft.Identity.Web.UI" Version="2.6.1" />
 	<PackageReference Include="Sabatex.ObjectsExchange.Models" Version="1.0.0-rc1" />
+	<PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.11.0" />
   </ItemGroup>
-
+	<ItemGroup>
+		<Content Include="..\..\Readme.md">
+			<Link>wwwroot\Readme.md</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>	
+		</Content>
+	</ItemGroup>
 </Project>
