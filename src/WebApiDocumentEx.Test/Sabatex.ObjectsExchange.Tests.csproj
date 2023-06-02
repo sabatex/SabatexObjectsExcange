@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ObjectsExchange\ObjectsExchange.csproj" />
     <ProjectReference Include="..\Sabatex.ObjectsExchange.ApiConnector\Sabatex.ObjectsExchange.ApiConnector.csproj" />
+    <ProjectReference Include="..\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj" />
   </ItemGroup>
 	
   <ItemGroup>

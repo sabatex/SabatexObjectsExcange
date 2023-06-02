@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net6.0;net7.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net3.5;net6.0;net7.0;netstandard2.0;netstandard2.1</TargetFrameworks>
     <NeutralLanguage>en-US</NeutralLanguage>
 	<Authors>Serhiy Lakas</Authors>
 	<Copyright>2022, Serhiy Lakas</Copyright>

@@ -1,6 +1,8 @@
-namespace Sabatex.ObjectsExchange.Models;
+namespace Sabatex.ObjectsExchange.Models
+{
 #if NET3_5 || NETSTANDARD2_0
 using Sabatex.Core;
+using System;
 public class PostObject : IEntityBase {
     public string objectType = string.Empty;
     public string objectId = string.Empty;
@@ -9,3 +11,4 @@ public class PostObject : IEntityBase {
     string IEntityBase.KeyAsString() => objectId.ToString();
 }
 #endif
+}
