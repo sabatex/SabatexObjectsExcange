@@ -1,6 +1,4 @@
-﻿#if NET6_0_OR_GREATER
-#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +11,11 @@ namespace Sabatex.ObjectsExchange.ApiConnector
         /// <summary>
         /// Base api uri https://host{:port}
         /// </summary>
-        public string BaseUri { get; set; }
-        public string? AccessToken { get; set; }
+        public string BaseUri { get; set; } = "https://sabatex.francecentral.cloudapp.azure.com/";
+        public string AccessToken { get; set; }
         public string ClientId { get; set; }
-        public string? RefreshToken { get; set; }
+        public string RefreshToken { get; set; }
         public string Password { get; set; }
+        public bool AcceptFailCertificates { get; set; }
     }
 }
-#endif

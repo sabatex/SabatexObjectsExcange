@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net3.5;net6.0;net7.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net3.5;netstandard2.0;netstandard2.1;net6.0;net7.0</TargetFrameworks>
     <NeutralLanguage>en-US</NeutralLanguage>
 	<Authors>Serhiy Lakas</Authors>
 	<Copyright>2022, Serhiy Lakas</Copyright>
@@ -14,15 +14,15 @@
 	<Version>1.0.0-alpha1</Version>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Sabatex.ObjectsExchange.Models" Version="1.0.0-rc4" />
-  </ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net3.5'">
+ 	<ItemGroup Condition="'$(TargetFramework)' == 'net3.5'">
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>	
+		<PackageReference Include="Sabatex.ObjectsExchange.Models" Version="1.0.0-rc5" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' != 'net3.5'">
+		<PackageReference Include="Sabatex.ObjectsExchange.Models" Version="1.0.0-rc5" />
+	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <Folder Include="BASApi\" />
   </ItemGroup>
 

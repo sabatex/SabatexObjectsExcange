@@ -30,7 +30,7 @@ public class v0Test : IClassFixture<WebApplicationFactory<Program>>
     }
 
 
-    private async Task SendObjectsAsync(ExchangeApiConnector client, int count)
+    private async Task SendObjectsAsync(APIConnector client, int count)
     {
         for (int i = 0; i < 100; i++)
         {
