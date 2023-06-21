@@ -134,17 +134,19 @@ public class v0Controller : ControllerBase
     /// </summary>
     /// <param name="apiToken">access token</param>
     /// <param name="nodeId">client node Id</param>
-    /// <param name="incomingNodesId">list separated ',' incoming nodes for query </param>
+    /// <param name="destinationId">destination node id (sender) </param>
     /// <param name="take">take objects by query </param>
     /// <returns>incoming objects </returns>
     [HttpGet("objects")]
     public async Task<IActionResult> GetObjectsAsync([FromHeader] string apiToken,
                                                      [FromHeader] Guid clientId,
+                                                     [FromHeader] Guid destinationId,
                                                      [FromQuery]int take = 10)
     {
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         var result = await _dbContext.ObjectExchanges
                         .Where(s => s.Destination==clientId)
+                        .Where(s=>s.Sender ==destinationId)
                         .OrderBy(d => d.Id) // priority
                         .Take(take).ToArrayAsync();
         return Ok(result);
@@ -235,6 +237,7 @@ public class v0Controller : ControllerBase
     [HttpGet("queries")]
     public async Task<IActionResult> GetQueryesAsync([FromHeader] string apiToken,
                                                      [FromHeader] Guid clientId,
+                                                     [FromHeader] Guid destinationId,
                                                      [FromQuery] int take = 10)
     {
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
@@ -242,6 +245,8 @@ public class v0Controller : ControllerBase
             return Unauthorized();
         var result = await _dbContext.QueryObjects
                 .Where(s => s.Destination == clientId)
+                .Where(s=>s.Sender == destinationId)
+                .OrderBy(d => d.Id) // priority
                 .Take(take)
                 .ToArrayAsync();
             return Ok(result);

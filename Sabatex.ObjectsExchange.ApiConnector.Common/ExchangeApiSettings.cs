@@ -12,10 +12,10 @@ namespace Sabatex.ObjectsExchange.ApiConnector
         /// Base api uri https://host{:port}
         /// </summary>
         public string BaseUri { get; set; } = "https://sabatex.francecentral.cloudapp.azure.com/";
-        public string AccessToken { get; set; }
-        public string ClientId { get; set; }
-        public string RefreshToken { get; set; }
-        public string Password { get; set; }
+        public string AccessToken { get; set; } = string.Empty;
+        public string ClientId { get; set; } = string.Empty;
+        public string RefreshToken { get; set; } = string.Empty;
+        public string Password { get; set; }= string.Empty;
         public bool AcceptFailCertificates { get; set; }
     }
 }

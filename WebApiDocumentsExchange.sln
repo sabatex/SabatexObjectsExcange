@@ -16,6 +16,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.ApiConnector.HttpClient", "Sabatex.ObjectsExchange.ApiConnector.HttpClient\Sabatex.ObjectsExchange.ApiConnector.HttpClient.csproj", "{3F4B6CC9-EE80-468B-8166-10D7664D1B0B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.ApiConnector.WebClient", "Sabatex.ObjectsExchange.ApiConnector.WebClient\Sabatex.ObjectsExchange.ApiConnector.WebClient.csproj", "{55D5759B-37B8-43AF-9C4D-08126008C688}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.ApiConnector.Common", "Sabatex.ObjectsExchange.ApiConnector.Common\Sabatex.ObjectsExchange.ApiConnector.Common.csproj", "{7D4AA71B-ADB2-49E3-A589-152E27686E5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectsExchange.ApiConnector.Tests", "Sabatex.ObjectsExchange.ApiConnector.Tests\Sabatex.ObjectsExchange.ApiConnector.Tests.csproj", "{1E4AAA57-98D5-4944-84BD-FC96DF396904}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +46,22 @@ Global
 		{13F51846-4395-43B8-AC0C-F1EAEB176CC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13F51846-4395-43B8-AC0C-F1EAEB176CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13F51846-4395-43B8-AC0C-F1EAEB176CC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F4B6CC9-EE80-468B-8166-10D7664D1B0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F4B6CC9-EE80-468B-8166-10D7664D1B0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F4B6CC9-EE80-468B-8166-10D7664D1B0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F4B6CC9-EE80-468B-8166-10D7664D1B0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55D5759B-37B8-43AF-9C4D-08126008C688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55D5759B-37B8-43AF-9C4D-08126008C688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55D5759B-37B8-43AF-9C4D-08126008C688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55D5759B-37B8-43AF-9C4D-08126008C688}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D4AA71B-ADB2-49E3-A589-152E27686E5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D4AA71B-ADB2-49E3-A589-152E27686E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D4AA71B-ADB2-49E3-A589-152E27686E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D4AA71B-ADB2-49E3-A589-152E27686E5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E4AAA57-98D5-4944-84BD-FC96DF396904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E4AAA57-98D5-4944-84BD-FC96DF396904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E4AAA57-98D5-4944-84BD-FC96DF396904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E4AAA57-98D5-4944-84BD-FC96DF396904}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

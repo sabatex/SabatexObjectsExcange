@@ -38,7 +38,7 @@
 #else
         [JsonProperty("refresh_token")]
 #endif
-        public string? RefreshToken { get; set; }
+        public string RefreshToken { get; set; }= string.Empty;
 
         /// <summary>
         /// Expired time by seconds
@@ -59,8 +59,8 @@
         /// <param name="tokenType">Token type, defaut Bearer</param>
         public Token(string accessToken, string refreshToken, int expiresIn, string tokenType = "Bearer")
         {
-            AccessToken = accessToken ?? string.Empty;
-            RefreshToken = refreshToken ?? string.Empty;
+            AccessToken = accessToken;
+            RefreshToken = refreshToken;
             TokenType = tokenType;
             ExpiresIn = expiresIn;
         }

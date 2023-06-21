@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 #endif
 using System;
 
+
 namespace Sabatex.ObjectsExchange.Models
 {
     /// <summary>
@@ -26,6 +27,18 @@ namespace Sabatex.ObjectsExchange.Models
         /// <summary>
         /// Moment then object serialized on Client mashine
         /// </summary>
-        public DateTime dateStamp = DateTime.Now;
-     }
+        public DateTime dateStamp = DateTime.UtcNow;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <param name="objectId"></param>
+        /// <param name="text"></param>
+        public PostObject(string objectType, string objectId,string text)
+        {
+            this.objectType = objectType;
+            this.objectId = objectId;
+            this.text = text;
+        }
+    }
 }

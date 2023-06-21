@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;NET7.0</TargetFrameworks>
+	<LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sabatex.ObjectsExchange.ApiConnector.Common\Sabatex.ObjectsExchange.ApiConnector.Common.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -105,6 +105,8 @@ namespace ObjectsExchange.Services
             if (oldAccessToken == null)
                 throw new TokenNotExistException($"Try refresh unexist token for clientId={clientId} ");
 
+            if (oldAccessToken.RefreshToken != refreshToken)
+                throw new TokenNotExistException($"Try refresh utoken for clientId={clientId} fail");
 
             _dbContext.AutenficatedNodes.Remove(oldAccessToken);
             var result = new AutenficatedNode

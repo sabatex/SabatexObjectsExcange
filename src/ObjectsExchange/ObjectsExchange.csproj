@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-ObjectsExchange-b463a7e1-074e-48cf-9f4f-d216310d61c7</UserSecretsId>
+	  <Version>2.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
