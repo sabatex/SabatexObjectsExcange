@@ -63,6 +63,7 @@ public class v0Controller : ControllerBase
             if (apiToken != clientAutenficate.AccessToken)
             {
                 _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  try use invalid token {apiToken}");
+                await Task.Delay(2000); // no access
                 return null;
             }
 
@@ -70,6 +71,7 @@ public class v0Controller : ControllerBase
             if (existTime > clientAutenficate.ExpiresDate)
             {
                 _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  use exprise token {apiToken} by time {existTime}");
+                await Task.Delay(2000); // no access
                 return null;
             }
             var result = await _dbContext.ClientNodes.FindAsync(nodeId);
@@ -82,6 +84,7 @@ public class v0Controller : ControllerBase
 
             var ip = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
             _logger.LogTrace($"{DateTime.Now}: Try use service from ip={ip} with nodeId={nodeId} and The client {nodeId} and token = {apiToken}");
+            await Task.Delay(2000); // no access
             return null;
         }
     }

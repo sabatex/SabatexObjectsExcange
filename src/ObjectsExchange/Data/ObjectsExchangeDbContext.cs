@@ -7,6 +7,7 @@ public class ObjectsExchangeDbContext:DbContext
 {
 #pragma warning disable CS8618
     public DbSet<ClientNode> ClientNodes { get; set; }
+    public DbSet<Client> Clients { get; set; }
     public DbSet<AutenficatedNode> AutenficatedNodes { get; set; }
     public DbSet<ObjectExchange> ObjectExchanges { get; set; }
     public DbSet<QueryObject> QueryObjects { get; set; }
@@ -28,5 +29,7 @@ public class ObjectsExchangeDbContext:DbContext
         builder.Entity<QueryObject>().HasOne<ClientNode>().WithMany().HasForeignKey(p => p.Destination).OnDelete(DeleteBehavior.Cascade);
         builder.Entity<ObjectExchange>().HasOne<ClientNode>().WithMany().HasForeignKey(p => p.Sender).OnDelete(DeleteBehavior.Cascade);
         builder.Entity<ObjectExchange>().HasOne<ClientNode>().WithMany().HasForeignKey(p => p.Destination).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<Client>().HasData(new Client {Id=1,Dascription="Demo"});
+
     }
 }

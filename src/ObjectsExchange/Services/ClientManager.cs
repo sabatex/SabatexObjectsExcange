@@ -69,6 +69,7 @@ namespace ObjectsExchange.Services
         /// <exception cref="LoginIdUknownException">Failure login to api</exception>
         public async Task<Token> LoginAsync(Guid clientId, string password)
         {
+            await Task.Delay(1000);// 
             var clientNode = await _dbContext.ClientNodes.FindAsync(clientId);
             if (clientNode == null)
                 throw new LoginIdUknownException($"Login failed: {clientId}");
@@ -97,6 +98,7 @@ namespace ObjectsExchange.Services
 
         public async Task<Token> RefreshTokenAsync(Guid clientId,string refreshToken)
         {
+            await Task.Delay(1000);
             var clientNode = await _dbContext.ClientNodes.FindAsync(clientId);
             if (clientNode == null)
                 throw new LoginIdUknownException($"Login failed: {clientId}");
