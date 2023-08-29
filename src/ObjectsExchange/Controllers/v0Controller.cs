@@ -147,6 +147,9 @@ public class v0Controller : ControllerBase
                                                      [FromQuery]int take = 10)
     {
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
+        if (clientNode == null)
+            return Unauthorized();
+
         var result = await _dbContext.ObjectExchanges
                         .Where(s => s.Destination==clientId)
                         .Where(s=>s.Sender ==destinationId)
@@ -238,7 +241,7 @@ public class v0Controller : ControllerBase
     /// <param name="take"></param>
     /// <returns></returns>
     [HttpGet("queries")]
-    public async Task<IActionResult> GetQueryesAsync([FromHeader] string apiToken,
+    public async Task<IActionResult> GetQueryesAsync([FromHeader] string? apiToken,
                                                      [FromHeader] Guid clientId,
                                                      [FromHeader] Guid destinationId,
                                                      [FromQuery] int take = 10)
