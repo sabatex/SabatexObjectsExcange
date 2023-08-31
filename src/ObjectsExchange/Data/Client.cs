@@ -7,6 +7,6 @@ namespace ObjectsExchange.Data
         public int Id { get; set; }
         public string Dascription { get; set; } = string.Empty;
         public IEnumerable<ClientNode>? ClientNodes { get; set; }
-        public string KeyAsString()=>Id.ToString();
+        public string KeyAsString() => Id.ToString();
     }
 }

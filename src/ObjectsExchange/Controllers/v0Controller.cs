@@ -27,14 +27,14 @@ public class v0Controller : ControllerBase
     private readonly ClientManager _clientManager;
     public static int maxTake = 50;
     private const string _tokenType = "BEARER";
-    public v0Controller(ObjectsExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig,ClientManager clientManager )
+    public v0Controller(ObjectsExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
     {
         _logger = logger;
         _dbContext = dbContext;
         _apiConfig = apiConfig.Value;
         _clientManager = clientManager;
     }
-    
+
     private string extractToken(string authorizationToken)
     {
         var r = authorizationToken.Split(' ');
@@ -55,7 +55,7 @@ public class v0Controller : ControllerBase
         r.NextBytes(data);
         return new Guid(data).ToString();
     }
-    private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId,string apiToken)
+    private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId, string apiToken)
     {
         var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(nodeId);
         if (clientAutenficate != null)
@@ -144,28 +144,28 @@ public class v0Controller : ControllerBase
     public async Task<IActionResult> GetObjectsAsync([FromHeader] string apiToken,
                                                      [FromHeader] Guid clientId,
                                                      [FromHeader] Guid destinationId,
-                                                     [FromQuery]int take = 10)
+                                                     [FromQuery] int take = 10)
     {
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
 
         var result = await _dbContext.ObjectExchanges
-                        .Where(s => s.Destination==clientId)
-                        .Where(s=>s.Sender ==destinationId)
+                        .Where(s => s.Destination == clientId)
+                        .Where(s => s.Sender == destinationId)
                         .OrderBy(d => d.Id) // priority
                         .Take(take).ToArrayAsync();
         return Ok(result);
     }
-    
+
     [HttpPost("objects")]
-    
+
     public async Task<IActionResult> PostAsync([FromHeader] string apiToken,
                                                [FromHeader] Guid clientId,
                                                [FromHeader] Guid destinationId,
                                                JsonDocument json)
     {
- 
+
         string? objectId = json.RootElement.GetProperty("objectId").GetString();
         if (objectId == null)
             return BadRequest("The not defined objectId");
@@ -175,10 +175,10 @@ public class v0Controller : ControllerBase
         string? text = json.RootElement.GetProperty("text").GetString();
         if (text == null)
             return BadRequest("The not defined text");
-        DateTime? dateStamp=null;
+        DateTime? dateStamp = null;
         if (json.RootElement.GetProperty("dateStamp").TryGetDateTime(out DateTime tdateStamp))
             dateStamp = tdateStamp;
-        var clientNode = await GetClientNodeByTokenAsync (clientId, apiToken);
+        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
 
@@ -205,7 +205,7 @@ public class v0Controller : ControllerBase
             _logger.LogError(error);
             return BadRequest(error);
         }
-        
+
         return Ok();
     }
 
@@ -228,8 +228,8 @@ public class v0Controller : ControllerBase
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
-   
- 
+
+
     #endregion
 
     #region queries
@@ -251,11 +251,11 @@ public class v0Controller : ControllerBase
             return Unauthorized();
         var result = await _dbContext.QueryObjects
                 .Where(s => s.Destination == clientId)
-                .Where(s=>s.Sender == destinationId)
+                .Where(s => s.Sender == destinationId)
                 .OrderBy(d => d.Id) // priority
                 .Take(take)
                 .ToArrayAsync();
-            return Ok(result);
+        return Ok(result);
     }
 
     [HttpPost("queries")]
@@ -274,17 +274,17 @@ public class v0Controller : ControllerBase
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
-        
+
         var validNodes = clientNode.GetClientAccess();
-           // check exist same query 
-            var obj = new QueryObject
-            {
-                Sender = clientId,
-                Destination = destinationId,
-                ObjectId = objectId,
-                ObjectType = objectType
-            };
-            await _dbContext.QueryObjects.AddAsync(obj);
+        // check exist same query 
+        var obj = new QueryObject
+        {
+            Sender = clientId,
+            Destination = destinationId,
+            ObjectId = objectId,
+            ObjectType = objectType
+        };
+        await _dbContext.QueryObjects.AddAsync(obj);
 
         await _dbContext.SaveChangesAsync();
         return Ok();
@@ -299,21 +299,21 @@ public class v0Controller : ControllerBase
         if (clientNode == null)
             return Unauthorized();
 
-             var obj = await _dbContext.QueryObjects.FindAsync(id);
-            if (obj ==null)
-                return NotFound();
-            if (obj.Destination !=clientId)
+        var obj = await _dbContext.QueryObjects.FindAsync(id);
+        if (obj == null)
+            return NotFound();
+        if (obj.Destination != clientId)
         {
             var error = $"Нод {clientNode.Name} з id={clientId} не може видаляти дані чужих нодів {obj.Destination}";
             _logger.LogError($"{DateTime.Now}: {error}");
             return Conflict(error);
 
         }
-             _dbContext.QueryObjects.Remove(obj);
+        _dbContext.QueryObjects.Remove(obj);
 
         await _dbContext.SaveChangesAsync();
         return Ok();
- 
+
     }
 
 

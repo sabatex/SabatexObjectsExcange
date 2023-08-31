@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ObjectsExchange.Data;
 
-public class AutenficatedNode:IEntityBase
+public class AutenficatedNode : IEntityBase
 {
     /// <summary>
     /// the same as ClientNode Id

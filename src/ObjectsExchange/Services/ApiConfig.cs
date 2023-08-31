@@ -8,7 +8,7 @@ namespace ObjectsExchange.Services
         /// <summary>
         /// Life time seconds
         /// </summary>
-        public int TokensLifeTime { get; set; } = 3600; 
+        public int TokensLifeTime { get; set; } = 3600;
         public string HashKey { get; set; } = "ajcewewi%^(F#|}9327nx=-23hdxsa5vcx<>_ d";
         public string HashPassword(string password)
         {

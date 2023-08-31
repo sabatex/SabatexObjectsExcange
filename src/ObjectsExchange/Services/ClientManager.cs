@@ -16,10 +16,10 @@ namespace ObjectsExchange.Services
         protected readonly ObjectsExchangeDbContext _dbContext;
         private readonly ApiConfig apiConfig;
 
-        public ClientManager(ObjectsExchangeDbContext dbContext, ILogger<ClientManager> logger, IOptions<ApiConfig> apiConfig) 
+        public ClientManager(ObjectsExchangeDbContext dbContext, ILogger<ClientManager> logger, IOptions<ApiConfig> apiConfig)
         {
-            _logger= logger;
-            _dbContext= dbContext;
+            _logger = logger;
+            _dbContext = dbContext;
             this.apiConfig = apiConfig.Value;
         }
         private string GetHashString(string value)
@@ -37,7 +37,7 @@ namespace ObjectsExchange.Services
             return new Guid(data).ToString();
         }
 
-        public async Task<ClientNode> CreateClientAsync(string clientName,string password,string descriptions,string accesNodes)
+        public async Task<ClientNode> CreateClientAsync(string clientName, string password, string descriptions, string accesNodes)
         {
             var normalizedName = clientName.ToUpper();
             var clientNode = await _dbContext.ClientNodes.SingleOrDefaultAsync(s => s.NormalizedName == normalizedName);
@@ -73,10 +73,10 @@ namespace ObjectsExchange.Services
             var clientNode = await _dbContext.ClientNodes.FindAsync(clientId);
             if (clientNode == null)
                 throw new LoginIdUknownException($"Login failed: {clientId}");
-  
+
             if (clientNode.Password != GetHashString(password))
                 throw new LoginIdUknownException($"Login failed: {clientId}");
-   
+
             // success client verified
             // remove old access token
             var oldAccessToken = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Id == clientId);
@@ -92,17 +92,17 @@ namespace ObjectsExchange.Services
             };
             await _dbContext.AutenficatedNodes.AddAsync(result);
             await _dbContext.SaveChangesAsync();
-            return new Token(result.AccessToken,result.RefreshToken,apiConfig.TokensLifeTime);
+            return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime);
 
         }
 
-        public async Task<Token> RefreshTokenAsync(Guid clientId,string refreshToken)
+        public async Task<Token> RefreshTokenAsync(Guid clientId, string refreshToken)
         {
             await Task.Delay(1000);
             var clientNode = await _dbContext.ClientNodes.FindAsync(clientId);
             if (clientNode == null)
                 throw new LoginIdUknownException($"Login failed: {clientId}");
-            
+
             var oldAccessToken = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Id == clientId);
             if (oldAccessToken == null)
                 throw new TokenNotExistException($"Try refresh unexist token for clientId={clientId} ");
@@ -124,17 +124,17 @@ namespace ObjectsExchange.Services
         }
 
 
-        public async Task<IEnumerable<ClientNodeBase>> GetClients(int skip,int take)
+        public async Task<IEnumerable<ClientNodeBase>> GetClients(int skip, int take)
         {
             return await _dbContext.ClientNodes.Skip(skip).Take(take).Select(s => new ClientNodeBase
             {
                 Id = s.Id,
                 Name = s.Name,
-                Description=s.Description,
+                Description = s.Description,
                 ClientAccess = s.ClientAccess,
                 IsDemo = s.IsDemo,
-                Counter= s.Counter,
-                MaxOperationPerMounth= s.MaxOperationPerMounth
+                Counter = s.Counter,
+                MaxOperationPerMounth = s.MaxOperationPerMounth
 
             }).ToArrayAsync();
         }
@@ -145,12 +145,12 @@ namespace ObjectsExchange.Services
         }
     }
 
-    public class LoginIdUknownException:Exception 
+    public class LoginIdUknownException : Exception
     {
-        public LoginIdUknownException(string message):base(message) { }
+        public LoginIdUknownException(string message) : base(message) { }
     }
-    public class TokenNotExistException:Exception
+    public class TokenNotExistException : Exception
     {
-        public TokenNotExistException(string message):base(message){}
+        public TokenNotExistException(string message) : base(message) { }
     }
 }
