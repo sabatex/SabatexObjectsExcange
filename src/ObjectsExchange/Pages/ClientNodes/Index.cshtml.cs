@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ObjectsExchange.Data;
 
-namespace ObjectsExchange.Pages.Clients
+namespace ObjectsExchange.Pages.ClientNodes
 {
     public class IndexModel : PageModel
     {

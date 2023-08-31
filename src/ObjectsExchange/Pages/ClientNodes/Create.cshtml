@@ -1,11 +1,11 @@
 ﻿@page
-@model ObjectsExchange.Pages.Clients.EditModel
+@model ObjectsExchange.Pages.ClientNodes.CreateModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Create";
 }
 
-<h1>Edit</h1>
+<h1>Create</h1>
 
 <h4>ClientNode</h4>
 <hr />
@@ -13,11 +13,16 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ClientNode.Id" />
+            <input asp-for="ClientNode.NormalizedName" class="form-control" hidden />
             <div class="form-group">
                 <label asp-for="ClientNode.Name" class="control-label"></label>
                 <input asp-for="ClientNode.Name" class="form-control" />
                 <span asp-validation-for="ClientNode.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClientNode.Password" class="control-label"></label>
+                <input asp-for="ClientNode.Password" class="form-control" />
+                <span asp-validation-for="ClientNode.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ClientNode.Description" class="control-label"></label>
@@ -45,14 +50,14 @@
                 <span asp-validation-for="ClientNode.MaxOperationPerMounth" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

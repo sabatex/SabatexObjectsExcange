@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ObjectsExchange.Data;
 using Sabatex.ObjectsExchange.Models;
 
-namespace ObjectsExchange.Pages.Clients
+namespace ObjectsExchange.Pages.ClientNodes
 {
     public class EditModel : PageModel
     {

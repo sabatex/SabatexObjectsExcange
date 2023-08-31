@@ -10,7 +10,7 @@ using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Sabatex.ObjectsExchange.Models;
 
-namespace ObjectsExchange.Pages.Clients
+namespace ObjectsExchange.Pages.ClientNodes
 {
     public class CreateModel : PageModel
     {
