@@ -19,15 +19,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.15" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.15" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.15" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.15">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.21" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.21">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
 
 	  <PackageReference Include="Microsoft.Identity.Web" Version="2.6.1" />
 	<PackageReference Include="Microsoft.Identity.Web.UI" Version="2.6.1" />
-	<PackageReference Include="Sabatex.ObjectsExchange.Models" Version="1.0.0-rc1" />
+	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
 	<PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.11.0" />
   </ItemGroup>
 	<ItemGroup>
@@ -35,5 +36,8 @@
 			<Link>wwwroot\Readme.md</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>	
 		</Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj" />
 	</ItemGroup>
 </Project>

@@ -14,6 +14,7 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="ClientNode.NormalizedName" class="form-control" hidden />
+            <input asp-for="ClientNode.ClientId" class="form-control" hidden />
             <div class="form-group">
                 <label asp-for="ClientNode.Name" class="control-label"></label>
                 <input asp-for="ClientNode.Name" class="form-control" />

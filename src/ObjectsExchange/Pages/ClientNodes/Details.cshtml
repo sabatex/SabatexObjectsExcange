@@ -12,6 +12,13 @@
     <hr />
     <form method="post">
     <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ClientNode.Id)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ClientNode.Id)
+            </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ClientNode.Name)
         </dt>

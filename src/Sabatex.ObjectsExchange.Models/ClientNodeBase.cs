@@ -54,7 +54,26 @@ namespace Sabatex.ObjectsExchange.Models
             }
             ClientAccess = result.ToString();
         }
-        
+        /// <summary>
+        /// Set client access nodes
+        /// </summary>
+        /// <param name="nodesList">array id's for access nodes</param>
+        public void SetClientAccess(IEnumerable<string> nodesList)
+        {
+            //ClientAccess = string.Join(",", nodesList); // not support NET3.5
+            bool first = true;
+            var result = new StringBuilder();
+            foreach (var item in nodesList)
+            {
+                if (first)
+                    first = false;
+                else
+                    result.Append(',');
+                result.Append(item);
+            }
+            ClientAccess = result.ToString();
+        }
+
         /// <summary>
         /// Get 
         /// </summary>

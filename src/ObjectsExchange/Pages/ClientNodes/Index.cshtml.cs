@@ -18,22 +18,24 @@ namespace ObjectsExchange.Pages.ClientNodes
             _context = context;
         }
 
-        public IList<ClientNode> ClientNode { get;set; } = default!;
-        public Dictionary<Guid, int> QuriesCount { get; set; } = new Dictionary<Guid, int>();
-        public Dictionary<Guid, int> ObjectsCount { get; set; } = new Dictionary<Guid, int>();
-        public async Task OnGetAsync()
+        public int ClientId { get; set; }
+        public IList<ClientNodes> ClientNode { get;set; } = default!;
+        public async Task OnGetAsync(int clientId)
         {
+            ClientId = clientId;
             if (_context.ClientNodes != null)
             {
-                ClientNode = await _context.ClientNodes.ToListAsync();
-                QuriesCount= _context.QueryObjects.GroupBy(g=>g.Destination)
-                            .Select(x=> new { id = x.Key, count = x.Count() })
-                            .ToDictionary(x=>x.id,y=>y.count);
-                ObjectsCount = _context.ObjectExchanges.GroupBy(g => g.Destination)
-                            .Select(x => new { id = x.Key, count = x.Count() })
-                            .ToDictionary(x => x.id, y => y.count);
+                ClientNode = await _context.ClientNodes.Include(i => i.Objects).Include(j => j.QueryObjects).Where(s => s.ClientId == clientId).Select(s => new ClientNodes { ClientNode = s, QueriesCount = s.QueryObjects.Count(), ObjectsCount = s.Objects.Count() }).ToArrayAsync();
 
             }
         }
+        public class ClientNodes
+        {
+            public ClientNode? ClientNode { get; set; }
+            public int QueriesCount { get; set; }
+            public int ObjectsCount { get; set; }
+        }
+
+
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
-using sabatex.ObjectsExchange.Models;
 using Sabatex.ObjectsExchange.Models;
 using System.Collections.Generic;
 using System.Security.Cryptography;

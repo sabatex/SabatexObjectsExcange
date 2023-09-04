@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using sabatex.ObjectsExchange.Models;
+using Sabatex.ObjectsExchange.Models;
 
 namespace ObjectsExchange.Data;
 

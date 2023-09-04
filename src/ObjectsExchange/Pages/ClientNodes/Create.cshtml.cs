@@ -23,11 +23,11 @@ namespace ObjectsExchange.Pages.ClientNodes
             _apiConfig = apiConfig.Value;
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet(int clientId)
         {
             ClientNode = new ClientNode
             {
-                Id = Guid.NewGuid(),NormalizedName="TEST"
+                Id = Guid.NewGuid(),ClientId = clientId,NormalizedName="NEW"
             };
             return Page();
         }
@@ -46,21 +46,19 @@ namespace ObjectsExchange.Pages.ClientNodes
 
             var clientNode = new ClientNode
             {
+                ClientId = ClientNode.ClientId,
                 Name = ClientNode.Name,
                 ClientAccess = ClientNode.ClientAccess,
                 Description = ClientNode.Description,
                 MaxOperationPerMounth = ClientNode.MaxOperationPerMounth,
                 NormalizedName = ClientNode.Name.ToUpper(),
-                Password = _apiConfig.HashPassword("")
+                Password = _apiConfig.HashPassword(ClientNode.Password)
             };
-
-            ClientNode.NormalizedName = ClientNode.Name.ToUpper();
-            ClientNode.Password = _apiConfig.HashPassword(ClientNode.Password);
 
             _context.ClientNodes.Add(ClientNode);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index",new {clientId=ClientNode.ClientId });
         }
     }
 }

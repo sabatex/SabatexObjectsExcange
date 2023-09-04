@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ObjectsExchange.Data;
+using ObjectsExchange.Services;
 using Sabatex.ObjectsExchange.Models;
 
 namespace ObjectsExchange.Pages.ClientNodes
@@ -14,14 +16,22 @@ namespace ObjectsExchange.Pages.ClientNodes
     public class EditModel : PageModel
     {
         private readonly ObjectsExchangeDbContext _context;
+        protected readonly ApiConfig _apiConfig;
+        const string maskPassword = "***********";
 
-        public EditModel(ObjectsExchangeDbContext context)
+        public EditModel(ObjectsExchangeDbContext context, IOptions<ApiConfig> apiConfig)
         {
             _context = context;
+            _apiConfig = apiConfig.Value;
         }
 
         [BindProperty]
-        public ClientNodeBase ClientNode { get; set; } = default!;
+        public ClientNode ClientNode { get; set; } = default!;
+
+        [BindProperty]
+        public IEnumerable<string> AccessCodes { get; set; }
+
+        public SelectListItem[] AccessItems { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -36,6 +46,9 @@ namespace ObjectsExchange.Pages.ClientNodes
                 return NotFound();
             }
             ClientNode = clientnode;
+            ClientNode.Password = maskPassword;
+            AccessItems = await _context.ClientNodes.Where(s=>s.ClientId == clientnode.ClientId).Select(n=>new SelectListItem { Value=n.Id.ToString(),Text =n.Name}).ToArrayAsync();
+            AccessCodes = clientnode.GetClientAccess().Select(s=>s.ToString());
             return Page();
         }
 
@@ -51,10 +64,19 @@ namespace ObjectsExchange.Pages.ClientNodes
             var clientNode = await _context.ClientNodes.FindAsync(ClientNode.Id);
             if (clientNode == null)
                 return NotFound();
-
-            clientNode.FillFromBase(ClientNode);
+            clientNode.Name = ClientNode.Name;
+            clientNode.NormalizedName = ClientNode.Name.ToUpper();
+            clientNode.Description = ClientNode.Description;
+            clientNode.SetClientAccess(AccessCodes);
+            clientNode.NormalizedName = ClientNode.Name.ToUpper();
+            clientNode.IsDemo = ClientNode.IsDemo;
+            clientNode.MaxOperationPerMounth = ClientNode.MaxOperationPerMounth;
+            if (ClientNode.Password != maskPassword)
+            {
+                clientNode.Password = _apiConfig.HashPassword(ClientNode.Password);
+            }
             await _context.SaveChangesAsync();
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { clientId = ClientNode.ClientId });
         }
 
         private bool ClientNodeExists(Guid id)

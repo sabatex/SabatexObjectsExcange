@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web.Resource;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
-using sabatex.ObjectsExchange.Models;
 using Sabatex.ObjectsExchange.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
