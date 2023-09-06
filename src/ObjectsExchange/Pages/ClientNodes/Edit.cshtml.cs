@@ -47,7 +47,7 @@ namespace ObjectsExchange.Pages.ClientNodes
             }
             ClientNode = clientnode;
             ClientNode.Password = maskPassword;
-            AccessItems = await _context.ClientNodes.Where(s=>s.ClientId == clientnode.ClientId).Select(n=>new SelectListItem { Value=n.Id.ToString(),Text =n.Name}).ToArrayAsync();
+            AccessItems = await _context.ClientNodes.Where(s=>s.ClientId == clientnode.ClientId && s.Id !=clientnode.Id).Select(n=>new SelectListItem { Value=n.Id.ToString(),Text =n.Name}).ToArrayAsync();
             AccessCodes = clientnode.GetClientAccess().Select(s=>s.ToString());
             return Page();
         }
