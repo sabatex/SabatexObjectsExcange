@@ -77,11 +77,10 @@
                 <input type="submit" asp-page-handler="CleanObjects" asp-route-id="@Model.ClientNode.Id" value="Clean Objects" />
             </dd>
 
-
     </dl>
     </form>
 </div>
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.ClientNode?.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Index" asp-route-clientId="@Model.ClientNode?.ClientId">Back to List</a>
 </div>

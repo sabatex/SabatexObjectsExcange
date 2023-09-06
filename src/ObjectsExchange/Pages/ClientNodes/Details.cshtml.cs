@@ -19,7 +19,7 @@ namespace ObjectsExchange.Pages.ClientNodes
             _context = context;
         }
 
-      public ClientNodeBase ClientNode { get; set; } = default!;
+      public ClientNode ClientNode { get; set; } = default!;
       public int QuriesCount { get; set; }
       public int ObjectsCount { get; set; }
 
