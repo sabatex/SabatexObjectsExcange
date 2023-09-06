@@ -25,7 +25,10 @@ namespace ObjectsExchange.Pages.ClientNodes
             ClientId = clientId;
             if (_context.ClientNodes != null)
             {
-                ClientNode = await _context.ClientNodes.Include(i => i.Objects).Include(j => j.QueryObjects).Where(s => s.ClientId == clientId).Select(s => new ClientNodes { ClientNode = s, QueriesCount = s.QueryObjects.Count(), ObjectsCount = s.Objects.Count() }).ToArrayAsync();
+                ClientNode = await _context.ClientNodes.Where(s => s.ClientId == clientId)
+                    .Select(s => new ClientNodes { ClientNode = s,
+                                                   QueriesCount = _context.QueryObjects.Where(n=>n.Destination == s.Id).Count(),
+                                                   ObjectsCount = _context.ObjectExchanges.Where(n=>n.Destination == s.Id).Count() }).ToArrayAsync();
 
             }
         }
