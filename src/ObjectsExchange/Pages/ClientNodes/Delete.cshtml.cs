@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using ObjectsExchange.Data;
 
 namespace ObjectsExchange.Pages.ClientNodes
 {
+    [Authorize]
     public class DeleteModel : PageModel
     {
         private readonly ObjectsExchangeDbContext _context;

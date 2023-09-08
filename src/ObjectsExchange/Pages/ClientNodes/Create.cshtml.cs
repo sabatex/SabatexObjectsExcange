@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using Sabatex.ObjectsExchange.Models;
 
 namespace ObjectsExchange.Pages.ClientNodes
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly ObjectsExchangeDbContext _context;

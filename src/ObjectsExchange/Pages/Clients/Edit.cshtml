@@ -95,9 +95,9 @@
 
 
                     <td>
-                        <a asp-page="./Edit" asp-route-id="@item.ClientNode.Id">Edit</a> |
-                        <a asp-page="./Details" asp-route-id="@item.ClientNode.Id">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.ClientNode.Id">Delete</a>
+                        <a asp-page="./Edit" asp-route-id="@item.ClientNode?.Id">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.ClientNode?.Id">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.ClientNode?.Id">Delete</a>
                     </td>
                 </tr>
             }
