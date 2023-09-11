@@ -2,7 +2,7 @@
 // Copyright (c) 2021 by Serhiy Lakas
 // https://sabatex.github.io
 // 1C 8.2.16 compatible
-// version 3.0.0-rc4
+// version 3.0.0-rc5
 
 function DigitStrCompare(str1,str2)
 	val1 = Число(str1);
@@ -292,9 +292,9 @@ endfunction
 #region Autenfication
 function ConvertAccesToken(accessToken)
 	result = new Structure;
-	result.Insert("access_token",ValueOrDefault(accessToken["access_token"],""));
+	result.Insert("access_token",ValueOrDefault(accessToken["access_token"],"undefined"));
 	result.Insert("token_type",ValueOrDefault(accessToken["token_type"],""));
-	result.Insert("refresh_token",ValueOrDefault(accessToken["refresh_token"],""));
+	result.Insert("refresh_token",ValueOrDefault(accessToken["refresh_token"],"undefined"));
 	result.Insert("expires_in",ValueOrDefault(accessToken["expires_in"],CurrentDate()));
 	return result;
 endfunction

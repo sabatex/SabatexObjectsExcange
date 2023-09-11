@@ -4,50 +4,50 @@
 // version 1.0.0
 
 
-function DateAddDay(value,count = 1) export
-	return value + count*86400;
-endfunction
+Function DateAddDay(value, count = 1) Export
+	Return value + count * 86400;
+EndFunction
 
-function DateAddHour(value,count = 1) export
-	return value + count*3600;
-endfunction	
+Function DateAddHour(value, count = 1) Export
+	Return value + count * 3600;
+EndFunction
 
-function DateAddMinute(value,count = 1) export
-	return value + count*60;
-endfunction	
+Function DateAddMinute(value, count = 1) Export
+	Return value + count * 60;
+EndFunction
 
-function StringStartWith(value,searchString) export
-	return StrFind(value,searchString)=1;
-endfunction
+Function StringStartWith(value, searchString) Export
+	Return StrFind(value, searchString) = 1;
+EndFunction
 
-function StringSplit(value,delimiter=";",includeEmpty=true) export
+Function StringSplit(value, delimiter = ";", includeEmpty = true) Export
 	
-	if StrLen(delimiter) <> 1 then
-		raise "Роздільник має бути тільки 1 символ.";
-	endif;	
+	If StrLen(delimiter) <> 1 Then
+		Raise "Роздільник має бути тільки 1 символ.";
+	EndIf;
 	
-	result = new array;
+	result = New array;
 	position = 1;
 	success = true;
-	while success do
-		nextPosition =  StrFind(value,delimiter,position);
-		if nextPosition = 0 then
+	While success Do
+		nextPosition = StrFind(value, delimiter, position);
+		If nextPosition = 0 Then
 			success = false;
-			continue;
-		endif;
-		count =  nextPosition - position;
-		if count = 0 then
-			if includeEmpty then
+			Continue;
+		EndIf;
+		count = nextPosition - position;
+		If count = 0 Then
+			If includeEmpty Then
 				result.Add("");
-			endif;	
+			EndIf;
 			position = position + 1;
-			continue;
-		endif;
-		result.Add(Mid(value,position,count));
-		position = position + count +1;
-	enddo;
-	return result;
-endfunction	
-	
+			Continue;
+		EndIf;
+		result.Add(Mid(value, position, count));
+		position = position + count + 1;
+	EndDo;
+	Return result;
+EndFunction
+
 
 #endregion
