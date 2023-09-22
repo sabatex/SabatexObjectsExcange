@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.ApiConnector", "src\Sabatex.ObjectsExchange.ApiConnector\Sabatex.ObjectsExchange.ApiConnector.csproj", "{B5658388-0AEF-4447-A3D2-3725338D26DA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "src\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{3AF42961-4628-4301-B439-76939F2E7D40}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "src\ObjectsExchange\ObjectsExchange.csproj", "{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}"
@@ -30,10 +28,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B5658388-0AEF-4447-A3D2-3725338D26DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B5658388-0AEF-4447-A3D2-3725338D26DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B5658388-0AEF-4447-A3D2-3725338D26DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B5658388-0AEF-4447-A3D2-3725338D26DA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
