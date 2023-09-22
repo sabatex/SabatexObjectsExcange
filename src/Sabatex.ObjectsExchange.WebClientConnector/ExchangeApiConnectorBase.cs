@@ -19,7 +19,7 @@ namespace Sabatex.ObjectsExchange.ApiConnector.Common
         protected DateTime expired_token;
 
 
-         protected ExchangeApiConnectorBase(string baseUri, Guid clientId, Guid destinationId, string accessToken, DateTime expired_token)
+        protected ExchangeApiConnectorBase(string baseUri, Guid clientId, Guid destinationId, string accessToken, DateTime expired_token)
         {
             if (baseUri == null || baseUri == string.Empty)
                 this.BaseUri = "https://sabatex.francecentral.cloudapp.azure.com/";
