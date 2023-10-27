@@ -8,7 +8,7 @@ using System.Threading;
 //using System.Runtime.Remoting.Messaging;
 //using System.Security.Cryptography.X509Certificates;
 
-namespace Sabatex.ObjectsExchange.V1C77
+namespace Sabatex.V1C77.ExchangeService
 {
 
     public delegate void DocumentBeforeSerialized(IDocument1C77 doc1C77, Dictionary<string, object> extData);

@@ -1,4 +1,4 @@
-using sabatex.V1C77.ExchangeService;
+using Sabatex.V1C77.ExchangeService;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>

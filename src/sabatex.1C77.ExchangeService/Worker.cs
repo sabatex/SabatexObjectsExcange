@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Logging;
-using sabatex.V1C77.Models;
+using sabatex.V1C77;
 
-namespace sabatex.V1C77.ExchangeService
+
+namespace Sabatex.V1C77.ExchangeService
 {
     public class Worker : BackgroundService
     {

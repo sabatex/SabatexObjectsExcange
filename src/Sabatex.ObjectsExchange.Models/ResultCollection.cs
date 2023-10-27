@@ -11,9 +11,9 @@
         /// <summary>
         /// Part items collection
         /// </summary>
-            public IEnumerable<T> Items { get; set; } = new T[] { };
+        public IEnumerable<T> Items { get; set; } = new T[] { };
         /// <summary>
-        /// items count
+        /// total items count in database 
         /// </summary>
             public int Count { get; set; }
         }
