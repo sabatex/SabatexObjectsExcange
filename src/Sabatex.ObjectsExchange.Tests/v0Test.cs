@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ObjectsExchange;
 using Xunit;
-using Sabatex.ObjectsExchange.ApiConnector;
+
 
 namespace WebApiDocumentEx.Test;
 [TestCaseOrderer("WebApiDocumentEx.Test.PriorityOrderer", "WebApiDocumentEx.Test")]

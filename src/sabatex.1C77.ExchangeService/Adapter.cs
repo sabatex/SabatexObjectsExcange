@@ -1,6 +1,7 @@
 ﻿using sabatex.Extensions.ClassExtensions;
 using sabatex.V1C77;
 using sabatex.V1C77.Models.Metadata;
+using Sabatex.ObjectsExchange.HttpClientApiConnector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Sabatex.V1C77.ExchangeService
     public delegate void CatalogBeforeSerialized(ICatalog1C77 catalog1C77, Dictionary<string, object> extData);
     public class Adapter : IDisposable
     {
-        ApiConnector api;
+        ExchangeApiConnector api;
         IGlobalContext global;
         RootMetadata1C77 rootMetadata;
         int takeObjects = 200;
@@ -27,7 +28,7 @@ namespace Sabatex.V1C77.ExchangeService
         public event DocumentBeforeSerialized OnDocumentSerialized;
         public event CheckDocumentIsSerialized OnCheckDocumentIsSerialized;
 
-        public Adapter(ApiConnector api, IGlobalContext global, RootMetadata1C77 rootMetadata, ILogger logger, Guid destinationId)
+        public Adapter(ExchangeApiConnector api, IGlobalContext global, RootMetadata1C77 rootMetadata, ILogger logger, Guid destinationId)
         {
             this.api = api;
             this.global = global;
@@ -86,7 +87,7 @@ namespace Sabatex.V1C77.ExchangeService
             throw new Exception($"Error parse date: {c[0]} in document query");
         }
 
-        private void PostDocuments(string docName, DateTime date)
+        private async Task PostDocuments(string docName, DateTime date)
         {
             var metadata = rootMetadata.Документы[docName];
             var docs = global.CreateObjectDocument(docName);
@@ -111,32 +112,32 @@ namespace Sabatex.V1C77.ExchangeService
                 string jsonText = rootMetadata.SerializeJSON(doc, docName, extData);
                 try
                 {
-                    api.PostObjects($"Документ.{docName}", objectId, jsonText);
-                    logger.Information($"Posted {docName} {doc.DocDate} {doc.DocNum}");
+                    await api.PostObjectAsync($"Документ.{docName}", objectId, jsonText);
+                    logger.LogInformation($"Posted {docName} {doc.DocDate} {doc.DocNum}");
                 }
                 catch (Exception ex)
                 {
-                    logger.Error($"Error Posted order {doc.DocDate} {doc.DocNum} with error: {ex.Message}");
+                    logger.LogError($"Error Posted order {doc.DocDate} {doc.DocNum} with error: {ex.Message}");
                 }
                 Thread.Sleep(200); // pause for query
             }
         }
 
 
-        public void Query()
+        public async Task Query()
         {
-            var queries = api.GetQueries(takeObjects);
+            var queries = await api.GetQueryObjectsAsync(takeObjects);
             Console.WriteLine($"Queried objects: {queries.Count()}");
             foreach (var query in queries)
             {
                 try
                 { 
-                logger?.Information($"Try answer object type = {query.ObjectType} id = {query.Id}");
+                logger?.LogInformation($"Try answer object type = {query.ObjectType} id = {query.Id}");
 
                 var c = query.ObjectType.Split('.');
                 if (c.Length == 0)
                 {
-                    logger?.Error($"Error query Id={query.ObjectType}");
+                    logger?.LogError($"Error query Id={query.ObjectType}");
                     continue;
                 }
                 string json = string.Empty;
@@ -146,7 +147,7 @@ namespace Sabatex.V1C77.ExchangeService
                     case "СПРАВОЧНИК":
                         if (c.Length != 2)
                         {
-                            logger.Error($"Error query СПРАВОЧНИК Id: {query.ObjectType}");
+                            logger.LogError($"Error query СПРАВОЧНИК Id: {query.ObjectType}");
                             continue;
                         }
                         json = GetCatalogByCode(c[1], query.ObjectId);
@@ -154,7 +155,7 @@ namespace Sabatex.V1C77.ExchangeService
                     case "ДОКУМЕНТ":
                         if (c.Length != 2)
                         {
-                            logger.Error($"Error query ДОКУМЕНТ Id: {query.ObjectType}");
+                            logger.LogError($"Error query ДОКУМЕНТ Id: {query.ObjectType}");
                             continue;
                         }
 
@@ -164,11 +165,11 @@ namespace Sabatex.V1C77.ExchangeService
                         // QUERYDOCS.{DocName}.{Date} date format 20230201
                         if (c.Length != 3)
                         {
-                            logger.Error($"Error query QUERYDOCS Id: {query.ObjectType}");
+                            logger.LogError($"Error query QUERYDOCS Id: {query.ObjectType}");
                             continue;
                         }
                         var dateDoc = ParseDateString(c[2]).BeginOfDay();
-                        PostDocuments(c[1], dateDoc);
+                        await PostDocuments(c[1], dateDoc);
                         singleObject = false;
                         Thread.Sleep(1000);
                         break;
@@ -176,7 +177,7 @@ namespace Sabatex.V1C77.ExchangeService
                         // SALDO.{ACC}.{Date} ACC account number withot dot, date format 20230201
                         if (c.Length != 3)
                         {
-                            logger.Error($"Error query SALDO Id: {query.ObjectType}");
+                            logger.LogError($"Error query SALDO Id: {query.ObjectType}");
                             continue;
                         }
                         var date = ParseDateString(c[2]).BeginOfDay();
@@ -184,22 +185,22 @@ namespace Sabatex.V1C77.ExchangeService
                         break;
 
                     default:
-                        logger.Error($"Uknown type object {query.ObjectType}");
+                        logger.LogError($"Uknown type object {query.ObjectType}");
                         break;
 
                 }
 
                     if (singleObject)
                     {
-                        api.PostObjects(query.ObjectType, query.ObjectId, json);
-                        logger.Information($"Posted {query.ObjectType} with code={query.ObjectId}");
+                        await api.PostObjectAsync(query.ObjectType, query.ObjectId, json);
+                        logger.LogInformation($"Posted {query.ObjectType} with code={query.ObjectId}");
 
                     }
-                    api.DeleteQuery(query.Id);
+                    await api.DeleteQueryObjectAsync(query.Id);
                 }
                 catch (Exception ex)
                 {
-                    logger.Error($"Error Posted {query.ObjectType} with code={query.ObjectId} with error: {ex.Message}");
+                    logger.LogError($"Error Posted {query.ObjectType} with code={query.ObjectId} with error: {ex.Message}");
                 }
             }
         }
