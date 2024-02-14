@@ -6,7 +6,8 @@
     /// Helper class for part result collection
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ResultCollection<T> where T : IEntityBase
+    /// <typeparam name="TKey"></typeparam>
+    public class ResultCollection<T,TKey> where T : IEntityBase<TKey>
     {
         /// <summary>
         /// Part items collection

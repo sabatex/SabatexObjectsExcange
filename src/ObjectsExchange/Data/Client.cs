@@ -2,7 +2,7 @@
 
 namespace ObjectsExchange.Data
 {
-    public class Client : IEntityBase
+    public class Client : IEntityBase<int>
     {
         public int Id { get; set; }
         public string Dascription { get; set; } = string.Empty;

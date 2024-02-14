@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ObjectsExchange.Data;
 
-public class AutenficatedNode : IEntityBase
+public class AutenficatedNode : IEntityBase<Guid>
 {
     /// <summary>
     /// the same as ClientNode Id
@@ -26,6 +26,6 @@ public class AutenficatedNode : IEntityBase
     /// </summary>
     public DateTime ExpiresDate { get; set; }
 
-    string IEntityBase.KeyAsString() => Id.ToString();
+    //string IEntityBase.KeyAsString() => Id.ToString();
 
 }

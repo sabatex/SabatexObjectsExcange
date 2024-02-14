@@ -1,10 +1,7 @@
 ﻿using Sabatex.Core;
 using System;
 using System.Collections.Generic;
-#if NET6_0_OR_GREATER
 using System.ComponentModel.DataAnnotations;
-#else
-#endif
 using System.Linq;
 using System.Text;
 
@@ -13,19 +10,18 @@ namespace Sabatex.ObjectsExchange.Models
     /// <summary>
     /// Base class for determine client node
     /// </summary>
-    public class ClientNodeBase:IEntityBase
+    public class ClientNodeBase:IEntityBase<Guid>
     {
         /// <summary>
         /// Client ID - UUID string
         /// </summary>
         public Guid Id { get; set; }
-        string IEntityBase.KeyAsString() => Id.ToString();
+        //string IEntityBase<Guid>.KeyAsString() => Id.ToString();
         /// <summary>
         /// Frendly client name (not indexed)
         /// </summary>
-#if NETCOREAPP2_0_OR_GREATER
+
         [MaxLength(100)]
-#endif
         public string Name { get; set; } = default!;
         /// <summary>
         /// Client description

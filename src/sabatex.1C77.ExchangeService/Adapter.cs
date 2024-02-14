@@ -2,12 +2,7 @@
 using sabatex.V1C77;
 using sabatex.V1C77.Models.Metadata;
 using Sabatex.ObjectsExchange.HttpClientApiConnector;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-//using System.Runtime.Remoting.Messaging;
-//using System.Security.Cryptography.X509Certificates;
+
 
 namespace Sabatex.V1C77.ExchangeService
 {
@@ -20,9 +15,9 @@ namespace Sabatex.V1C77.ExchangeService
         ExchangeApiConnector api;
         IGlobalContext global;
         RootMetadata1C77 rootMetadata;
-        int takeObjects = 200;
-        ILogger logger;
-        Guid destinationId;
+        readonly int takeObjects = 200;
+        readonly ILogger logger;
+        readonly Guid destinationId;
 
         public event CatalogBeforeSerialized OnCatalogSerialized;
         public event DocumentBeforeSerialized OnDocumentSerialized;
@@ -58,8 +53,8 @@ namespace Sabatex.V1C77.ExchangeService
             var catalog = global.CreateObjectCatalog(catalogName);
             if (catalog.FindByCode(code))
             {
-                Dictionary<string, object> extData = new Dictionary<string, object>();
-                if (OnCatalogSerialized != null) OnCatalogSerialized.Invoke(catalog, extData);
+                Dictionary<string, object> extData = new();
+                OnCatalogSerialized?.Invoke(catalog, extData);
                 return rootMetadata.SerializeJSON(catalog.CurrentItem, catalogName, extData);
             }
             throw new Exception($"Для Справочник.{catalogName} with code={catalog.Code.Trim()} не існує.");
@@ -77,7 +72,7 @@ namespace Sabatex.V1C77.ExchangeService
 
                 if (doc.FindByNum(c[1], date))
                 {
-                    Dictionary<string, object> extData = new Dictionary<string, object>();
+                    Dictionary<string, object> extData = new();
                     if (OnCatalogSerialized != null) OnDocumentSerialized.Invoke(doc.CurrentDocument, extData);
                     return rootMetadata.SerializeJSON(doc.CurrentDocument, docName, extData);
                 }
@@ -106,9 +101,8 @@ namespace Sabatex.V1C77.ExchangeService
                 var docNumber = doc.DocNum;
                 string objectId = $"{docDate.Year}{docDate.Month.ToString().PadLeft(2, '0')}{doc.DocNum}";
                 string objectKey = $"{docName}-{objectId}";
-                Dictionary<string, object> extData = new Dictionary<string, object>();
-                if (OnDocumentSerialized != null)
-                    OnDocumentSerialized.Invoke(doc, extData);
+                Dictionary<string, object> extData = new();
+                OnDocumentSerialized?.Invoke(doc, extData);
                 string jsonText = rootMetadata.SerializeJSON(doc, docName, extData);
                 try
                 {

@@ -34,7 +34,7 @@ public  class ExchangeApiConnector : IDisposable
     private readonly PasswordGetterDelegateAsync passwordGetterAsync;
     private readonly UpdateTokenDelegateAsync tokenUpdateAsync;
     private readonly RefreshTokenGetterDelegateAsync refreshTokenGetter;
-    protected AuthenticationHeaderValue _authenticationHeaderValue => new AuthenticationHeaderValue(_accessToken.TokenType,_accessToken.AccessToken);
+    protected AuthenticationHeaderValue _authenticationHeaderValue => new(_accessToken.TokenType,_accessToken.AccessToken);
 
     #region constructors
     /// <summary>
@@ -55,8 +55,10 @@ public  class ExchangeApiConnector : IDisposable
         if (clientNodeConfig.AcceptFailCertificates )
         {
 
-            var httpClientHandler = new HttpClientHandler();
-            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+            var httpClientHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; }
+            };
             _httpClient = new HttpClient(httpClientHandler);
         }
         else
@@ -65,7 +67,6 @@ public  class ExchangeApiConnector : IDisposable
         }
         
         _httpClient.BaseAddress = new Uri(clientNodeConfig.BaseUri);
-        //_httpClient.DefaultRequestHeaders.Authorization = _authenticationHeaderValue;
         _httpClient.DefaultRequestHeaders.Add("apiToken", _accessToken.AccessToken);
         _httpClient.DefaultRequestHeaders.Add("clientId", clientNodeConfig.ClientId);
         _httpClient.DefaultRequestHeaders.Add("destinationId", destinationId);
@@ -97,14 +98,10 @@ public  class ExchangeApiConnector : IDisposable
             ClientId =  new Guid(_clientNodeConfig.ClientId),
             Password = await passwordGetterAsync.Invoke()
         };
-        var response = await _httpClient.PostAsJsonAsync("api/v0/login", login);
-        if (response == null) 
-            throw new Exception();
+        var response = await _httpClient.PostAsJsonAsync("api/v0/login", login) ?? throw new Exception();
         if (response.IsSuccessStatusCode)
         {
-            var token = await response.Content.ReadFromJsonAsync<Token>();
-            if (token == null)
-                throw new Exception();
+            var token = await response.Content.ReadFromJsonAsync<Token>() ?? throw new Exception();
             await UpdateAccessTokenAsync(token);
             return;
         }
@@ -240,9 +237,9 @@ public  class ExchangeApiConnector : IDisposable
     public async Task PostObjectAsync(string objectType, string objectId, string text) =>
     await PostAsync(objectsUrl,
                                          new {
-                                             objectType = objectType,
-                                             objectId = objectId,
-                                             text = text,
+                                             objectType,
+                                             objectId,
+                                             text,
                                              dateStamp = DateTime.UtcNow
                                          });
     public async Task DeleteObjectAsync(long id)=>await DeleteAsync(objectsUrl, id);

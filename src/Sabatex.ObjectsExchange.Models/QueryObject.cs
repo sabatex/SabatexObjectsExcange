@@ -1,14 +1,12 @@
 ﻿using Sabatex.Core;
-#if NET6_0_OR_GREATER
 using System.ComponentModel.DataAnnotations;
-#endif
 using System;
 namespace Sabatex.ObjectsExchange.Models
 {
         /// <summary>
         /// обєкти які потрібно отримати з нода
         /// </summary>
-        public class QueryObject : IEntityBase
+        public class QueryObject : IEntityBase<long>
         {
         /// <summary>
         /// primary key
@@ -25,18 +23,14 @@ namespace Sabatex.ObjectsExchange.Models
         /// <summary>
         /// Client object unique id
         /// </summary>
-#if NET6_0_OR_GREATER
         [MaxLength(50)]
-#endif
         public string ObjectId { get; set; } = default!; //must lovercase
         /// <summary>
         /// client object type
         /// </summary>
-#if NET6_0_OR_GREATER
         [MaxLength(50)]
-#endif
         public string ObjectType { get; set; } = default!; // lovercase
-            string IEntityBase.KeyAsString() => Id.ToString();
+            //string IEntityBase.KeyAsString() => Id.ToString();
         }
 
 }

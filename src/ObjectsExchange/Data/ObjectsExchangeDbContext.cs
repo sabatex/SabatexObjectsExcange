@@ -1,18 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Sabatex.ObjectsExchange.Models;
 
 namespace ObjectsExchange.Data;
 
-public class ObjectsExchangeDbContext : DbContext
+public class ObjectsExchangeDbContext : IdentityDbContext
 {
-#pragma warning disable CS8618
     public DbSet<ClientNode> ClientNodes { get; set; }
     public DbSet<Client> Clients { get; set; }
     public DbSet<AutenficatedNode> AutenficatedNodes { get; set; }
     public DbSet<ObjectExchange> ObjectExchanges { get; set; }
     public DbSet<QueryObject> QueryObjects { get; set; }
-    public ObjectsExchangeDbContext(DbContextOptions options) : base(options) { }
-#pragma warning restore CS8618
+    public ObjectsExchangeDbContext(DbContextOptions<ObjectsExchangeDbContext> options) : base(options) { }
 
     IEnumerable<ClientNode> GetDefaultClientNodes()
     {

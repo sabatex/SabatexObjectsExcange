@@ -1,7 +1,5 @@
 using Sabatex.Core;
-#if NET6_0_OR_GREATER
 using System.ComponentModel.DataAnnotations;
-#endif
 using System;
 
 

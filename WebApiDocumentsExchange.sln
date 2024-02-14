@@ -18,8 +18,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.HttpClientConnector", "src\Sabatex.ObjectsExchange.HttpClientConnector\Sabatex.ObjectsExchange.HttpClientConnector.csproj", "{1AAFAE12-D832-4414-AF2F-4E4B816B304A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.WebClientConnector", "src\Sabatex.ObjectsExchange.WebClientConnector\Sabatex.ObjectsExchange.WebClientConnector.csproj", "{FB6DD0FA-7634-4B6C-B8A5-330C621836CB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,10 +44,6 @@ Global
 		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB6DD0FA-7634-4B6C-B8A5-330C621836CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB6DD0FA-7634-4B6C-B8A5-330C621836CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB6DD0FA-7634-4B6C-B8A5-330C621836CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB6DD0FA-7634-4B6C-B8A5-330C621836CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

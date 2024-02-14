@@ -1,11 +1,11 @@
 {
   "Linux": {
     "UserHomeFolder": "/home/azureuser",
-    "BitviseTlpFile": "C:\\Users\\serhi\\OneDrive\\SSH\\ZNCUbuntuAzure.tlp",
-    "PublishFolder": "/var/www/ObjectsExchange",
+    "BitviseTlpFile": "C:\\Users\\serhi\\OneDrive\\SSH\\ZNCWebSite.tlp",
+    "PublishFolder": "/var/www/sabatex-exchange",
     "FrontEnd": false,
     "Service": {
-      "ServiceName": "ObjectsExchange",
+      "ServiceName": "sabatex-exchange",
       "Port": 7000,
       "UpdateService": false
     }
