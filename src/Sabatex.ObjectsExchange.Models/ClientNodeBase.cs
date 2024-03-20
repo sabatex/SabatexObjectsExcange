@@ -35,7 +35,7 @@ namespace Sabatex.ObjectsExchange.Models
         /// Set client access nodes
         /// </summary>
         /// <param name="nodesList">array id's for access nodes</param>
-        public void SetClientAccess(Guid[] nodesList)
+        public void SetClientAccess(IEnumerable<Guid> nodesList)
         {
             //ClientAccess = string.Join(",", nodesList); // not support NET3.5
             bool first = true;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Sabatex.ObjectsExchange.Models;

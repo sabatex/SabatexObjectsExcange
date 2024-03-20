@@ -1,0 +1,45 @@
+﻿@page "/client/list"
+@attribute [Authorize]
+@inherits GridBasePage<Models.Client>
+
+<RadzenContent Container="main">
+    <ChildContent>
+        <div class="row">
+            <div class="col-md-12">
+               <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@AddButtonClick" Disabled="IsPageRO" />
+               <RadzenButton style="margin-bottom: 10px" Text="Nodes" Click="()=>Nodes(selectedItem[0])" Disabled=@(!selectedItem?.Any() ?? true)/>
+                <RadzenDataGrid TItem="Models.Client"
+                    @ref="grid"
+                    Data="@dataCollection.Value"
+                    Count="@dataCollection.Count"
+                    LoadData="@GridLoadData"
+                    IsLoading="@IsGridDataLoading"
+                    AllowFiltering="true"
+                    AllowSorting="true"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    @bind-Value=@selectedItem
+                    Density="Density.Compact"
+                    AllowVirtualization=true
+                    Style=@gridStyle
+                    RowDoubleClick="@RowDoubleClick">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Models.Client" Property="Description" Title="Description"  />
+                    </Columns>
+                </RadzenDataGrid>
+            </div>
+        </div>
+    </ChildContent>
+</RadzenContent>
+
+@code {
+
+    IList<Models.Client> selectedItem;
+    string gridStyle = "height:200px";
+    void Nodes(Models.Client client)
+    {
+        var query = new Dictionary<string, object?>();
+        query.Add("ClientId", client.Id.ToString());
+        var uri = NavigationManager.GetUriWithQueryParameters($"clientnode/list", query);
+        NavigationManager.NavigateTo(uri);   
+    }
+}

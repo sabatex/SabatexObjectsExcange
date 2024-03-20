@@ -1,0 +1,14 @@
+﻿<RadzenPanelMenu>
+    <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
+    <AuthorizeView>
+        <Authorized>
+            <RadzenPanelMenuItem Text="Clients" Icon="info" Path="client/list" />
+        </Authorized>
+        <NotAuthorized>
+            <RadzenPanelMenuItem Text="Counter" Icon="info" Path="counter" />
+            <RadzenPanelMenuItem Text="Weather" Icon="engineering" Path="Weather" />
+         </NotAuthorized>
+    </AuthorizeView>
+
+</RadzenPanelMenu>
+

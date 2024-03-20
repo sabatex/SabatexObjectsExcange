@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
 
 namespace ObjectsExchange.Pages.ClientNodes
@@ -20,9 +21,9 @@ namespace ObjectsExchange.Pages.ClientNodes
             _context = context;
         }
 
-        public int ClientId { get; set; }
+        public Guid ClientId { get; set; }
         public IList<ClientNodes> ClientNode { get;set; } = default!;
-        public async Task OnGetAsync(int clientId)
+        public async Task OnGetAsync(Guid clientId)
         {
             ClientId = clientId;
             if (_context.ClientNodes != null)

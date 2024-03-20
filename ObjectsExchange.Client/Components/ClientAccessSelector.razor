@@ -1,0 +1,35 @@
+﻿@inherits SabatexRadzenBlazorBaseDataComponent<Guid>
+
+    <RadzenCheckBoxList Data="@avaliableNodes" @bind-Value=@values TValue="Guid" TextProperty="Name" ValueProperty="Id" class="mb-5">
+        <Items>
+            <RadzenCheckBoxListItem Text="Static item" Value="0" />
+        </Items>
+    </RadzenCheckBoxList>
+
+
+
+
+@code {
+    record NodeDescriptor(Guid Id,string Name);
+    [Parameter] public Models.ClientNode? ClientNode { get; set; }
+
+    private IEnumerable<Guid> values
+    {
+        get => ClientNode.GetClientAccess();
+        set
+        {
+            ClientNode.SetClientAccess(value);
+        }
+    }
+
+    private IEnumerable<Models.ClientNode>? avaliableNodes;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var filter = $"ClientId eq {ClientNode.ClientId} and Id ne {ClientNode.Id}";
+        var avaliableNodes = await DataAdapter.GetAsync<Models.ClientNode>(filter,null,null,null,null,false);
+        this.avaliableNodes = avaliableNodes.Value;
+
+
+    }
+}

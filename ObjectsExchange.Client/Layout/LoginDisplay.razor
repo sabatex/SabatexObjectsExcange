@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+
+<AuthorizeView>
+    <Authorized>
+         <RadzenLink Icon="person" Path="Account/Manage" Text="@context.User.Identity?.Name" class="rz-my-auto" />
+         <form action="Account/logout" method="post">
+            <AntiforgeryToken />
+            <input type="hidden" name="ReturnUrl" value="" />
+            <RadzenButton ButtonType="ButtonType.Submit" Icon="logout" Text="" class="rz-mr-2" />
+
+         </form>
+    </Authorized>
+    <NotAuthorized>
+        <RadzenLink Icon="login" Path="Account/Login" Text="" class="rz-mr-3 rz-my-auto" />
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{
+    public void BeginLogOut()
+    {
+        Navigation.NavigateToLogout("Account/logout");
+    }
+}

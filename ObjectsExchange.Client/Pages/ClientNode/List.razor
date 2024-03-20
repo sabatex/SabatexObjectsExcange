@@ -1,0 +1,50 @@
+﻿@page "/clientnode/list"
+@attribute [Authorize]
+@inherits GridBasePage<Models.ClientNode>
+<RadzenContent Container="main">
+    <ChildContent>
+        <div class="row">
+            <div class="col-md-12">
+               <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@AddButtonClick" Disabled="IsPageRO" />
+
+                <RadzenDataGrid TItem="Models.ClientNode"
+                    @ref="grid"
+                    Data="@dataCollection.Value"
+                    Count="@dataCollection.Count"
+                    LoadData="@GridLoadData"
+                    IsLoading="@IsGridDataLoading"
+                    AllowFiltering="true"
+                    AllowSorting="true"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    @bind-Value=@selectedItem
+                    Density="Density.Compact"
+                    AllowVirtualization=true
+                    Style=@gridStyle
+                    RowDoubleClick="@RowDoubleClick">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Models.ClientNode" Property="Name" Title="Name" />
+
+                    </Columns>
+                </RadzenDataGrid>
+            </div>
+        </div>
+    </ChildContent>
+</RadzenContent>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid ClientId { get; set; }
+
+    IList<Models.ClientNode> selectedItem;
+    string gridStyle = "height:200px";
+
+    protected override ForeginKey ForeginKey => new ForeginKey("ClientId", ClientId.ToString());
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+
+}

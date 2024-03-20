@@ -1,0 +1,63 @@
+﻿@page "/clientnode/edit/{id?}"
+@attribute [Authorize]
+@inherits EditBasePage<Models.ClientNode>
+@if (Item == null)
+{
+    <p><em>Loading ...</em></p>
+}
+else
+{
+    <RadzenTemplateForm Data="@Item">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+            <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Small" Icon="save" Text="Save" Click="@Save" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" Icon="cancel" Text="Cancel" Click="@Cancel" />
+        </RadzenStack>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+                <RadzenFormField Text="Name" Style="width:100%">
+                    <RadzenTextBox @bind-Value="Item.Name" Name="Name" class="w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+                <RadzenFormField Text="Password" Style="width:100%">
+                    <RadzenPassword @bind-Value="Item.Password" Name="Password" class="w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+                <RadzenFormField Text="Description" Style="width:100%">
+                    <RadzenTextBox @bind-Value="Item.Description" Name="Description" class="w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+                <RadzenText Text="Access to node" />
+                <ClientAccessSelector ClientNode="Item" class="rz-my-2"/>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenTemplateForm>
+
+
+
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQueryAttribute]
+    public Guid ClientId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (Id == null)
+        {
+            Item.ClientId = ClientId;
+        }
+    }
+    protected override async Task Save()
+    {
+        Item.NormalizedName = Item.Name.ToUpper();
+
+        await base.Save();
+    }
+
+}

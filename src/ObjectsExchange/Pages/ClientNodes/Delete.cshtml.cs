@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
 
 namespace ObjectsExchange.Pages.ClientNodes

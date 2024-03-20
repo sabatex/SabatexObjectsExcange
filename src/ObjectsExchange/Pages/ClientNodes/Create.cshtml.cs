@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Sabatex.ObjectsExchange.Models;
@@ -25,7 +26,7 @@ namespace ObjectsExchange.Pages.ClientNodes
             _apiConfig = apiConfig.Value;
         }
 
-        public IActionResult OnGet(int clientId)
+        public IActionResult OnGet(Guid clientId)
         {
             ClientNode = new ClientNode
             {

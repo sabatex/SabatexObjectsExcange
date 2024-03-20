@@ -18,6 +18,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.HttpClientConnector", "src\Sabatex.ObjectsExchange.HttpClientConnector\Sabatex.ObjectsExchange.HttpClientConnector.csproj", "{1AAFAE12-D832-4414-AF2F-4E4B816B304A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange.Client", "ObjectsExchange.Client\ObjectsExchange.Client.csproj", "{75DB9265-342E-4DE3-A46A-C66DB25586CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.RadzenBlazor", "..\Sabatex.RadzenBlazor\Sabatex.RadzenBlazor\Sabatex.RadzenBlazor.csproj", "{AEA83029-91A6-4772-836D-10B5143458C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,14 @@ Global
 		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75DB9265-342E-4DE3-A46A-C66DB25586CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75DB9265-342E-4DE3-A46A-C66DB25586CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75DB9265-342E-4DE3-A46A-C66DB25586CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DB9265-342E-4DE3-A46A-C66DB25586CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEA83029-91A6-4772-836D-10B5143458C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEA83029-91A6-4772-836D-10B5143458C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEA83029-91A6-4772-836D-10B5143458C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEA83029-91A6-4772-836D-10B5143458C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
