@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ObjectsExchange.Data;
@@ -101,36 +102,36 @@ namespace ObjectsExchange.Controllers
             }
         }
 
-        //[HttpPatch]
-        //public virtual async Task<IActionResult> Patch([FromRoute] Guid key, jsonPa<TItem> delta)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    var entity = await context.Set<TItem>().FindAsync(key);
-        //    if (entity == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    delta.Patch(entity);
-        //    try
-        //    {
-        //        await context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ValueExists(key))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //    return Ok(entity);
-        //}
+        [HttpPatch]
+        public virtual async Task<IActionResult> Patch([FromRoute] Guid key, JsonPatchDocument<TItem> delta)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var entity = await context.Set<TItem>().FindAsync(key);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            delta.ApplyTo(entity);
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ValueExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return Ok(entity);
+        }
         [HttpPut("{id}")]
         public virtual async Task<IActionResult> Put([FromRoute] Guid id, TItem update)
         {
