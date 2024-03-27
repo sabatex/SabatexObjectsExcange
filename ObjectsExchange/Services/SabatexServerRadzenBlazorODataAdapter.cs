@@ -35,12 +35,12 @@ namespace ObjectsExchange.Services
             throw new NotImplementedException();
         }
 
-        public Task<TItem> PostAsync<TItem>(TItem? item) where TItem : class, Sabatex.Core.IEntityBase<TKey>
+        public Task<SabatexValidationModel<TItem>> PostAsync<TItem>(TItem? item) where TItem : class, Sabatex.Core.IEntityBase<TKey>
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync<TItem>(TItem item) where TItem : class, Sabatex.Core.IEntityBase<TKey>
+        public Task<SabatexValidationModel<TItem>> UpdateAsync<TItem>(TItem item) where TItem : class, Sabatex.Core.IEntityBase<TKey>
         {
             throw new NotImplementedException();
         }

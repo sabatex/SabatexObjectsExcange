@@ -1,41 +1,37 @@
 ﻿@page "/client/list"
 @attribute [Authorize]
-@inherits GridBasePage<Models.Client>
+@inherits SabatexRadzenBlazorBasePage
 
 <RadzenContent Container="main">
     <ChildContent>
         <div class="row">
             <div class="col-md-12">
-               <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@AddButtonClick" Disabled="IsPageRO" />
-               <RadzenButton style="margin-bottom: 10px" Text="Nodes" Click="()=>Nodes(selectedItem[0])" Disabled=@(!selectedItem?.Any() ?? true)/>
-                <RadzenDataGrid TItem="Models.Client"
-                    @ref="grid"
-                    Data="@dataCollection.Value"
-                    Count="@dataCollection.Count"
-                    LoadData="@GridLoadData"
-                    IsLoading="@IsGridDataLoading"
-                    AllowFiltering="true"
-                    AllowSorting="true"
-                    SelectionMode="DataGridSelectionMode.Single"
-                    @bind-Value=@selectedItem
-                    Density="Density.Compact"
-                    AllowVirtualization=true
-                    Style=@gridStyle
-                    RowDoubleClick="@RowDoubleClick">
+               <SabatexRadzenGrid TItem="Models.Client" TKey="Guid" >
+                   <Buttons Context="item">
+                        <RadzenButton Text="Nodes" Click="()=>Nodes(item)" Disabled=@(item == null) />
+                            @if (!IsAdmin)
+                            {
+                                <RadzenText Text="The limit 5 clients per user!"  />
+                            }
+                    </Buttons>
                     <Columns>
                         <RadzenDataGridColumn TItem="Models.Client" Property="Description" Title="Description"  />
                     </Columns>
-                </RadzenDataGrid>
+                </SabatexRadzenGrid>
             </div>
         </div>
     </ChildContent>
 </RadzenContent>
 
 @code {
+    bool IsAdmin = false;
 
-    IList<Models.Client> selectedItem;
-    string gridStyle = "height:200px";
-    void Nodes(Models.Client client)
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        IsAdmin = await UserIsInRore(ApplicationRole.AdministratorRole);
+    }
+    void Nodes(Models.Client? client)
     {
         var query = new Dictionary<string, object?>();
         query.Add("ClientId", client.Id.ToString());

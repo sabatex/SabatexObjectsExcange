@@ -25,6 +25,7 @@ public class v0Controller : ControllerBase
     private readonly ApiConfig _apiConfig;
     private readonly ClientManager _clientManager;
     public static int maxTake = 50;
+    public const int MessageSizeLimit = 10000;
     private const string _tokenType = "BEARER";
     public v0Controller(ObjectsExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
     {
@@ -96,6 +97,7 @@ public class v0Controller : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> PostLoginAsync(Login login)
     {
+        Thread.Sleep(100); // anti butforce
         try
         {
             return Ok(await _clientManager.LoginAsync(login.ClientId, login.Password));
@@ -109,6 +111,7 @@ public class v0Controller : ControllerBase
     [HttpPost("refresh_token")]
     public async Task<IActionResult> PostRefresTokenAsync(Login login)
     {
+        Thread.Sleep(100); // anti butforce
         try
         {
             return Ok(await _clientManager.RefreshTokenAsync(login.ClientId, login.Password));
@@ -127,6 +130,7 @@ public class v0Controller : ControllerBase
     [HttpGet("version")]
     public IActionResult Get()
     {
+        Thread.Sleep(500);
         return Ok(Assembly.GetExecutingAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty);
     }
 
@@ -148,7 +152,7 @@ public class v0Controller : ControllerBase
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
-
+        Thread.Sleep(100); // 
         var result = await _dbContext.ObjectExchanges
                         .Where(s => s.Destination == clientId)
                         .Where(s => s.Sender == destinationId)
@@ -174,15 +178,30 @@ public class v0Controller : ControllerBase
         string? text = json.RootElement.GetProperty("text").GetString();
         if (text == null)
             return BadRequest("The not defined text");
+        if (text.Length > MessageSizeLimit)
+            return BadRequest($"The message size {text.Length} is overflow limit {MessageSizeLimit} per message.");
+
         DateTime? dateStamp = null;
         if (json.RootElement.GetProperty("dateStamp").TryGetDateTime(out DateTime tdateStamp))
             dateStamp = tdateStamp;
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
+        if (clientNode.CounterReseted.Day != DateTime.UtcNow.Day)
+        {
+            clientNode.CounterReseted = DateTime.UtcNow;
+            clientNode.Counter = 0;
+
+        }
+
+        if (clientNode.ObjectsCount >= clientNode.MaxOperationPerMounth)
+        {
+            return BadRequest("The limit operations per day is overflow");
+        }
+
+
 
         var validNodes = clientNode.GetClientAccess();
-
         if (validNodes.Contains(destinationId))
         {
             var doc = new ObjectExchange
@@ -196,6 +215,7 @@ public class v0Controller : ControllerBase
                 SenderDateStamp = dateStamp
             };
             await _dbContext.ObjectExchanges.AddAsync(doc);
+            clientNode.Counter++;
             await _dbContext.SaveChangesAsync();
         }
         else
@@ -208,7 +228,7 @@ public class v0Controller : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("objects/{id}")]
+    [HttpDelete("objects/{id:long}")]
     public async Task<IActionResult> DeleteAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
     {
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
@@ -245,9 +265,11 @@ public class v0Controller : ControllerBase
                                                      [FromHeader] Guid destinationId,
                                                      [FromQuery] int take = 10)
     {
+
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
+        if (clientNode.IsDemo) Thread.Sleep(100);
         var result = await _dbContext.QueryObjects
                 .Where(s => s.Destination == clientId)
                 .Where(s => s.Sender == destinationId)
@@ -275,6 +297,8 @@ public class v0Controller : ControllerBase
             return Unauthorized();
 
         var validNodes = clientNode.GetClientAccess();
+        if (!validNodes.Contains(destinationId))
+            return BadRequest("The node not accept post");
         // check exist same query 
         var obj = new QueryObject
         {

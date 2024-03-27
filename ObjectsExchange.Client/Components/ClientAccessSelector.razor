@@ -26,10 +26,18 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var filter = $"ClientId eq {ClientNode.ClientId} and Id ne {ClientNode.Id}";
-        var avaliableNodes = await DataAdapter.GetAsync<Models.ClientNode>(filter,null,null,null,null,false);
-        this.avaliableNodes = avaliableNodes.Value;
+        //var queryParams = new QueryParams {Args = new LoadDataArgs {Filter = $"ClientId = {ClientNode.ClientId} && Id <> {ClientNode.Id}" } };
+        var queryParams = new QueryParams { Args = new LoadDataArgs { Filter = $"ClientId eq \"{ClientNode.ClientId}\" and Id ne \"{ClientNode.Id}\"" } };
+        try
+        {
+            var avaliableNodes = await DataAdapter.GetAsync<Models.ClientNode>(queryParams);
+            this.avaliableNodes = avaliableNodes.Value;
+        }
+        catch(Exception ex)
+        {
+            NotificationService?.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Помилка запису", Detail = ex.Message });
 
-
+        }
+        
     }
 }

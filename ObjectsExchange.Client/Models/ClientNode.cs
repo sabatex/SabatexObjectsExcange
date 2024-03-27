@@ -19,7 +19,10 @@ public class ClientNode : ClientNodeBase
     public Client? Client { get; set; }
     public Guid ClientId { get; set; }
     [NotMapped]
-    public int DataCount { get; set; }
+    public int QueriesCount { get; set; }
+    [NotMapped]
+    public int ObjectsCount { get; set; }
+    public DateTime CounterReseted { get; set; }
     public IEnumerable<ObjectExchange>? Objects { get; set; }
     public IEnumerable<QueryObject>? QueryObjects { get; set; }
 }

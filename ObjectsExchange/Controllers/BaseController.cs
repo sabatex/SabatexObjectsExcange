@@ -15,18 +15,22 @@ namespace ObjectsExchange.Controllers
     public abstract class BaseController<TItem> : ControllerBase where TItem : class, IEntityBase<Guid>, new()
     {
         protected readonly ObjectsExchangeDbContext context;
-        protected BaseController(ObjectsExchangeDbContext context)
+        protected readonly ILogger logger;
+        protected BaseController(ObjectsExchangeDbContext context, ILogger logger)
         {
             this.context = context;
+            this.logger = logger;
         }
 
 
         public Guid UserId => Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
 
 
-        [HttpPost("get")]
-        public virtual async Task<ODataServiceResult<TItem>> Get([FromBody] QueryParams queryParams)
+        [HttpGet]
+        public virtual async Task<ODataServiceResult<TItem>> Get([FromQuery] string json)
         {
+            QueryParams queryParams = System.Text.Json.JsonSerializer.Deserialize<QueryParams>(Uri.UnescapeDataString(json));
+
             var query = context.Set<TItem>().AsQueryable<TItem>();
             if (queryParams.Args.Skip != null)
                 query = query.Skip(queryParams.Args.Skip.Value); 
@@ -41,20 +45,20 @@ namespace ObjectsExchange.Controllers
                 query = query.Where($"{queryParams.ForeginKey.Name}==\"{queryParams.ForeginKey.Id}\"");
             }
             if (!String.IsNullOrEmpty(queryParams.Args.Filter))
-                query = query.Where(queryParams.Args.Filter);
-            query = BeforeGet(query,queryParams);
+                query = query.Where(queryParams.Args.Filter); 
+            query = OnBeforeGet(query,queryParams);
             var result = new ODataServiceResult<TItem>();
             result.Value = await query.ToArrayAsync();
             if ((queryParams.Args.Skip != null) || (queryParams.Args.Top != null))
                 result.Count = await query.CountAsync();
             return result;
         }
-        protected virtual IQueryable<TItem> BeforeGet(IQueryable<TItem> query, QueryParams queryParams) 
+        protected virtual IQueryable<TItem> OnBeforeGet(IQueryable<TItem> query, QueryParams queryParams) 
         {
             return query;
         }
 
-        //[HttpGet("{id}")]
+        [HttpGet("{id}")]
         public virtual async Task<TItem> GetById([FromRoute]Guid id)
         {
             var query = context.Set<TItem>().AsQueryable<TItem>();
@@ -80,7 +84,8 @@ namespace ObjectsExchange.Controllers
             }
             if (value == null)
             {
-                return BadRequest();
+                ModelState.AddModelError(string.Empty, "The post null value");
+                return BadRequest(ModelState);
             }
             try
             {
@@ -97,7 +102,7 @@ namespace ObjectsExchange.Controllers
         }
 
         //[HttpPatch]
-        //public virtual async Task<IActionResult> Patch([FromRoute] Guid key, Delta<TItem> delta)
+        //public virtual async Task<IActionResult> Patch([FromRoute] Guid key, jsonPa<TItem> delta)
         //{
         //    if (!ModelState.IsValid)
         //    {
@@ -126,14 +131,14 @@ namespace ObjectsExchange.Controllers
         //    }
         //    return Ok(entity);
         //}
-        [HttpPut]
-        public virtual async Task<IActionResult> Put([FromRoute] Guid key, TItem update)
+        [HttpPut("{id}")]
+        public virtual async Task<IActionResult> Put([FromRoute] Guid id, TItem update)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (key != update.Id)
+            if (id != update.Id)
             {
                 return BadRequest();
             }
@@ -144,7 +149,7 @@ namespace ObjectsExchange.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ValueExists(key))
+                if (!ValueExists(id))
                 {
                     return NotFound();
                 }
@@ -155,10 +160,11 @@ namespace ObjectsExchange.Controllers
             }
             return Ok(update);
         }
-        [HttpDelete]
-        public virtual async Task<IActionResult> Delete([FromRoute] Guid key)
+
+        [HttpDelete("{id}")]
+        public virtual async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var product = await context.Set<TItem>().FindAsync(key);
+            var product = await context.Set<TItem>().FindAsync(id);
             if (product == null)
             {
                 return NotFound();

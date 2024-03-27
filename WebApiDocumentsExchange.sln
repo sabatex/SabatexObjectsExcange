@@ -5,8 +5,6 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "src\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{3AF42961-4628-4301-B439-76939F2E7D40}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "src\ObjectsExchange\ObjectsExchange.csproj", "{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E25FC2B4-765C-4D8E-9A3B-54D3355A5856}"
 	ProjectSection(SolutionItems) = preProject
 		Readme.md = Readme.md
@@ -22,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange.Client", "O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.RadzenBlazor", "..\Sabatex.RadzenBlazor\Sabatex.RadzenBlazor\Sabatex.RadzenBlazor.csproj", "{AEA83029-91A6-4772-836D-10B5143458C2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "ObjectsExchange\ObjectsExchange.csproj", "{CEF09DEB-9152-4860-ADFB-B784F57D85D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,10 +32,6 @@ Global
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A4DAA7B-D64C-49E8-AA39-29C764BDA581}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,6 +52,10 @@ Global
 		{AEA83029-91A6-4772-836D-10B5143458C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEA83029-91A6-4772-836D-10B5143458C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEA83029-91A6-4772-836D-10B5143458C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

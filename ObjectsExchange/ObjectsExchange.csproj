@@ -20,18 +20,19 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
 		<PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.16.0" />
 		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.3" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="..\..\Readme.md">
+		<Content Include="..\Readme.md">
 			<Link>wwwroot\Readme.md</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\ObjectsExchange.Client\ObjectsExchange.Client.csproj" />
+		<ProjectReference Include="..\ObjectsExchange.Client\ObjectsExchange.Client.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />

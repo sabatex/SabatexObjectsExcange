@@ -7,6 +7,9 @@ namespace ObjectsExchange.Models
     {
         public ApplicationRole():base(){}
         public ApplicationRole(string role):base(role) { }
+
+        public const string AdministratorRole = "Administrator";
+        public const string ClientRole= "Client";
  
     }
 }

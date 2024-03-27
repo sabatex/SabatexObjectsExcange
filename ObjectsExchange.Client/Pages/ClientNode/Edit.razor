@@ -7,9 +7,9 @@
 }
 else
 {
-    <RadzenTemplateForm Data="@Item">
+    <RadzenTemplateForm Data="@Item" TItem="Models.ClientNode" Submit="OnSubmit">
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-mt-8 rz-mb-4">
-            <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Small" Icon="save" Text="Save" Click="@Save" />
+            <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Small" Icon="save" Text="Save" />
             <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" Icon="cancel" Text="Cancel" Click="@Cancel" />
         </RadzenStack>
         <RadzenRow>
@@ -53,11 +53,12 @@ else
             Item.ClientId = ClientId;
         }
     }
-    protected override async Task Save()
-    {
-        Item.NormalizedName = Item.Name.ToUpper();
 
-        await base.Save();
+    protected override async Task OnBeforeSubmit(Models.ClientNode item)
+    {
+        await base.OnBeforeSubmit(item);
+        item.NormalizedName = item.Name.ToUpper();
     }
+
 
 }

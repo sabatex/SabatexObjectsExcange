@@ -1,50 +1,43 @@
 ﻿@page "/clientnode/list"
 @attribute [Authorize]
-@inherits GridBasePage<Models.ClientNode>
-<RadzenContent Container="main">
-    <ChildContent>
-        <div class="row">
-            <div class="col-md-12">
-               <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@AddButtonClick" Disabled="IsPageRO" />
+@inherits SabatexRadzenBlazorBasePage
 
-                <RadzenDataGrid TItem="Models.ClientNode"
-                    @ref="grid"
-                    Data="@dataCollection.Value"
-                    Count="@dataCollection.Count"
-                    LoadData="@GridLoadData"
-                    IsLoading="@IsGridDataLoading"
-                    AllowFiltering="true"
-                    AllowSorting="true"
-                    SelectionMode="DataGridSelectionMode.Single"
-                    @bind-Value=@selectedItem
-                    Density="Density.Compact"
-                    AllowVirtualization=true
-                    Style=@gridStyle
-                    RowDoubleClick="@RowDoubleClick">
-                    <Columns>
-                        <RadzenDataGridColumn TItem="Models.ClientNode" Property="Name" Title="Name" />
+<SabatexRadzenGrid TItem="Models.ClientNode" TKey="Guid" ForeginKey="ForeginKey" @ref=grid>
+    <Buttons Context="item">
+        <RadzenButton Text="CleanNode" Click="()=>CleanNode(item)" Disabled=@(item == null) />
+        <RadzenButton Text="Export CSV" Icon="wrap_text" Click="@(args => Export())" />
+     </Buttons>
 
-                    </Columns>
-                </RadzenDataGrid>
-            </div>
-        </div>
-    </ChildContent>
-</RadzenContent>
+    <Columns>
+        <RadzenDataGridColumn TItem="Models.ClientNode" Property="Name" Title="Name" />
+        <RadzenDataGridColumn TItem="Models.ClientNode" Property="Counter" Title="CountPerDay" Width="120px" />
+        <RadzenDataGridColumn TItem="Models.ClientNode" Property="QueriesCount" Title="Queries" Width="120px" />
+        <RadzenDataGridColumn TItem="Models.ClientNode" Property="ObjectsCount" Title="Objects" Width="120px" />
+    </Columns>
+</SabatexRadzenGrid>
 
 @code {
     [Parameter]
     [SupplyParameterFromQuery]
     public Guid ClientId { get; set; }
 
-    IList<Models.ClientNode> selectedItem;
-    string gridStyle = "height:200px";
-
-    protected override ForeginKey ForeginKey => new ForeginKey("ClientId", ClientId.ToString());
+    SabatexRadzenGrid<Guid,Models.ClientNode> grid;
+ 
+    ForeginKey ForeginKey => new ForeginKey("ClientId", ClientId.ToString());
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
     }
 
+    async void CleanNode(Models.ClientNode node)
+    {
+         await HttpClient.DeleteAsync($"api/clientnode/clean/{node.Id}");
+    }
+    
+    public async Task Export()
+    {
+        await SabatexJS.DownloadStringAsFile("Nodes.csv",string.Join("\r\n",  grid.Items.Select(c => $"{c.Name.Replace(',','_')},{c.Id}").ToArray()));
+    }
 
 }
