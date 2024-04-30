@@ -15,10 +15,10 @@
 
     private IEnumerable<Guid> values
     {
-        get => ClientNode.GetClientAccess();
+        get => ClientNode?.GetClientAccess() ?? new Guid[] { };
         set
         {
-            ClientNode.SetClientAccess(value);
+            ClientNode?.SetClientAccess(value);
         }
     }
 
@@ -26,10 +26,12 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        //var queryParams = new QueryParams {Args = new LoadDataArgs {Filter = $"ClientId = {ClientNode.ClientId} && Id <> {ClientNode.Id}" } };
-        var queryParams = new QueryParams { Args = new LoadDataArgs { Filter = $"ClientId eq \"{ClientNode.ClientId}\" and Id ne \"{ClientNode.Id}\"" } };
+        if (ClientNode == null)
+            throw new ArgumentNullException(nameof(ClientNode)); 
+
         try
         {
+            var queryParams = new QueryParams { Args = new LoadDataArgs { Filter = $"ClientId eq \"{ClientNode.ClientId}\" and Id ne \"{ClientNode.Id}\"" } };
             var avaliableNodes = await DataAdapter.GetAsync<Models.ClientNode>(queryParams);
             this.avaliableNodes = avaliableNodes.Value;
         }
@@ -38,6 +40,5 @@
             NotificationService?.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Помилка запису", Detail = ex.Message });
 
         }
-        
     }
 }

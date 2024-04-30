@@ -1,8 +1,8 @@
 {
   "Linux": {
     "UserHomeFolder": "/home/azureuser",
-    "BitviseTlpFile": "C:\\Users\\serhi\\OneDrive\\SSH\\ZNCWebSite.tlp",
-    "PublishFolder": "/var/www/sabatex-exchange",
+    "BitviseTlpFile": "C:\\Users\\serhi\\OneDrive\\SSH\\sabatex.tlp",
+    "PublishFolder": "/opt/app/sabatex-exchange",
     "FrontEnd": false,
     "Service": {
       "ServiceName": "sabatex-exchange",

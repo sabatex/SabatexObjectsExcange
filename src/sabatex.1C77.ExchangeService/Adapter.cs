@@ -2,6 +2,7 @@
 using sabatex.V1C77;
 using sabatex.V1C77.Models.Metadata;
 using Sabatex.ObjectsExchange.HttpClientApiConnector;
+using System.Text.Json;
 
 
 namespace Sabatex.V1C77.ExchangeService
@@ -19,9 +20,9 @@ namespace Sabatex.V1C77.ExchangeService
         readonly ILogger logger;
         readonly Guid destinationId;
 
-        public event CatalogBeforeSerialized OnCatalogSerialized;
-        public event DocumentBeforeSerialized OnDocumentSerialized;
-        public event CheckDocumentIsSerialized OnCheckDocumentIsSerialized;
+        public event CatalogBeforeSerialized? OnCatalogSerialized;
+        public event DocumentBeforeSerialized? OnDocumentSerialized;
+        public event CheckDocumentIsSerialized? OnCheckDocumentIsSerialized;
 
         public Adapter(ExchangeApiConnector api, IGlobalContext global, RootMetadata1C77 rootMetadata, ILogger logger, Guid destinationId)
         {
@@ -118,83 +119,85 @@ namespace Sabatex.V1C77.ExchangeService
         }
 
 
+        internal record ObjectHeader(string id,string type);
         public async Task Query()
         {
-            var queries = await api.GetQueryObjectsAsync(takeObjects);
-            Console.WriteLine($"Queried objects: {queries.Count()}");
+            var queries = await api.GetObjectsAsync(takeObjects);
+            logger?.LogInformation($"Queried objects: {queries.Count()}");
             foreach (var query in queries)
             {
                 try
                 { 
-                logger?.LogInformation($"Try answer object type = {query.ObjectType} id = {query.Id}");
+                    logger?.LogInformation($"Try answer message = {query.MessageHeader}");
+                    //var messageHeader = await JsonSerializer.DeserializeAsync(query.MessageHeader,new {id=0,type=""});
 
-                var c = query.ObjectType.Split('.');
-                if (c.Length == 0)
-                {
-                    logger?.LogError($"Error query Id={query.ObjectType}");
-                    continue;
+        //        var c = query.ObjectType.Split('.');
+        //        if (c.Length == 0)
+        //        {
+        //            logger?.LogError($"Error query Id={query.ObjectType}");
+        //            continue;
+        //        }
+        //        string json = string.Empty;
+        //        bool singleObject = true;
+        //        switch (c[0].ToUpper())
+        //        {
+        //            case "СПРАВОЧНИК":
+        //                if (c.Length != 2)
+        //                {
+        //                    logger.LogError($"Error query СПРАВОЧНИК Id: {query.ObjectType}");
+        //                    continue;
+        //                }
+        //                json = GetCatalogByCode(c[1], query.ObjectId);
+        //                break;
+        //            case "ДОКУМЕНТ":
+        //                if (c.Length != 2)
+        //                {
+        //                    logger.LogError($"Error query ДОКУМЕНТ Id: {query.ObjectType}");
+        //                    continue;
+        //                }
+
+        //                json = GetDocumentByNumber(c[1], query.ObjectId);
+        //                break;
+        //            case "QUERYDOCS":
+        //                // QUERYDOCS.{DocName}.{Date} date format 20230201
+        //                if (c.Length != 3)
+        //                {
+        //                    logger.LogError($"Error query QUERYDOCS Id: {query.ObjectType}");
+        //                    continue;
+        //                }
+        //                var dateDoc = ParseDateString(c[2]).BeginOfDay();
+        //                await PostDocuments(c[1], dateDoc);
+        //                singleObject = false;
+        //                Thread.Sleep(1000);
+        //                break;
+        //            case "SALDO":
+        //                // SALDO.{ACC}.{Date} ACC account number withot dot, date format 20230201
+        //                if (c.Length != 3)
+        //                {
+        //                    logger.LogError($"Error query SALDO Id: {query.ObjectType}");
+        //                    continue;
+        //                }
+        //                var date = ParseDateString(c[2]).BeginOfDay();
+        //                json = rootMetadata.QueryAccountSaldoAsJSON(global, c[1], date);
+        //                break;
+
+        //            default:
+        //                logger.LogError($"Uknown type object {query.ObjectType}");
+        //                break;
+
+        //        }
+
+        //            if (singleObject)
+        //            {
+        //                await api.PostObjectAsync(query.ObjectType, query.ObjectId, json);
+        //                logger.LogInformation($"Posted {query.ObjectType} with code={query.ObjectId}");
+
+        //            }
+        //            await api.DeleteQueryObjectAsync(query.Id);
                 }
-                string json = string.Empty;
-                bool singleObject = true;
-                switch (c[0].ToUpper())
+                    catch (Exception ex)
                 {
-                    case "СПРАВОЧНИК":
-                        if (c.Length != 2)
-                        {
-                            logger.LogError($"Error query СПРАВОЧНИК Id: {query.ObjectType}");
-                            continue;
-                        }
-                        json = GetCatalogByCode(c[1], query.ObjectId);
-                        break;
-                    case "ДОКУМЕНТ":
-                        if (c.Length != 2)
-                        {
-                            logger.LogError($"Error query ДОКУМЕНТ Id: {query.ObjectType}");
-                            continue;
-                        }
-
-                        json = GetDocumentByNumber(c[1], query.ObjectId);
-                        break;
-                    case "QUERYDOCS":
-                        // QUERYDOCS.{DocName}.{Date} date format 20230201
-                        if (c.Length != 3)
-                        {
-                            logger.LogError($"Error query QUERYDOCS Id: {query.ObjectType}");
-                            continue;
-                        }
-                        var dateDoc = ParseDateString(c[2]).BeginOfDay();
-                        await PostDocuments(c[1], dateDoc);
-                        singleObject = false;
-                        Thread.Sleep(1000);
-                        break;
-                    case "SALDO":
-                        // SALDO.{ACC}.{Date} ACC account number withot dot, date format 20230201
-                        if (c.Length != 3)
-                        {
-                            logger.LogError($"Error query SALDO Id: {query.ObjectType}");
-                            continue;
-                        }
-                        var date = ParseDateString(c[2]).BeginOfDay();
-                        json = rootMetadata.QueryAccountSaldoAsJSON(global, c[1], date);
-                        break;
-
-                    default:
-                        logger.LogError($"Uknown type object {query.ObjectType}");
-                        break;
-
-                }
-
-                    if (singleObject)
-                    {
-                        await api.PostObjectAsync(query.ObjectType, query.ObjectId, json);
-                        logger.LogInformation($"Posted {query.ObjectType} with code={query.ObjectId}");
-
-                    }
-                    await api.DeleteQueryObjectAsync(query.Id);
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError($"Error Posted {query.ObjectType} with code={query.ObjectId} with error: {ex.Message}");
+                    logger?.LogError($"Error Posted {query.MessageHeader} with error: {ex.Message}");
                 }
             }
         }

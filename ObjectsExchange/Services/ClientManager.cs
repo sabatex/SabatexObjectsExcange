@@ -22,13 +22,16 @@ namespace ObjectsExchange.Services
             _dbContext = dbContext;
             this.apiConfig = apiConfig.Value;
         }
-        private string GetHashString(string value)
+        public string GetHashString(string value)
         {
             var hashKey = Encoding.UTF8.GetBytes("ajcewewi%^(F#|}9327nx=-23hdxsa5vcx<>_ d");
             var hmac = new HMACSHA256(hashKey);
             var result = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(value)));
             return result;
         }
+
+
+
         private string CreateAccessToken()
         {
             var r = new Random();

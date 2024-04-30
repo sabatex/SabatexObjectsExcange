@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ObjectsExchange;
+using ObjectsExchange.Client.Services;
 using ObjectsExchange.Components;
 using ObjectsExchange.Components.Account;
 using ObjectsExchange.Data;
@@ -20,9 +21,13 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenticationStateProvider>();
 
 builder.Services.AddRadzenComponents();
-builder.Services.AddScoped<ISabatexRadzenBlazorDataAdapter<Guid>, SabatexServerRadzenBlazorODataAdapter<Guid>>();
+builder.Services.AddScoped<ISabatexRadzenBlazorDataAdapter<Guid>, ObjectsExchange.Services.ApiAdapter>();
+builder.Services.AddScoped<IApiAdapter, ObjectsExchange.Services.ApiAdapter>();
 builder.Services.AddSingleton<SabatexBlazorAppState>();
 builder.Services.AddScoped<SabatexJsInterop>();
+
+builder.Services.AddScoped<ClientManager>();
+
 //builder.Services.AddControllers();
 //builder.Services.AddSabatexRadzenBlazor<SabatexServerRadzenBlazorODataAdapter<Guid>, Guid>();
 builder.Services.AddHttpClient();
@@ -35,11 +40,13 @@ builder.Services.AddAuthorization();
 //builder.Services.AddScoped< ObjectsExchange.Client.Services.SecurityService >();
 builder.Services.AddDbContext<ObjectsExchangeDbContext>(options =>
 {
-#if DEBUG
-    options.UseNpgsql(builder.Configuration.GetConnectionString("LocalConnection"));
-#else
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-#endif
+    options.UseSqlite(builder.Configuration.GetConnectionString("SqlIteConnection"));
+//#if DEBUG
+//    //options.UseNpgsql(builder.Configuration.GetConnectionString("LocalConnection"));
+//    options.UseSqlite(builder.Configuration.GetConnectionString("SqlIteConnection"));
+//#else
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+//#endif
 });
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ObjectsExchangeDbContext>().AddDefaultTokenProviders();
 builder.Services.AddControllers();
@@ -57,11 +64,11 @@ builder.Services.AddControllers();
 //});
 
 
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders =
-                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-        });
+//builder.Services.Configure<ForwardedHeadersOptions>(options =>
+//        {
+//            options.ForwardedHeaders =
+//                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+//        });
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
@@ -80,12 +87,14 @@ else
    app.UseExceptionHandler("/Error");
    app.UseHsts();
 }
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
+//app.UseForwardedHeaders(new ForwardedHeadersOptions
+//{
+//    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+//});
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/v0"),
+                           builder => builder.UseHttpsRedirection());
 app.MapControllers();
 //app.UseODataQueryRequest();
 app.UseHeaderPropagation();
@@ -97,7 +106,8 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>().AddInteractiveWebAssemblyRenderMode().AddAdditionalAssemblies(typeof(ObjectsExchange.Client._Imports).Assembly);
 app.MapAdditionalIdentityEndpoints();
-await DataSeed.InitializeAsync(app.Services.CreateScope().ServiceProvider);
+await DataSeed.InitializeAsync(app.Services.CreateScope().ServiceProvider,builder.Configuration);
+
 app.Run();
 
 

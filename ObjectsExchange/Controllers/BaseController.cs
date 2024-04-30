@@ -2,12 +2,16 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ObjectsExchange.Data;
+using ObjectsExchange.Services;
 using Radzen;
 using Sabatex.Core;
 using Sabatex.RadzenBlazor;
+using System.ComponentModel;
 using System.Linq.Dynamic.Core;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace ObjectsExchange.Controllers
 {
@@ -17,10 +21,12 @@ namespace ObjectsExchange.Controllers
     {
         protected readonly ObjectsExchangeDbContext context;
         protected readonly ILogger logger;
-        protected BaseController(ObjectsExchangeDbContext context, ILogger logger)
+        protected readonly ClientManager clientManager;
+        protected BaseController(ObjectsExchangeDbContext context, ILogger logger,ClientManager clientManager)
         {
             this.context = context;
             this.logger = logger;
+            this.clientManager = clientManager;
         }
 
 
@@ -30,8 +36,11 @@ namespace ObjectsExchange.Controllers
         [HttpGet]
         public virtual async Task<ODataServiceResult<TItem>> Get([FromQuery] string json)
         {
-            QueryParams queryParams = System.Text.Json.JsonSerializer.Deserialize<QueryParams>(Uri.UnescapeDataString(json));
+            QueryParams? queryParams = JsonSerializer.Deserialize<QueryParams>(Uri.UnescapeDataString(json));
 
+            if (queryParams == null)
+                throw new Exception("Deserialize error");
+ 
             var query = context.Set<TItem>().AsQueryable<TItem>();
             if (queryParams.Args.Skip != null)
                 query = query.Skip(queryParams.Args.Skip.Value); 
@@ -59,19 +68,33 @@ namespace ObjectsExchange.Controllers
             return query;
         }
 
-        [HttpGet("{id}")]
-        public virtual async Task<TItem> GetById([FromRoute]Guid id)
-        {
-            var query = context.Set<TItem>().AsQueryable<TItem>();
-            query = BeforeGetById(query,id);
-            return await query.Where(s=>s.Id == id).SingleAsync();
-
-        }
-        protected virtual IQueryable<TItem> BeforeGetById(IQueryable<TItem> query,Guid id)
+        
+        protected virtual IQueryable<TItem> OnBeforeGetById(IQueryable<TItem> query,Guid id)
         {
             return query;
         }
 
+        protected virtual async Task OnAfterGetById(TItem item, Guid id)
+        {
+            await Task.Yield();
+        }
+
+        protected abstract Task<bool> CheckAccess(TItem item,TItem? updated);
+ 
+
+        [HttpGet("{id}")]
+        public virtual async Task<IActionResult> GetById([FromRoute]Guid id)
+        {
+            var query = context.Set<TItem>().AsQueryable<TItem>();
+            query = OnBeforeGetById(query,id);
+            var result  = await query.Where(s=>s.Id == id).SingleAsync();
+            if (await CheckAccess(result,null))
+            {
+                await OnAfterGetById(result, id);
+                return Ok(result);
+            }
+            return Unauthorized(); 
+        }
 
 
         protected virtual async Task OnBeforeAddItemToDatabase(TItem item) => await Task.Yield();
@@ -91,9 +114,13 @@ namespace ObjectsExchange.Controllers
             try
             {
                 await this.OnBeforeAddItemToDatabase(value);
-                await context.Set<TItem>().AddAsync(value);
-                await context.SaveChangesAsync();
-                return Ok(value);
+                if (await CheckAccess(value, null))
+                {
+                    await context.Set<TItem>().AddAsync(value);
+                    await context.SaveChangesAsync();
+                    return Ok(value);
+                }
+                return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -102,35 +129,40 @@ namespace ObjectsExchange.Controllers
             }
         }
 
-        [HttpPatch]
-        public virtual async Task<IActionResult> Patch([FromRoute] Guid key, JsonPatchDocument<TItem> delta)
+        //[HttpPatch]
+        //public virtual async Task<IActionResult> Patch([FromRoute] Guid key, JsonPatchDocument<TItem> delta)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    var entity = await context.Set<TItem>().FindAsync(key);
+        //    if (entity == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    delta.ApplyTo(entity);
+        //    try
+        //    {
+        //        await context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ValueExists(key))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+        //    return Ok(entity);
+        //}
+        
+        protected virtual async Task OnBeforeUpdateAsync(TItem item,TItem update)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var entity = await context.Set<TItem>().FindAsync(key);
-            if (entity == null)
-            {
-                return NotFound();
-            }
-            delta.ApplyTo(entity);
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ValueExists(key))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return Ok(entity);
+           await Task.Yield();
         }
         [HttpPut("{id}")]
         public virtual async Task<IActionResult> Put([FromRoute] Guid id, TItem update)
@@ -143,7 +175,16 @@ namespace ObjectsExchange.Controllers
             {
                 return BadRequest();
             }
-            context.Entry(update).State = EntityState.Modified;
+
+            var item = await context.Set<TItem>().FindAsync(id);
+            if (item == null)
+                return NotFound();
+
+            if (!await CheckAccess(item,update))
+                return Unauthorized(ModelState);
+            
+            await OnBeforeUpdateAsync(item,update);
+            context.Entry(item).CurrentValues.SetValues(update);
             try
             {
                 await context.SaveChangesAsync();

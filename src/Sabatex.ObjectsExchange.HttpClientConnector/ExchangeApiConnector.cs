@@ -20,10 +20,10 @@ public delegate Task UpdateTokenDelegateAsync(Token token,DateTime expiredToken)
 
 public  class ExchangeApiConnector : IDisposable
 {
-    protected const string loginUrl = "api/v0/login";
-    protected const string refreshTokenUrl = "api/v0/refresh_token";
-    protected const string objectsUrl = "api/v0/objects";
-    protected const string queryUrl = "api/v0/queries";
+    protected const string loginUrl = "api/v1/login";
+    protected const string refreshTokenUrl = "api/v1/refresh_token";
+    protected const string objectsUrl = "api/v1/objects";
+    //protected const string queryUrl = "api/v1/queries";
 
 
     private Token? _accessToken;
@@ -245,29 +245,29 @@ public  class ExchangeApiConnector : IDisposable
     public async Task DeleteObjectAsync(long id)=>await DeleteAsync(objectsUrl, id);
     #endregion
 
-    #region Query
-    public async Task PostQueryObjectAsync(string objectType, string objectId) =>
-        await PostAsync(queryUrl, new { objectType, objectId });
+//    #region Query
+//    public async Task PostQueryObjectAsync(string objectType, string objectId) =>
+//        await PostAsync(queryUrl, new { objectType, objectId });
 
-    public async Task<IEnumerable<QueryObject>?> GetQueryObjectsAsync(int take)
-    {
-        var responce = await GetAsync(queryUrl, take);
-        if (responce != null)
-        {
-            if (responce.IsSuccessStatusCode)
-            {
-                var result = await responce.Content.ReadFromJsonAsync<IEnumerable<QueryObject>>();
-                if (result != null)
-                    return result;
-            }
-        }
-        throw new Exception();
+//    public async Task<IEnumerable<QueryObject>?> GetQueryObjectsAsync(int take)
+//    {
+//        var responce = await GetAsync(queryUrl, take);
+//        if (responce != null)
+//        {
+//            if (responce.IsSuccessStatusCode)
+//            {
+//                var result = await responce.Content.ReadFromJsonAsync<IEnumerable<QueryObject>>();
+//                if (result != null)
+//                    return result;
+//            }
+//        }
+//        throw new Exception();
 
-    }
+//    }
 
-    public async Task DeleteQueryObjectAsync(long id) => await DeleteAsync(queryUrl, id);
+//    public async Task DeleteQueryObjectAsync(long id) => await DeleteAsync(queryUrl, id);
 
-#endregion
+//#endregion
 
 
 

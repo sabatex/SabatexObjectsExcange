@@ -1,6 +1,7 @@
 ﻿using Sabatex.Core;
 using System.ComponentModel.DataAnnotations;
 using System;
+using System.Text.Json;
 namespace Sabatex.ObjectsExchange.Models
 {
         /// <summary>
@@ -8,10 +9,25 @@ namespace Sabatex.ObjectsExchange.Models
         /// </summary>
         public class QueryObject : IEntityBase<long>
         {
+        public QueryObject()
+        {
+            
+        }
+
+        public QueryObject(ObjectExchange objectExchange)
+        {
+            var objectDescription = JsonSerializer.Deserialize<ObjectDescription>(objectExchange.MessageHeader);
+            this.ObjectId = objectDescription.id;
+            this.ObjectType = objectDescription.type;
+            this.Id = objectExchange.Id;
+            this.Sender = objectExchange.Sender;
+            this.Destination = objectExchange.Destination;
+
+        }
         /// <summary>
         /// primary key
         /// </summary>
-            public long Id { get; set; }
+        public long Id { get; set; }
         /// <summary>
         /// Sender client id
         /// </summary>
@@ -30,7 +46,22 @@ namespace Sabatex.ObjectsExchange.Models
         /// </summary>
         [MaxLength(50)]
         public string ObjectType { get; set; } = default!; // lovercase
-            //string IEntityBase.KeyAsString() => Id.ToString();
+                                                           //string IEntityBase.KeyAsString() => Id.ToString();
+
+
+        public ObjectExchange GetObjectExchange()
+        {
+            var result = new ObjectExchange();
+            result.MessageHeader = JsonSerializer.Serialize(new ObjectDescription(this.ObjectId, this.ObjectType));
+            result.Message = null;
+            result.Sender = this.Sender;
+            result.Destination = this.Destination;
+            result.Id = this.Id;
+            result.SenderDateStamp = DateTime.UtcNow;
+            result.DateStamp = DateTime.UtcNow;
+            return result;
         }
+
+    }
 
 }

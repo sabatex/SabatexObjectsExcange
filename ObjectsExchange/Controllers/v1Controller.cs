@@ -18,16 +18,16 @@ namespace Sabatex.ObjectsExchange.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class v0Controller : ControllerBase
+public class v1Controller : ControllerBase
 {
-    private readonly ILogger<v0Controller> _logger;
+    private readonly ILogger<v1Controller> _logger;
     private readonly ObjectsExchangeDbContext _dbContext;
     private readonly ApiConfig _apiConfig;
     private readonly ClientManager _clientManager;
     public static int maxTake = 50;
-    public const int MessageSizeLimit = 50000;
+    public const int MessageSizeLimit = 1000000;
     private const string _tokenType = "BEARER";
-    public v0Controller(ObjectsExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
+    public v1Controller(ObjectsExchangeDbContext dbContext, ILogger<v1Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
     {
         _logger = logger;
         _dbContext = dbContext;
@@ -156,11 +156,8 @@ public class v0Controller : ControllerBase
         var result = await _dbContext.ObjectExchanges
                         .Where(s => s.Destination == clientId)
                         .Where(s => s.Sender == destinationId)
-                        .Where(s => s.Message != null)
                         .OrderBy(d => d.Id) // priority
-                        .Take(take)
-                        .Select(d => new ObjectExchange_v0(d))
-                        .ToArrayAsync();
+                        .Take(take).ToArrayAsync();
         return Ok(result);
     }
 
@@ -171,18 +168,18 @@ public class v0Controller : ControllerBase
                                                [FromHeader] Guid destinationId,
                                                JsonDocument json)
     {
-
-        string? objectId = json.RootElement.GetProperty("objectId").GetString();
-        if (objectId == null)
-            return BadRequest("The not defined objectId");
-        string? objectType = json.RootElement.GetProperty("objectType").GetString();
-        if (objectType == null)
-            return BadRequest("The not defined objectType");
-        string? text = json.RootElement.GetProperty("text").GetString();
-        if (text == null)
-            return BadRequest("The not defined text");
-        if (text.Length > MessageSizeLimit)
-            return BadRequest($"The message size {text.Length} is overflow limit {MessageSizeLimit} per message.");
+        string? messageHeader = json.RootElement.GetProperty("messageHeader").GetString();
+        if (messageHeader == null)
+            return BadRequest("The not defined messageHeader");
+        
+        //string? objectType = json.RootElement.GetProperty("objectType").GetString();
+        //if (objectType == null)
+        //    return BadRequest("The not defined objectType");
+        
+        string? message = json.RootElement.GetProperty("message").GetString();
+        if (message != null)
+           if (message.Length > MessageSizeLimit)
+                return BadRequest($"The message size {message.Length} is overflow limit {MessageSizeLimit} per message.");
 
         DateTime? dateStamp = null;
         if (json.RootElement.GetProperty("dateStamp").TryGetDateTime(out DateTime tdateStamp))
@@ -194,30 +191,26 @@ public class v0Controller : ControllerBase
         {
             clientNode.CounterReseted = DateTime.UtcNow;
             clientNode.Counter = 0;
-
         }
 
-        if (clientNode.ObjectsCount >= clientNode.MaxOperationPerMounth)
+        if (clientNode.Counter >= clientNode.MaxOperationPerMounth)
         {
             return BadRequest("The limit operations per day is overflow");
         }
 
-
-
         var validNodes = clientNode.GetClientAccess();
         if (validNodes.Contains(destinationId))
         {
-            var doc = new ObjectExchange_v0
+            var doc = new ObjectExchange
             {
                 Sender = clientId,
                 Destination = destinationId,
-                ObjectId = objectId,
-                ObjectType = objectType,
-                ObjectAsText = text,
+                MessageHeader = messageHeader,
+                Message = message,
                 DateStamp = DateTime.UtcNow,
-                SenderDateStamp = dateStamp
+                SenderDateStamp = DateTime.SpecifyKind(dateStamp ?? DateTime.UtcNow, DateTimeKind.Utc)
             };
-            await _dbContext.ObjectExchanges.AddAsync(doc.GetObjectExchange());
+            await _dbContext.ObjectExchanges.AddAsync(doc);
             clientNode.Counter++;
             await _dbContext.SaveChangesAsync();
         }
@@ -262,87 +255,85 @@ public class v0Controller : ControllerBase
     /// <param name="nodeName"></param>
     /// <param name="take"></param>
     /// <returns></returns>
-    [HttpGet("queries")]
-    public async Task<IActionResult> GetQueryesAsync([FromHeader] string? apiToken,
-                                                     [FromHeader] Guid clientId,
-                                                     [FromHeader] Guid destinationId,
-                                                     [FromQuery] int take = 10)
-    {
+    //[HttpGet("queries")]
+    //public async Task<IActionResult> GetQueryesAsync([FromHeader] string? apiToken,
+    //                                                 [FromHeader] Guid clientId,
+    //                                                 [FromHeader] Guid destinationId,
+    //                                                 [FromQuery] int take = 10)
+    //{
 
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-        if (clientNode == null)
-            return Unauthorized();
-        if (clientNode.IsDemo) Thread.Sleep(100);
-        var result = await _dbContext.ObjectExchanges
-                .Where(s => s.Destination == clientId)
-                .Where(s => s.Sender == destinationId)
-                .Where(s=>s.Message==null)
-                .OrderBy(d => d.Id) // priority
-                .Take(take)
-                .Select(s=>new QueryObject(s))
-                .ToArrayAsync();
-        return Ok(result);
-    }
+    //    var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
+    //    if (clientNode == null)
+    //        return Unauthorized();
+    //    if (clientNode.IsDemo) Thread.Sleep(100);
+    //    var result = await _dbContext.QueryObjects
+    //            .Where(s => s.Destination == clientId)
+    //            .Where(s => s.Sender == destinationId)
+    //            .OrderBy(d => d.Id) // priority
+    //            .Take(take)
+    //            .ToArrayAsync();
+    //    return Ok(result);
+    //}
 
-    [HttpPost("queries")]
-    public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken,
-                                                    [FromHeader] Guid clientId,
-                                                    [FromHeader] Guid destinationId,
-                                                    JsonDocument json)
-    {
-        string? objectId = json.RootElement.GetProperty("objectId").GetString();
-        if (objectId == null)
-            return BadRequest("The not defined objectId");
-        string? objectType = json.RootElement.GetProperty("objectType").GetString();
-        if (objectType == null)
-            return BadRequest("The not defined objectType");
+    //[HttpPost("queries")]
+    //public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken,
+    //                                                [FromHeader] Guid clientId,
+    //                                                [FromHeader] Guid destinationId,
+    //                                                JsonDocument json)
+    //{
+    //    string? objectId = json.RootElement.GetProperty("objectId").GetString();
+    //    if (objectId == null)
+    //        return BadRequest("The not defined objectId");
+    //    string? objectType = json.RootElement.GetProperty("objectType").GetString();
+    //    if (objectType == null)
+    //        return BadRequest("The not defined objectType");
 
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-        if (clientNode == null)
-            return Unauthorized();
+    //    var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
+    //    if (clientNode == null)
+    //        return Unauthorized();
 
-        var validNodes = clientNode.GetClientAccess();
-        if (!validNodes.Contains(destinationId))
-            return BadRequest("The node not accept post");
-        // check exist same query 
-        var obj = new QueryObject
-        {
-            Sender = clientId,
-            Destination = destinationId,
-            ObjectId = objectId,
-            ObjectType = objectType
-        };
-        await _dbContext.ObjectExchanges.AddAsync(obj.GetObjectExchange());
+    //    var validNodes = clientNode.GetClientAccess();
+    //    if (!validNodes.Contains(destinationId))
+    //        return BadRequest("The node not accept post");
+    //    // check exist same query 
+    //    var obj = new QueryObject
+    //    {
+    //        Sender = clientId,
+    //        Destination = destinationId,
+    //        ObjectId = objectId,
+    //        ObjectType = objectType
+    //    };
+    //    await _dbContext.QueryObjects.AddAsync(obj);
 
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
+    //    await _dbContext.SaveChangesAsync();
+    //    return Ok();
+    //}
 
 
 
-    [HttpDelete("queries/{id:long}")]
-    public async Task<IActionResult> DeleteQueryAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
-    {
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-        if (clientNode == null)
-            return Unauthorized();
+    //[HttpDelete("queries/{id:long}")]
+    //public async Task<IActionResult> DeleteQueryAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
+    //{
+    //    var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
+    //    if (clientNode == null)
+    //        return Unauthorized();
 
-        var obj = await _dbContext.ObjectExchanges.FindAsync(id);
-        if (obj == null)
-            return NotFound();
-        if (obj.Destination != clientId)
-        {
-            var error = $"Нод {clientNode.Name} з id={clientId} не може видаляти дані чужих нодів {obj.Destination}";
-            _logger.LogError($"{DateTime.Now}: {error}");
-            return Conflict(error);
+    //    var obj = await _dbContext.QueryObjects.FindAsync(id);
+    //    if (obj == null)
+    //        return NotFound();
+    //    if (obj.Destination != clientId)
+    //    {
+    //        var error = $"Нод {clientNode.Name} з id={clientId} не може видаляти дані чужих нодів {obj.Destination}";
+    //        _logger.LogError($"{DateTime.Now}: {error}");
+    //        return Conflict(error);
 
-        }
-        _dbContext.ObjectExchanges.Remove(obj);
+    //    }
+    //    _dbContext.QueryObjects.Remove(obj);
 
-        await _dbContext.SaveChangesAsync();
-        return Ok();
+    //    await _dbContext.SaveChangesAsync();
+    //    return Ok();
 
-    }
+    //}
 
 
     #endregion

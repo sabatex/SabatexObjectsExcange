@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.DynamicLinq;
 using Microsoft.Extensions.Logging;
 using ObjectsExchange.Data;
+using ObjectsExchange.Services;
 using Sabatex.RadzenBlazor;
 using System.Linq.Dynamic.Core;
 using System.Security.Claims;
@@ -13,7 +14,7 @@ namespace ObjectsExchange.Controllers;
 [Authorize()]
 public class ClientController : BaseController<ObjectsExchange.Client.Models.Client>
 {
-    public ClientController(ObjectsExchangeDbContext context,ILogger<ClientController> logger) : base(context,logger)
+    public ClientController(ObjectsExchangeDbContext context,ILogger<ClientController> logger,ClientManager clientManager) : base(context,logger,clientManager)
     {
 
     }
@@ -33,5 +34,11 @@ public class ClientController : BaseController<ObjectsExchange.Client.Models.Cli
         if (await context.Clients.Where(s=>s.UserId == UserId).CountAsync() >= 5)
             throw new Exception("The try add client over limit 5!");
   
+    }
+
+    protected override async Task<bool> CheckAccess(Client.Models.Client item, Client.Models.Client? update)
+    {
+        await Task.Yield();
+        return item.UserId == UserId;
     }
 }

@@ -7,12 +7,14 @@ using ObjectsExchange.Client.Identity;
 using Radzen;
 using Radzen.Blazor;
 using Sabatex.RadzenBlazor;
+using ObjectsExchange.Client.Services;
 
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddRadzenComponents();
-builder.Services.AddScoped<ISabatexRadzenBlazorDataAdapter<Guid>, SabatexRadzenBlazorApiDataAdapter<Guid>>();
+builder.Services.AddScoped<ISabatexRadzenBlazorDataAdapter<Guid>, ApiAdapter>();
+builder.Services.AddScoped<IApiAdapter, ApiAdapter>();
 builder.Services.AddSingleton<SabatexBlazorAppState>();
 builder.Services.AddScoped<SabatexJsInterop>();
 

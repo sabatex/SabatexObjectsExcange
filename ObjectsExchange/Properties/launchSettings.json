@@ -32,8 +32,7 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "8081",
-        "ASPNETCORE_HTTP_PORTS": "8080",
-        "ConnectionStrings__LocalConnection": "Server=172.17.0.2;Port=15432;Database=SabatexExchange;Uid=postgres;Pwd=selma"
+        "ASPNETCORE_HTTP_PORTS": "8080"
       },
       "publishAllPorts": true,
       "useSSL": true
