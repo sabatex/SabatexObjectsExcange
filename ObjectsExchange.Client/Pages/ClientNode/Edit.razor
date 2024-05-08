@@ -1,63 +1,70 @@
 ﻿@page "/clientnode/edit/{id?}"
 @attribute [Authorize]
-@inherits EditBasePage<Models.ClientNode>
-@if (Item == null)
-{
-    <p><em>Loading ...</em></p>
-}
-else
-{
-    <RadzenTemplateForm Data="@Item" TItem="Models.ClientNode" Submit="OnSubmit">
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-mt-8 rz-mb-4">
-            <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Small" Icon="save" Text="Save" />
-            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" Icon="cancel" Text="Cancel" Click="@Cancel" />
-        </RadzenStack>
-        <RadzenRow>
-            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
-                <RadzenFormField Text="Name" Style="width:100%">
-                    <RadzenTextBox @bind-Value="Item.Name" Name="Name" class="w-100" />
-                </RadzenFormField>
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
-                <RadzenFormField Text="Password" Style="width:100%">
-                    <RadzenPassword @bind-Value="Item.Password" Name="Password" class="w-100" />
-                </RadzenFormField>
-            </RadzenColumn>
+@rendermode InteractiveWebAssembly
+<SabatexEditForm TItem="Models.ClientNode" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)">
+    <Content Context="item">
+        <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+            <RadzenFormField Text="Name" Style="width:100%">
+                <RadzenTextBox @bind-Value="item.Name" Name="Name" class="w-100" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+            <RadzenFormField Text="Password" Style="width:100%">
+                <RadzenPassword @bind-Value="item.Password" Name="Password" class="w-100" />
+            </RadzenFormField>
+        </RadzenColumn>
 
-            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
-                <RadzenFormField Text="Description" Style="width:100%">
-                    <RadzenTextBox @bind-Value="Item.Description" Name="Description" class="w-100" />
-                </RadzenFormField>
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
-                <RadzenText Text="Access to node" />
-                <ClientAccessSelector ClientNode="Item" class="rz-my-2"/>
-            </RadzenColumn>
-        </RadzenRow>
-    </RadzenTemplateForm>
+        <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+            <RadzenFormField Text="Description" Style="width:100%">
+                <RadzenTextBox @bind-Value="item.Description" Name="Description" class="w-100" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+            <RadzenText Text="Access to node" />
+            <ClientAccessSelector ClientNode="item" class="rz-my-2" />
+        </RadzenColumn>
+    </Content>
+</SabatexEditForm>
 
 
 
-}
 
 @code {
+
+    [Parameter]
+    public string? Id { get; set; }
+
+
+    Models.ClientNode? Item;
+
+
+
     [Parameter]
     [SupplyParameterFromQueryAttribute]
     public Guid ClientId { get; set; }
 
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-        if (Id == null)
+        await base.OnInitializedAsync();
+        if (Id != null)
         {
+            Item = await DataAdapter.GetByIdAsync<Models.ClientNode>(Id);
+        }
+        else
+        {
+            Item = new Models.ClientNode();
             Item.ClientId = ClientId;
         }
+
+
     }
 
-    protected override async Task OnBeforeSubmit(Models.ClientNode item)
+
+    async Task OnBeforeSubmit(Models.ClientNode item)
     {
-        await base.OnBeforeSubmit(item);
         item.NormalizedName = item.Name.ToUpper();
+        await Task.Yield();
     }
 
 

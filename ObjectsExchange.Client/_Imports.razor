@@ -9,11 +9,16 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.JSInterop
 @using ObjectsExchange.Client
-@using ObjectsExchange.Client.Layout
 @using ObjectsExchange.Client.Components
 @using ObjectsExchange.Models
 
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
 @using Radzen
 @using Radzen.Blazor
 @using Sabatex.RadzenBlazor
 
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISabatexRadzenBlazorDataAdapter<Guid> DataAdapter
+@inject SabatexJsInterop SabatexJsInterop

@@ -85,3 +85,7 @@ a {
         content: var(--blazor-load-percentage-text, "Loading");
     }
 
+.side-bar-collapse {
+    width: 0px !important;
+    transform: translateX(-100%);
+}

@@ -1,6 +1,6 @@
 {
-  "name": "ObjectsExchange.Client",
-  "short_name": "ObjectsExchange.Client",
+  "name": "SabatexExchange",
+  "short_name": "SabatexExchange",
   "id": "./",
   "start_url": "./",
   "display": "standalone",

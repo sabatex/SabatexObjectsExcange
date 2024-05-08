@@ -27,17 +27,10 @@ builder.Services.AddSingleton<SabatexBlazorAppState>();
 builder.Services.AddScoped<SabatexJsInterop>();
 
 builder.Services.AddScoped<ClientManager>();
-
-//builder.Services.AddControllers();
-//builder.Services.AddSabatexRadzenBlazor<SabatexServerRadzenBlazorODataAdapter<Guid>, Guid>();
 builder.Services.AddHttpClient();
-//builder.Services.AddScoped<RadzenDemo.Server.SabatexExchangeService>();
-//builder.Services.AddScoped<RadzenDemo.Client.SabatexExchangeService>();
-//builder.Services.AddHttpClient("RadzenDemo.Server").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false }).AddHeaderPropagation(o => o.Headers.Add("Cookie"));
 builder.Services.AddHeaderPropagation(o => o.Headers.Add("Cookie"));
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
-//builder.Services.AddScoped< ObjectsExchange.Client.Services.SecurityService >();
 builder.Services.AddDbContext<ObjectsExchangeDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("SqlIteConnection"));

@@ -1,40 +1,47 @@
 ﻿@page "/client/edit/{id?}"
 @attribute [Authorize]
-@inherits EditBasePage<Models.Client>
-@if (Item == null)
-{
-    <p><em>Loading ...</em></p>
-}
-else
-{
-    <RadzenTemplateForm Data="@Item" TItem="Models.Client" Submit="OnSubmit">
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-mt-8 rz-mb-4">
-            <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Small" Icon="save" Text="Save" />
-            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" Icon="cancel" Text="Cancel" Click="@Cancel" />
-        </RadzenStack>
-        <RadzenRow>
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
-                <RadzenFormField Text="Description" Style="width:100%">
-                    <RadzenTextBox @bind-Value="Item.Description" Name="Description" class="w-100" />
-                </RadzenFormField>
-
-            </RadzenColumn>
-         </RadzenRow>
-    </RadzenTemplateForm>
+@rendermode InteractiveWebAssembly
 
 
+<SabatexEditForm TItem="Models.Client" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)">
+    <Content Context="item">
+        <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
+            <RadzenFormField Text="Description" Style="width:100%">
+                <RadzenTextBox @bind-Value="item.Description" Name="Description" class="w-100" />
+            </RadzenFormField>
 
-}
+        </RadzenColumn>
+
+    </Content>
+</SabatexEditForm>
 
 @code {
-    
-    protected override async Task OnBeforeSubmit(Models.Client item)
+    [Parameter]
+    public string? Id { get; set; }
+
+
+    Models.Client? Item;
+
+    async Task OnBeforeSubmit(Models.Client item)
     {
-        await base.OnBeforeSubmit(item);
-        item.UserId = await GetUserIdAsync();
+        if (Id == null)
+            item.UserId = await AuthenticationStateProvider.GetUserIdAsync();
     }
 
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (Id != null)
+        {
+            Item = await DataAdapter.GetByIdAsync<Models.Client>(Id);
+        }
+        else
+        {
+            Item = new Models.Client();
+        }
+
+
+    }
 
 }

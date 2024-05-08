@@ -11,6 +11,7 @@
 
 @code
 {
+    const string FileName = "Readme.md";
     private MarkupString? body;
     RenderFragment StringToHtml(string htmlString)
     {
@@ -18,9 +19,17 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        if (System.IO.File.Exists(FileName))
+        {
+            var markDown = await System.IO.File.ReadAllTextAsync(FileName);
+            body = new MarkupString(Markdig.Markdown.ToHtml(markDown));
+        }
+        else
+        {
 
-         body = new MarkupString(Markdig.Markdown.ToHtml( await ApiAdapter.GetReadmeAsync()));
+            body =new MarkupString( $"The file {FileName} do not exist !");
+        }
+
     }
- 
 
 }

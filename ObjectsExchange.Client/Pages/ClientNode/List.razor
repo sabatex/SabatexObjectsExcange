@@ -1,7 +1,8 @@
 ﻿@page "/clientnode/list"
 @attribute [Authorize]
-@inherits SabatexRadzenBlazorBasePage
-
+@inject HttpClient HttpClient
+@inject SabatexJsInterop SabatexJS
+@rendermode InteractiveWebAssembly
 <SabatexRadzenGrid TItem="Models.ClientNode" TKey="Guid" ForeginKey="ForeginKey" @ref=grid>
     <Buttons Context="item">
         <RadzenButton Text="CleanNode" Click="()=>CleanNode(item)" Disabled=@(item == null) />

@@ -1,6 +1,6 @@
 ﻿@page "/client/list"
 @attribute [Authorize]
-@inherits SabatexRadzenBlazorBasePage
+@rendermode InteractiveWebAssembly
 
 <RadzenContent Container="main">
     <ChildContent>
@@ -29,7 +29,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        IsAdmin = await UserIsInRore(ApplicationRole.AdministratorRole);
+        IsAdmin = await AuthenticationStateProvider.UserIsInRore(ApplicationRole.AdministratorRole);
     }
     void Nodes(Models.Client? client)
     {
