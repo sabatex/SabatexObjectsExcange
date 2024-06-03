@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "src\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{3AF42961-4628-4301-B439-76939F2E7D40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{3AF42961-4628-4301-B439-76939F2E7D40}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E25FC2B4-765C-4D8E-9A3B-54D3355A5856}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.V1C77.ExchangeService", "src\sabatex.1C77.ExchangeService\Sabatex.V1C77.ExchangeService.csproj", "{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.V1C77.ExchangeService", "sabatex.1C77.ExchangeService\Sabatex.V1C77.ExchangeService.csproj", "{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Tests", "src\Sabatex.ObjectsExchange.Tests\Sabatex.ObjectsExchange.Tests.csproj", "{79B4D601-10CA-46EC-B928-32DB7B3D5F52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Tests", "Sabatex.ObjectsExchange.Tests\Sabatex.ObjectsExchange.Tests.csproj", "{79B4D601-10CA-46EC-B928-32DB7B3D5F52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.HttpClientConnector", "src\Sabatex.ObjectsExchange.HttpClientConnector\Sabatex.ObjectsExchange.HttpClientConnector.csproj", "{1AAFAE12-D832-4414-AF2F-4E4B816B304A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.HttpClientConnector", "Sabatex.ObjectsExchange.HttpClientConnector\Sabatex.ObjectsExchange.HttpClientConnector.csproj", "{1AAFAE12-D832-4414-AF2F-4E4B816B304A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange.Client", "ObjectsExchange.Client\ObjectsExchange.Client.csproj", "{75DB9265-342E-4DE3-A46A-C66DB25586CD}"
 EndProject
