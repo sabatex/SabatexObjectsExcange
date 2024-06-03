@@ -31,9 +31,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
+        //await base.OnInitializedAsync();
         if (Id != null)
         {
+
             Item = await DataAdapter.GetByIdAsync<Models.Client>(Id);
         }
         else

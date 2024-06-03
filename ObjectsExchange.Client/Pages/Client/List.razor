@@ -6,13 +6,9 @@
     <ChildContent>
         <div class="row">
             <div class="col-md-12">
-               <SabatexRadzenGrid TItem="Models.Client" TKey="Guid" >
+               <SabatexRadzenGrid TItem="Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes">
                    <Buttons Context="item">
                         <RadzenButton Text="Nodes" Click="()=>Nodes(item)" Disabled=@(item == null) />
-                            @if (!IsAdmin)
-                            {
-                                <RadzenText Text="The limit 5 clients per user!"  />
-                            }
                     </Buttons>
                     <Columns>
                         <RadzenDataGridColumn TItem="Models.Client" Property="Description" Title="Description"  />

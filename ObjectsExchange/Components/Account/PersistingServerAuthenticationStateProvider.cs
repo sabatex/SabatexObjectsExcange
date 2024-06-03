@@ -51,6 +51,8 @@ namespace ObjectsExchange.Components.Account
             {
                 var userId = principal.FindFirst(options.ClaimsIdentity.UserIdClaimType)?.Value;
                 var email = principal.FindFirst(options.ClaimsIdentity.EmailClaimType)?.Value;
+                var roles = principal.FindAll(options.ClaimsIdentity.RoleClaimType).Select(s => s.Value).ToArray();
+
 
                 if (userId != null && email != null)
                 {
@@ -58,6 +60,7 @@ namespace ObjectsExchange.Components.Account
                     {
                         UserId = userId,
                         Email = email,
+                        Roles = roles
                     });
                 }
             }

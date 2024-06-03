@@ -19,6 +19,17 @@ namespace ObjectsExchange.Client
             Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
 
         private readonly Task<AuthenticationState> authenticationStateTask = defaultUnauthenticatedTask;
+        IEnumerable<Claim> GetClaims(UserInfo userInfo)
+        {
+            yield return new Claim(ClaimTypes.NameIdentifier, userInfo.UserId);
+            yield return new Claim(ClaimTypes.Name, userInfo.Email);
+            yield return new Claim(ClaimTypes.Email, userInfo.Email);
+            foreach (var role in userInfo.Roles)
+            {
+                yield return new Claim(ClaimTypes.Role, role);
+            }
+
+        }
 
         public PersistentAuthenticationStateProvider(PersistentComponentState state)
         {
@@ -27,11 +38,8 @@ namespace ObjectsExchange.Client
                 return;
             }
 
-            Claim[] claims = [
-                new Claim(ClaimTypes.NameIdentifier, userInfo.UserId),
-                new Claim(ClaimTypes.Name, userInfo.Email),
-                new Claim(ClaimTypes.Email, userInfo.Email) ];
-
+            IEnumerable<Claim> claims = GetClaims(userInfo);
+ 
             authenticationStateTask = Task.FromResult(
                 new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(claims,
                     authenticationType: nameof(PersistentAuthenticationStateProvider)))));

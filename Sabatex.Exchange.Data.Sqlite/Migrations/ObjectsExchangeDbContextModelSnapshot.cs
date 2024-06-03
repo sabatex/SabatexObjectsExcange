@@ -2,23 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ObjectsExchange.Data;
+
+using Sabatex.Exchange.Data.Sqlite;
 
 #nullable disable
 
 namespace ObjectsExchange.Migrations
 {
-    [DbContext(typeof(ObjectsExchangeDbContext))]
-    [Migration("20240402055333_m1")]
-    partial class m1
+    [DbContext(typeof(SqliteDbContext))]
+    partial class ObjectsExchangeDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
@@ -185,6 +183,19 @@ namespace ObjectsExchange.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("ClientNodes");
+                });
+
+            modelBuilder.Entity("ObjectsExchange.Client.Models.ClientUser", b =>
+                {
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ApplicationUserId", "ClientId");
+
+                    b.ToTable("ClientUsers");
                 });
 
             modelBuilder.Entity("ObjectsExchange.Data.AutenficatedNode", b =>

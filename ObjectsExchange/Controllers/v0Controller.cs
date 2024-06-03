@@ -94,20 +94,20 @@ public class v0Controller : ControllerBase
     /// <param name="login">The object Login with node Id (register unsensitive) and password</param>
     /// <returns>string access token or empty for fail</returns>
     /// <exception cref="Exception"></exception>
-    [HttpPost("login")]
-    public async Task<IActionResult> PostLoginAsync(Login login)
-    {
-        Thread.Sleep(100); // anti butforce
-        try
-        {
-            return Ok(await _clientManager.LoginAsync(login.ClientId, login.Password));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Login client {login.ClientId} error:{ex.Message}");
-            return BadRequest(ex.Message);
-        }
-    }
+    //[HttpPost("login")]
+    //public async Task<IActionResult> PostLoginAsync(Login login)
+    //{
+    //    Thread.Sleep(100); // anti butforce
+    //    try
+    //    {
+    //        return Ok(await _clientManager.LoginAsync(login.ClientId, login.Password));
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError($"Login client {login.ClientId} error:{ex.Message}");
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
     [HttpPost("refresh_token")]
     public async Task<IActionResult> PostRefresTokenAsync(Login login)
     {
@@ -217,7 +217,8 @@ public class v0Controller : ControllerBase
                 DateStamp = DateTime.UtcNow,
                 SenderDateStamp = dateStamp
             };
-            await _dbContext.ObjectExchanges.AddAsync(doc.GetObjectExchange());
+            var oe = doc.GetObjectExchange();
+            await _dbContext.ObjectExchanges.AddAsync(oe);
             clientNode.Counter++;
             await _dbContext.SaveChangesAsync();
         }

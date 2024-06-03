@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ObjectsExchange.Data;
+using Sabatex.Exchange.Data.Sqlite;
 
 #nullable disable
 
 namespace ObjectsExchange.Migrations
 {
-    [DbContext(typeof(ObjectsExchangeDbContext))]
-    [Migration("20240401110731_m0")]
-    partial class m0
+    [DbContext(typeof(SqliteDbContext))]
+    [Migration("20240402055333_m1")]
+    partial class m1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -316,18 +316,12 @@ namespace ObjectsExchange.Migrations
                     b.Property<Guid>("Destination")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ObjectAsText")
-                        .IsRequired()
+                    b.Property<string>("Message")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ObjectId")
+                    b.Property<string>("MessageHeader")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ObjectType")
-                        .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("Sender")
@@ -345,42 +339,6 @@ namespace ObjectsExchange.Migrations
                     b.HasIndex("Sender");
 
                     b.ToTable("ObjectExchanges");
-                });
-
-            modelBuilder.Entity("Sabatex.ObjectsExchange.Models.QueryObject", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid?>("ClientNodeId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("Destination")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ObjectId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ObjectType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("Sender")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientNodeId");
-
-                    b.HasIndex("Destination");
-
-                    b.HasIndex("Sender");
-
-                    b.ToTable("QueryObjects");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -475,25 +433,6 @@ namespace ObjectsExchange.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Sabatex.ObjectsExchange.Models.QueryObject", b =>
-                {
-                    b.HasOne("ObjectsExchange.Client.Models.ClientNode", null)
-                        .WithMany("QueryObjects")
-                        .HasForeignKey("ClientNodeId");
-
-                    b.HasOne("ObjectsExchange.Client.Models.ClientNode", null)
-                        .WithMany()
-                        .HasForeignKey("Destination")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ObjectsExchange.Client.Models.ClientNode", null)
-                        .WithMany()
-                        .HasForeignKey("Sender")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ObjectsExchange.Client.Models.Client", b =>
                 {
                     b.Navigation("ClientNodes");
@@ -502,8 +441,6 @@ namespace ObjectsExchange.Migrations
             modelBuilder.Entity("ObjectsExchange.Client.Models.ClientNode", b =>
                 {
                     b.Navigation("Objects");
-
-                    b.Navigation("QueryObjects");
                 });
 #pragma warning restore 612, 618
         }

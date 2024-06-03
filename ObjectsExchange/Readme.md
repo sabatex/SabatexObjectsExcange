@@ -1,4 +1,4 @@
 ﻿# Exchange server
 
-## Login for edit jour exchange nodes.
+## Login for edit jour exchange nodes. Ok.
   

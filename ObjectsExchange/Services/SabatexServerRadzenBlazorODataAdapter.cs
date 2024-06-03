@@ -5,6 +5,7 @@ using Radzen;
 using Sabatex.Core;
 using Sabatex.RadzenBlazor;
 using System.Net.Http;
+using System.Linq.Dynamic.Core;
 
 
 namespace ObjectsExchange.Services
@@ -27,14 +28,37 @@ namespace ObjectsExchange.Services
             return new ODataServiceResult<TItem> { Count = 0,Value = await result.ToArrayAsync() };
         }
 
-        public Task<TItem> GetByIdAsync<TItem>(Guid id, string? expand = null) where TItem : class, Sabatex.Core.IEntityBase<Guid>
+
+        protected  async Task<bool> CheckAccess<TItem>(TItem item, TItem? updated)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            return true;
         }
 
-        public Task<TItem> GetByIdAsync<TItem>(string id, string? expand = null) where TItem : class, Sabatex.Core.IEntityBase<Guid>
+        public async Task<TItem> GetByIdAsync<TItem>(Guid id, string? expand = null) where TItem : class, Sabatex.Core.IEntityBase<Guid>
         {
-            throw new NotImplementedException();
+            var query = context.Set<TItem>().AsQueryable<TItem>();
+            //query = OnBeforeGetById(query, id);
+            var result = await query.Where(s => s.Id == id).SingleAsync();
+            if (await CheckAccess(result, null))
+            {
+                return result;
+            }
+            return null;
+         }
+
+        public async Task<TItem> GetByIdAsync<TItem>(string id, string? expand = null) where TItem : class, Sabatex.Core.IEntityBase<Guid>
+        {
+            var query = context.Set<TItem>().AsQueryable<TItem>();
+            var idGuid = Guid.Parse(id);
+            //query = OnBeforeGetById(query, id);
+            var result = await query.Where(s => s.Id == idGuid).SingleAsync();
+            if (await CheckAccess(result, null))
+            {
+                return result;
+            }
+            return null;
+
         }
 
         public Task<SabatexValidationModel<TItem>> PostAsync<TItem>(TItem? item) where TItem : class, Sabatex.Core.IEntityBase<Guid>
@@ -47,9 +71,9 @@ namespace ObjectsExchange.Services
             throw new NotImplementedException();
         }
 
-        Task<ODataServiceResult<TItem>> ISabatexRadzenBlazorDataAdapter<Guid>.GetAsync<TItem>(QueryParams queryParams)
+        async Task<ODataServiceResult<TItem>> ISabatexRadzenBlazorDataAdapter<Guid>.GetAsync<TItem>(QueryParams queryParams)
         {
-            throw new NotImplementedException();
+            return new ODataServiceResult<TItem> { };
         }
         const string FileName = "Readme.md";
         public async Task<string> GetReadmeAsync()
@@ -58,6 +82,9 @@ namespace ObjectsExchange.Services
             return $"Please wait ...";
         }
 
-
+        public Task<string> GetDataBaseBackupAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

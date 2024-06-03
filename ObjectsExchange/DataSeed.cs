@@ -20,6 +20,8 @@ public class DataSeed
     internal record SeedData(string[]? Roles, User[]? Users, UserInRole[]? UsersInRoles);
     public static async Task InitializeAsync(IServiceProvider serviceProvider,IConfiguration configuration)
     {
+        if (!configuration.GetSection("DatabaseMigrate").GetValue<bool>("Migrate"))
+            return;
 
         var context = serviceProvider.GetRequiredService<ObjectsExchangeDbContext>();
 

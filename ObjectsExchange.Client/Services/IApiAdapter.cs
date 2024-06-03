@@ -1,9 +1,11 @@
-﻿using Sabatex.RadzenBlazor;
+﻿using ObjectsExchange.Client.Models;
+using Sabatex.RadzenBlazor;
 
 namespace ObjectsExchange.Client.Services
 {
     public interface IApiAdapter: ISabatexRadzenBlazorDataAdapter<Guid>
     {
         public Task<string> GetReadmeAsync();
+        Task<string> GetDataBaseBackupAsync();
     }
 }

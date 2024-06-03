@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+	  <Version>4.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

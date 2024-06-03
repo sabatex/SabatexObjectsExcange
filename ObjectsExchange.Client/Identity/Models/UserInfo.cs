@@ -20,4 +20,5 @@ public class UserInfo
     /// The list of claims for the user.
     /// </summary>
     public Dictionary<string, string> Claims { get; set; } = [];
+    public required string[] Roles { get; set; }
 }

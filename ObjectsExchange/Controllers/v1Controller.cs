@@ -6,13 +6,16 @@ using Microsoft.Extensions.Options;
 using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
+using Radzen.Blazor.Rendering;
 using Sabatex.ObjectsExchange.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 
 namespace Sabatex.ObjectsExchange.Controllers;
 
@@ -95,6 +98,8 @@ public class v1Controller : ControllerBase
     /// <returns>string access token or empty for fail</returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("login")]
+    [Route("/api/v0/login")]
+    [Route("/api/v1/login")]
     public async Task<IActionResult> PostLoginAsync(Login login)
     {
         Thread.Sleep(100); // anti butforce
@@ -108,6 +113,10 @@ public class v1Controller : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+
+
+
     [HttpPost("refresh_token")]
     public async Task<IActionResult> PostRefresTokenAsync(Login login)
     {
@@ -247,6 +256,10 @@ public class v1Controller : ControllerBase
 
     #endregion
 
+
+
+
+
     #region queries
     /// <summary>
     /// Get 
@@ -337,5 +350,21 @@ public class v1Controller : ControllerBase
 
 
     #endregion
+
+
+    [HttpGet("DataBaseBackup")]
+    [Authorize(Roles = "Administrator")]
+    public async Task<string> GetDataBaseBackupAsync()
+    {
+        var result = new DataBaseBackup();
+        result.ClientNodes = await _dbContext.ClientNodes.ToArrayAsync();
+        result.Clients = await _dbContext.Clients.ToArrayAsync();
+        result.ClientUsers = await _dbContext.ClientUsers.ToArrayAsync();
+        result.Roles = await _dbContext.Roles.ToArrayAsync();
+        result.Users = await _dbContext.Users.ToArrayAsync();
+        result.UserRoles = await _dbContext.UserRoles.ToArrayAsync();
+        return System.Text.Json.JsonSerializer.Serialize(result,new JsonSerializerOptions { Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic) });
+    }
+
 
 }
