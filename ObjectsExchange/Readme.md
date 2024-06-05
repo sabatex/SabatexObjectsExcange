@@ -1,4 +1,5 @@
 ﻿# Exchange server
 
-## Login for edit jour exchange nodes. Ok.
+## Login for edit jour exchange nodes.
+-Тест мови.
   

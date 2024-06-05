@@ -9,8 +9,8 @@ namespace ObjectsExchange.Data
         public IEnumerable<ClientNode> ClientNodes { get; set; }
         public IEnumerable<Client.Models.Client> Clients { get; set; }
         public IEnumerable<ClientUser> ClientUsers { get; set; }
-        public IEnumerable<ApplicationRole> Roles { get; set; }
+        public IEnumerable<IdentityRole> Roles { get; set; }
         public IEnumerable<ApplicationUser> Users { get; set; }
-        public IEnumerable<IdentityUserRole<Guid>> UserRoles { get; set; }
+        public IEnumerable<IdentityUserRole<string>> UserRoles { get; set; }
     }
 }

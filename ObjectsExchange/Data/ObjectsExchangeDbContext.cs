@@ -5,7 +5,7 @@ using Sabatex.ObjectsExchange.Models;
 
 namespace ObjectsExchange.Data;
 
-public class ObjectsExchangeDbContext : IdentityDbContext<ApplicationUser,ApplicationRole,Guid>
+public class ObjectsExchangeDbContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<Client.Models.ClientNode> ClientNodes { get; set; }
     public DbSet<Client.Models.Client> Clients { get; set; }
@@ -20,7 +20,7 @@ public class ObjectsExchangeDbContext : IdentityDbContext<ApplicationUser,Applic
         yield return new Client.Models.ClientNode
         {
             Id = new Guid("EF1A359F-9F43-40E6-B702-A56DF87432D6"),
-            Name = "Demo ",
+            Name = "Demo",
             ClientId = new Guid("8F830B0C-BF60-4A4D-B9C7-9D86C60DB75D")
         };
     }

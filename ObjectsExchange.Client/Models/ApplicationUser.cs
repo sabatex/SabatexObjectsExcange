@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace ObjectsExchange.Models
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser
     {
 
 

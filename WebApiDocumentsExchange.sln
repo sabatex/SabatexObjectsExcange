@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.Exchange.Data", "Sa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.Exchange.Data.Models", "Sabatex.Exchange.Data.Models\Sabatex.Exchange.Data.Models.csproj", "{486A5342-933E-46D5-AC88-E15E3E707B45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.Exchange", "Sabatex.Exchange\Sabatex.Exchange.csproj", "{D8C40A72-C733-4A60-9EDF-6A38531A505F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{486A5342-933E-46D5-AC88-E15E3E707B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{486A5342-933E-46D5-AC88-E15E3E707B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{486A5342-933E-46D5-AC88-E15E3E707B45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8C40A72-C733-4A60-9EDF-6A38531A505F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8C40A72-C733-4A60-9EDF-6A38531A505F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8C40A72-C733-4A60-9EDF-6A38531A505F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8C40A72-C733-4A60-9EDF-6A38531A505F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -38,10 +38,10 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<ObjectsExchangeDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-    //options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    //options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ObjectsExchangeDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ObjectsExchangeDbContext>().AddDefaultTokenProviders();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 

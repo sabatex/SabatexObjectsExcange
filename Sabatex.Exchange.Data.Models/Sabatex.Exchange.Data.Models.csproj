@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj" />
+    <ProjectReference Include="..\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -30,7 +30,7 @@ namespace ObjectsExchange.Controllers
         }
 
 
-        public Guid UserId => Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
+        public string UserId => User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 
 
         [HttpGet]

@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sabatex.Exchange.Data.Models\Sabatex.Exchange.Data.Models.csproj" />
-    <ProjectReference Include="..\src\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj" />
+    <ProjectReference Include="..\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -20,7 +20,8 @@ public class DataSeed
     internal record SeedData(string[]? Roles, User[]? Users, UserInRole[]? UsersInRoles);
     public static async Task InitializeAsync(IServiceProvider serviceProvider,IConfiguration configuration)
     {
-        if (!configuration.GetSection("DatabaseMigrate").GetValue<bool>("Migrate"))
+
+        if (!configuration.GetValue<bool>("Migrate"))
             return;
 
         var context = serviceProvider.GetRequiredService<ObjectsExchangeDbContext>();
@@ -35,13 +36,13 @@ public class DataSeed
         var seedData = new SeedData(null,null,null);
         configuration.Bind("SeedData", seedData);
  
-        using var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        using var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
         foreach (var role in seedData.Roles ?? new string[] { })
         {
             if (!await roleManager.RoleExistsAsync(role))
             {
-                await roleManager.CreateAsync(new ApplicationRole(role));
+                await roleManager.CreateAsync(new IdentityRole(role));
             }
         }
 

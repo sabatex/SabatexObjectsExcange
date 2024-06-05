@@ -25,7 +25,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        IsAdmin = await AuthenticationStateProvider.UserIsInRore(ApplicationRole.AdministratorRole);
+        IsAdmin = await AuthenticationStateProvider.UserIsInRore(ApplicationClaim.AdministratorRole);
     }
     void Nodes(Models.Client? client)
     {
