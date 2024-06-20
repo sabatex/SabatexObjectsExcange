@@ -3,7 +3,7 @@
 @using ObjectsExchange.Data
 @using ObjectsExchange.Models
 
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<IdentityUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
 @if (externalLogins.Length == 0)

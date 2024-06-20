@@ -25,25 +25,18 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenticationStateProvider>();
 
-//builder.Services.AddRadzenComponents();
-//builder.Services.AddScoped<ISabatexRadzenBlazorDataAdapter<Guid>, ObjectsExchange.Services.ApiAdapter>();
-//builder.Services.AddScoped<IApiAdapter, ObjectsExchange.Services.ApiAdapter>();
-//builder.Services.AddSingleton<SabatexBlazorAppState>();
-//builder.Services.AddScoped<SabatexJsInterop>();
-
 builder.Services.AddScoped<ClientManager>();
-//builder.Services.AddHttpClient();
 builder.Services.AddHeaderPropagation(o => o.Headers.Add("Cookie"));
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<ObjectsExchangeDbContext>(options =>
 {
-    //options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    //options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ObjectsExchangeDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ObjectsExchangeDbContext>().AddDefaultTokenProviders();
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
 
 
 

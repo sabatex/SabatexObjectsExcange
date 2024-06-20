@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Sabatex.ObjectsExchange.Models;
@@ -197,7 +196,7 @@ public class v0Controller : ControllerBase
 
         }
 
-        if (clientNode.ObjectsCount >= clientNode.MaxOperationPerMounth)
+        if (clientNode.ObjectsCount >= clientNode.MaxOperationPerDay)
         {
             return BadRequest("The limit operations per day is overflow");
         }

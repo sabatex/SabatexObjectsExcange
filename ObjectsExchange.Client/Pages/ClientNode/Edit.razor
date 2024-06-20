@@ -1,7 +1,7 @@
 ﻿@page "/clientnode/edit/{id?}"
 @attribute [Authorize]
 @rendermode InteractiveWebAssembly
-<SabatexEditForm TItem="Models.ClientNode" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)">
+<SabatexEditForm TItem="Sabatex.ObjectsExchange.Models.ClientNode" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)">
     <Content Context="item">
         <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
             <RadzenFormField Text="Name" Style="width:100%">
@@ -35,7 +35,7 @@
     public string? Id { get; set; }
 
 
-    Models.ClientNode? Item;
+    Sabatex.ObjectsExchange.Models.ClientNode? Item;
 
 
 
@@ -49,11 +49,11 @@
         //await base.OnInitializedAsync();
         if (Id != null)
         {
-            Item = await DataAdapter.GetByIdAsync<Models.ClientNode>(Id);
+            Item = await DataAdapter.GetByIdAsync<Sabatex.ObjectsExchange.Models.ClientNode>(Id);
         }
         else
         {
-            Item = new Models.ClientNode();
+            Item = new Sabatex.ObjectsExchange.Models.ClientNode();
             Item.ClientId = ClientId;
         }
 
@@ -61,10 +61,9 @@
     }
 
 
-    async Task OnBeforeSubmit(Models.ClientNode item)
+    async Task OnBeforeSubmit(Sabatex.ObjectsExchange.Models.ClientNode item)
     {
-        item.NormalizedName = item.Name.ToUpper();
-        await Task.Yield();
+         await Task.Yield();
     }
 
 

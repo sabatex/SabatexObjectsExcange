@@ -16,6 +16,27 @@
     </NotAuthorized>
 </AuthorizeView>
 
+@if (IsAdmin)
+{
+    <RadzenContent Container="main">
+        <ChildContent>
+            <div class="row">
+                <div class="col-md-12">
+                    <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes">
+                        <Buttons Context="item">
+                            <RadzenButton Text="Nodes" Click="()=>Nodes(item)" Disabled=@(item == null) />
+                        </Buttons>
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Sabatex.ObjectsExchange.Models.Client" Property="Description" Title="Description" />
+                        </Columns>
+                    </SabatexRadzenGrid>
+                </div>
+            </div>
+        </ChildContent>
+    </RadzenContent>
+
+}
+
 
 
 @body
@@ -23,6 +44,8 @@
 
 @code
 {
+    bool IsAdmin = false;
+
     const string FileName = "Readme.md";
     private MarkupString? body;
     RenderFragment StringToHtml(string htmlString)
@@ -33,6 +56,7 @@
     {
         var markDown = await ApiAdapter.GetReadmeAsync();
         body = new MarkupString(Markdig.Markdown.ToHtml(markDown));
+        IsAdmin = await AuthenticationStateProvider.UserIsInRore(ApplicationClaim.AdministratorRole);
 
 
         // if (System.IO.File.Exists(FileName))
@@ -52,5 +76,11 @@
         var jsonString = await ApiAdapter.GetDataBaseBackupAsync();
         await SabatexJsInterop.DownloadStringAsFile("SabatexExchange.json", jsonString);
     }
-
+    void Nodes(Sabatex.ObjectsExchange.Models.Client? client)
+    {
+        var query = new Dictionary<string, object?>();
+        query.Add("ClientId", client.Id.ToString());
+        var uri = NavigationManager.GetUriWithQueryParameters($"clientnode/list", query);
+        NavigationManager.NavigateTo(uri);
+    }
 }

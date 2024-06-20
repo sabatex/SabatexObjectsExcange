@@ -1,5 +1,4 @@
-﻿using ObjectsExchange.Client.Models;
-using Sabatex.RadzenBlazor;
+﻿using Sabatex.RadzenBlazor;
 
 namespace ObjectsExchange.Client.Services
 {

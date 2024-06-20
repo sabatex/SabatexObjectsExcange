@@ -3,7 +3,7 @@
 @inject HttpClient HttpClient
 @inject SabatexJsInterop SabatexJS
 @rendermode InteractiveWebAssembly
-<SabatexRadzenGrid TItem="Models.ClientNode" TKey="Guid" ForeginKey="ForeginKey" @ref=grid>
+<SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.ClientNode" TKey="Guid" ForeginKey="ForeginKey" @ref=grid>
     <Buttons Context="item">
         <RadzenButton Text="CleanNode" Click="()=>CleanNode(item)" Disabled=@(item == null) />
         <RadzenButton Text="Export CSV" Icon="wrap_text" Click="@(async args => await ExportAsync())" />
@@ -18,9 +18,9 @@
      </Buttons>
 
     <Columns>
-        <RadzenDataGridColumn TItem="Models.ClientNode" Property="Name" Title="Name" />
-        <RadzenDataGridColumn TItem="Models.ClientNode" Property="Counter" Title="CountPerDay" Width="120px" />
-        <RadzenDataGridColumn TItem="Models.ClientNode" Property="ObjectsCount" Title="Objects" Width="120px" />
+        <RadzenDataGridColumn TItem="Sabatex.ObjectsExchange.Models.ClientNode" Property="Name" Title="Name" />
+        <RadzenDataGridColumn TItem="Sabatex.ObjectsExchange.Models.ClientNode" Property="Counter" Title="CountPerDay" Width="120px" />
+        <RadzenDataGridColumn TItem="Sabatex.ObjectsExchange.Models.ClientNode" Property="ObjectsCount" Title="Objects" Width="120px" />
     </Columns>
 </SabatexRadzenGrid>
 
@@ -29,7 +29,7 @@
     [SupplyParameterFromQuery]
     public Guid ClientId { get; set; }
 
-    SabatexRadzenGrid<Guid,Models.ClientNode> grid;
+    SabatexRadzenGrid<Guid, Sabatex.ObjectsExchange.Models.ClientNode> grid;
 
     ForeginKey ForeginKey => new ForeginKey("ClientId", ClientId.ToString());
 
@@ -38,7 +38,7 @@
         base.OnInitialized();
     }
 
-    async void CleanNode(Models.ClientNode node)
+    async void CleanNode(Sabatex.ObjectsExchange.Models.ClientNode node)
     {
         await HttpClient.DeleteAsync($"api/clientnode/clean/{node.Id}");
     }
@@ -83,8 +83,8 @@
                 await LogWrite(" Ok");
 
                 string s = System.Text.Encoding.UTF8.GetString(stream.ToArray());
-                var clientNodes = System.Text.Json.JsonSerializer.Deserialize<Models.ClientNode[]>(s);
-                foreach (var item in clientNodes ?? new Models.ClientNode[] { })
+                var clientNodes = System.Text.Json.JsonSerializer.Deserialize<Sabatex.ObjectsExchange.Models.ClientNode[]>(s);
+                foreach (var item in clientNodes ?? new Sabatex.ObjectsExchange.Models.ClientNode[] { })
                 {
                     item.ClientId = ClientId;
                     await HttpClient.PostAsJsonAsync("api/clientnode", item);

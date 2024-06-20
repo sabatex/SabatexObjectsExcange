@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Security.Claims;
 using ObjectsExchange.Client;
-using ObjectsExchange.Client.Identity;
 using Radzen;
 using Radzen.Blazor;
 using Sabatex.RadzenBlazor;

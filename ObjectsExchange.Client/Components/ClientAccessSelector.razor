@@ -11,18 +11,18 @@
 
 @code {
     record NodeDescriptor(Guid Id,string Name);
-    [Parameter] public Models.ClientNode? ClientNode { get; set; }
+    [Parameter] public Sabatex.ObjectsExchange.Models.ClientNode? ClientNode { get; set; }
 
     private IEnumerable<Guid> values
     {
         get => ClientNode?.GetClientAccess() ?? new Guid[] { };
         set
         {
-            ClientNode?.SetClientAccess(value);
+            if (ClientNode !=null)  ClientNode.ClientAccess = string.Join(",", value);
         }
     }
 
-    private IEnumerable<Models.ClientNode>? avaliableNodes;
+    private IEnumerable<Sabatex.ObjectsExchange.Models.ClientNode>? avaliableNodes;
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -32,7 +32,7 @@
         try
         {
             var queryParams = new QueryParams { Args = new LoadDataArgs { Filter = $"ClientId eq \"{ClientNode.ClientId}\" and Id ne \"{ClientNode.Id}\"" } };
-            var avaliableNodes = await DataAdapter.GetAsync<Models.ClientNode>(queryParams);
+            var avaliableNodes = await DataAdapter.GetAsync<Sabatex.ObjectsExchange.Models.ClientNode>(queryParams);
             this.avaliableNodes = avaliableNodes.Value;
         }
         catch(Exception ex)

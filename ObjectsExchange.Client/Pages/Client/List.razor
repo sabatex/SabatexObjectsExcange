@@ -6,12 +6,12 @@
     <ChildContent>
         <div class="row">
             <div class="col-md-12">
-               <SabatexRadzenGrid TItem="Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes">
+               <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes">
                    <Buttons Context="item">
                         <RadzenButton Text="Nodes" Click="()=>Nodes(item)" Disabled=@(item == null) />
                     </Buttons>
                     <Columns>
-                        <RadzenDataGridColumn TItem="Models.Client" Property="Description" Title="Description"  />
+                        <RadzenDataGridColumn TItem="Sabatex.ObjectsExchange.Models.Client" Property="Description" Title="Description" />
                     </Columns>
                 </SabatexRadzenGrid>
             </div>
@@ -27,7 +27,7 @@
         await base.OnInitializedAsync();
         IsAdmin = await AuthenticationStateProvider.UserIsInRore(ApplicationClaim.AdministratorRole);
     }
-    void Nodes(Models.Client? client)
+    void Nodes(Sabatex.ObjectsExchange.Models.Client? client)
     {
         var query = new Dictionary<string, object?>();
         query.Add("ClientId", client.Id.ToString());

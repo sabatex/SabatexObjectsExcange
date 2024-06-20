@@ -24,7 +24,7 @@ namespace Microsoft.AspNetCore.Routing
 
             accountGroup.MapPost("/PerformExternalLogin", (
                 HttpContext context,
-                [FromServices] SignInManager<ApplicationUser> signInManager,
+                [FromServices] SignInManager<IdentityUser> signInManager,
                 [FromForm] string provider,
                 [FromForm] string returnUrl) =>
             {
@@ -43,7 +43,7 @@ namespace Microsoft.AspNetCore.Routing
 
             accountGroup.MapPost("/Logout", async (
                 ClaimsPrincipal user,
-                SignInManager<ApplicationUser> signInManager,
+                SignInManager<IdentityUser> signInManager,
                 [FromForm] string returnUrl) =>
             {
                 await signInManager.SignOutAsync();
@@ -54,7 +54,7 @@ namespace Microsoft.AspNetCore.Routing
 
             manageGroup.MapPost("/LinkExternalLogin", async (
                 HttpContext context,
-                [FromServices] SignInManager<ApplicationUser> signInManager,
+                [FromServices] SignInManager<IdentityUser> signInManager,
                 [FromForm] string provider) =>
             {
                 // Clear the existing external cookie to ensure a clean login process
@@ -74,7 +74,7 @@ namespace Microsoft.AspNetCore.Routing
 
             manageGroup.MapPost("/DownloadPersonalData", async (
                 HttpContext context,
-                [FromServices] UserManager<ApplicationUser> userManager,
+                [FromServices] UserManager<IdentityUser> userManager,
                 [FromServices] AuthenticationStateProvider authenticationStateProvider) =>
             {
                 var user = await userManager.GetUserAsync(context.User);
@@ -88,7 +88,7 @@ namespace Microsoft.AspNetCore.Routing
 
                 // Only include personal data for download
                 var personalData = new Dictionary<string, string>();
-                var personalDataProps = typeof(ApplicationUser).GetProperties().Where(
+                var personalDataProps = typeof(IdentityUser).GetProperties().Where(
                     prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
                 foreach (var p in personalDataProps)
                 {

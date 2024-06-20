@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Radzen.Blazor.Rendering;
@@ -202,7 +201,7 @@ public class v1Controller : ControllerBase
             clientNode.Counter = 0;
         }
 
-        if (clientNode.Counter >= clientNode.MaxOperationPerMounth)
+        if (clientNode.Counter >= clientNode.MaxOperationPerDay)
         {
             return BadRequest("The limit operations per day is overflow");
         }

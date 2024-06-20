@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using ObjectsExchange.Client.Identity.Models;
 using System.Security.Claims;
 
 namespace ObjectsExchange.Client;

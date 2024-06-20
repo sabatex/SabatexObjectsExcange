@@ -3,7 +3,7 @@
 @rendermode InteractiveWebAssembly
 
 
-<SabatexEditForm TItem="Models.Client" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)">
+<SabatexEditForm TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)">
     <Content Context="item">
         <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
             <RadzenFormField Text="Description" Style="width:100%">
@@ -20,12 +20,12 @@
     public string? Id { get; set; }
 
 
-    Models.Client? Item;
+    Sabatex.ObjectsExchange.Models.Client? Item;
 
-    async Task OnBeforeSubmit(Models.Client item)
+    async Task OnBeforeSubmit(Sabatex.ObjectsExchange.Models.Client item)
     {
         if (Id == null)
-            item.UserId = await AuthenticationStateProvider.GetUserIdAsync();
+            item.OwnerUser = await AuthenticationStateProvider.GetUserNameAsync();
     }
 
 
@@ -35,11 +35,11 @@
         if (Id != null)
         {
 
-            Item = await DataAdapter.GetByIdAsync<Models.Client>(Id);
+            Item = await DataAdapter.GetByIdAsync<Sabatex.ObjectsExchange.Models.Client>(Id);
         }
         else
         {
-            Item = new Models.Client();
+            Item = new Sabatex.ObjectsExchange.Models.Client();
         }
 
 

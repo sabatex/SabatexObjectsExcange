@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Sabatex.ObjectsExchange.Models;
@@ -42,17 +41,8 @@ namespace ObjectsExchange.Services
 
         public async Task<ClientNode> CreateClientAsync(string clientName, string password, string descriptions, string accesNodes)
         {
-            var normalizedName = clientName.ToUpper();
-            var clientNode = await _dbContext.ClientNodes.SingleOrDefaultAsync(s => s.NormalizedName == normalizedName);
-            if (clientNode != null)
+            var clientNode =  new ClientNode
             {
-                var errorClientName = $"The client {clientName} is exist";
-                _logger.LogError($"{DateTime.Now}: {errorClientName}");
-                throw new Exception(errorClientName);
-            }
-            clientNode = new ClientNode
-            {
-                NormalizedName = normalizedName,
                 Name = clientName,
                 Description = descriptions,
                 ClientAccess = accesNodes,
@@ -127,9 +117,9 @@ namespace ObjectsExchange.Services
         }
 
 
-        public async Task<IEnumerable<ClientNodeBase>> GetClients(int skip, int take)
+        public async Task<IEnumerable<ClientNode>> GetClients(int skip, int take)
         {
-            return await _dbContext.ClientNodes.Skip(skip).Take(take).Select(s => new ClientNodeBase
+            return await _dbContext.ClientNodes.Skip(skip).Take(take).Select(s => new ClientNode
             {
                 Id = s.Id,
                 Name = s.Name,
@@ -137,7 +127,7 @@ namespace ObjectsExchange.Services
                 ClientAccess = s.ClientAccess,
                 IsDemo = s.IsDemo,
                 Counter = s.Counter,
-                MaxOperationPerMounth = s.MaxOperationPerMounth
+                MaxOperationPerDay = s.MaxOperationPerDay
 
             }).ToArrayAsync();
         }

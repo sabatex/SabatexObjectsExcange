@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using ObjectsExchange.Client.Models;
 using ObjectsExchange.Data;
+using ObjectsExchange.Models;
 using ObjectsExchange.Services;
 using Radzen;
 using Sabatex.ObjectsExchange.Models;
@@ -13,7 +13,7 @@ using System.Linq.Expressions;
 
 namespace ObjectsExchange.Controllers;
 [Authorize()]
-public class ClientNodeController : BaseController<ObjectsExchange.Client.Models.ClientNode>
+public class ClientNodeController : BaseController<ClientNode>
 {
 
     public ClientNodeController(ObjectsExchangeDbContext context,ILogger<ClientNodeController> logger,ClientManager clientManager) : base(context,logger, clientManager)
@@ -27,7 +27,7 @@ public class ClientNodeController : BaseController<ObjectsExchange.Client.Models
         var node = await context.ClientNodes.Include(c=>c.Client).SingleOrDefaultAsync(s=>s.Id ==id);
         if (node == null) { return NotFound(); }
 
-        if (User.IsInRole("Administrator") || (node.Client !=null && node.Client.UserId == UserId))
+        if (User.IsInRole("Administrator") || (node.Client !=null && node.Client.OwnerUser == User.Identity.Name))
         {
             context.ObjectExchanges.Where(s=>s.Destination == id).ExecuteDelete();
             return new NoContentResult();
@@ -46,7 +46,7 @@ public class ClientNodeController : BaseController<ObjectsExchange.Client.Models
     {
         var q = base.OnBeforeGet(query, queryParams);
         if (!User.IsInRole("Administrator"))
-            q = q.Where(s => s.Client!=null &&  s.Client.UserId == UserId);
+            q = q.Where(s => s.Client!=null &&  s.Client.OwnerUser == User.Identity.Name);
         
         q=q.Select(x =>new ClientNode
         {
@@ -87,8 +87,10 @@ public class ClientNodeController : BaseController<ObjectsExchange.Client.Models
         {
             if (item.ClientId != update.ClientId) return false;
         }
+        if (User.IsInRole(ApplicationClaim.AdministratorRole)) return true;
+
         var client = await context.Clients.SingleAsync(s=>s.Id == item.ClientId);
-        return client.UserId == UserId;
+        return   client.OwnerUser == User.Identity.Name;
     }
 }
 

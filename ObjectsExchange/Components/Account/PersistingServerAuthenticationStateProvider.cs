@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using ObjectsExchange.Client.Identity.Models;
+
 
 namespace ObjectsExchange.Components.Account
 {
