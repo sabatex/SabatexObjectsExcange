@@ -148,10 +148,11 @@ public class v0Controller : ControllerBase
                                                      [FromHeader] Guid destinationId,
                                                      [FromQuery] int take = 10)
     {
+        Thread.Sleep(100); // 
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
-        Thread.Sleep(100); // 
+        
         var result = await _dbContext.ObjectExchanges
                         .Where(s => s.Destination == clientId)
                         .Where(s => s.Sender == destinationId)

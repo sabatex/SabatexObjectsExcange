@@ -5,39 +5,6 @@
 
 <PageTitle>Home</PageTitle>
 
-<AuthorizeView Roles="Administrator">
-    <Authorized>
-        <RadzenButton Click="Download">
-            <RadzenBadge Text="Base Download" BadgeStyle="BadgeStyle.Primary" />
-        </RadzenButton>
-    </Authorized>
-    <NotAuthorized>
-        Not Autorized
-    </NotAuthorized>
-</AuthorizeView>
-
-@if (IsAdmin)
-{
-    <RadzenContent Container="main">
-        <ChildContent>
-            <div class="row">
-                <div class="col-md-12">
-                    <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes">
-                        <Buttons Context="item">
-                            <RadzenButton Text="Nodes" Click="()=>Nodes(item)" Disabled=@(item == null) />
-                        </Buttons>
-                        <Columns>
-                            <RadzenDataGridColumn TItem="Sabatex.ObjectsExchange.Models.Client" Property="Description" Title="Description" />
-                        </Columns>
-                    </SabatexRadzenGrid>
-                </div>
-            </div>
-        </ChildContent>
-    </RadzenContent>
-
-}
-
-
 
 @body
 
@@ -56,19 +23,15 @@
     {
         var markDown = await ApiAdapter.GetReadmeAsync();
         body = new MarkupString(Markdig.Markdown.ToHtml(markDown));
-        IsAdmin = await AuthenticationStateProvider.UserIsInRore(ApplicationClaim.AdministratorRole);
+        IsAdmin = await AuthenticationStateProvider.IsInRoreAsync(ApplicationClaim.AdministratorRole);
+        var state =await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (await AuthenticationStateProvider.IsAuthenticatedAsync())
+        {
+                NavigationManager.NavigateTo("client/list");
 
+        }    
 
-        // if (System.IO.File.Exists(FileName))
-        // {
-        //     var markDown = await System.IO.File.ReadAllTextAsync(FileName);
-        //     body = new MarkupString(Markdig.Markdown.ToHtml(markDown));
-        // }
-        // else
-        // {
-
-        //     body =new MarkupString( $"The file {FileName} do not exist !");
-        // }
+  
 
     }
     async Task Download()

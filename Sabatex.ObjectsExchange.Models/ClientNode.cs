@@ -1,4 +1,5 @@
-﻿using Sabatex.Core;
+﻿using ObjectsExchange.Client.Models;
+using Sabatex.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,12 +32,31 @@ public class ClientNode:IEntityBase<Guid>
     /// </summary>
     [Display(Name = "Password")]
     public string Password { get; set; } = default!;
-
+    /// <summary>
+    /// Client entity
+    /// </summary>
     public Client? Client { get; set; }
+    /// <summary>
+    /// Foregin key for Client
+    /// </summary>
     public Guid ClientId { get; set; }
+    
+    /// <summary>
+    /// Calculated objects 
+    /// </summary>
     [NotMapped]
     public int ObjectsCount { get; set; }
+    
+    /// <summary>
+    /// Reset counter time (drop counter every day
+    /// </summary>
     public DateTime CounterReseted { get; set; }
+    
+    
+    
+    /// <summary>
+    /// list messages
+    /// </summary>
     [JsonIgnore]
     public IEnumerable<ObjectExchange>? Objects { get; set; }
 
@@ -47,12 +67,11 @@ public class ClientNode:IEntityBase<Guid>
     /// </summary>
     /// 
     public string? Description { get; set; }
+    
     /// <summary>
     /// Client list id's with delimiters char ; for access node  
     /// </summary>
     public string? ClientAccess { get; set; }
-
-
 
     /// <summary>
     /// Get 
@@ -68,7 +87,10 @@ public class ClientNode:IEntityBase<Guid>
     /// </summary>
     public uint Counter { get; set; }
     /// <summary>
-    /// limit transactions per day (drop every day)
+    /// limit transactions per day (drop count every day)
     /// </summary>
     public uint MaxOperationPerDay { get; set; } = 1000;
+
+
+
 }

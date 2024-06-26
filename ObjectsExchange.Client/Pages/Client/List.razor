@@ -6,7 +6,7 @@
     <ChildContent>
         <div class="row">
             <div class="col-md-12">
-               <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes">
+               <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes" IsInserted="@IsAdmin" IsDeleted="@IsAdmin">
                    <Buttons Context="item">
                         <RadzenButton Text="Nodes" Click="()=>Nodes(item)" Disabled=@(item == null) />
                     </Buttons>
@@ -25,8 +25,11 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        IsAdmin = await AuthenticationStateProvider.UserIsInRore(ApplicationClaim.AdministratorRole);
+        IsAdmin = await AuthenticationStateProvider.IsInRoreAsync(ApplicationClaim.AdministratorRole);
     }
+    
+    
+    
     void Nodes(Sabatex.ObjectsExchange.Models.Client? client)
     {
         var query = new Dictionary<string, object?>();

@@ -7,14 +7,14 @@
     <Buttons Context="item">
         <RadzenButton Text="CleanNode" Click="()=>CleanNode(item)" Disabled=@(item == null) />
         <RadzenButton Text="Export CSV" Icon="wrap_text" Click="@(async args => await ExportAsync())" />
-        <RadzenButton Text="Download" Icon="download" Click="@(async args => await DownloadAsync())" />
+ @*        <RadzenButton Text="Download" Icon="download" Click="@(async args => await DownloadAsync())" />
          <div>
         <RadzenLabel Component="uploadFile" >
                 <RadzenBadge Text="Upload" BadgeStyle="BadgeStyle.Primary" Style="height:35px;width:100px" />
         </RadzenLabel>
         <InputFile id="uploadFile" hidden OnChange="UploadChange" />
     </div>
-
+        *@
      </Buttons>
 
     <Columns>

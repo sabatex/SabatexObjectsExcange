@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 using System.Text.Json;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 namespace Sabatex.ObjectsExchange.Models
 {
         /// <summary>
@@ -52,7 +54,10 @@ namespace Sabatex.ObjectsExchange.Models
         public ObjectExchange GetObjectExchange()
         {
             var result = new ObjectExchange();
-            result.MessageHeader = JsonSerializer.Serialize(new ObjectDescription(this.ObjectId, this.ObjectType));
+            result.MessageHeader = JsonSerializer.Serialize(new ObjectDescription(this.ObjectId, this.ObjectType), new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic)
+            });
             result.Message = null;
             result.Sender = this.Sender;
             result.Destination = this.Destination;
