@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /ObjectsExchange/CUsersserhi.databasesObjectsExchange.db
+/TextFile1.json
