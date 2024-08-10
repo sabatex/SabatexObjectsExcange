@@ -2,11 +2,12 @@
 @attribute [Authorize]
 @rendermode InteractiveWebAssembly
 
-<RadzenContent Container="main">
+@* <RadzenContent Container="main">
     <ChildContent>
         <div class="row">
-            <div class="col-md-12">
-               <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes" IsInserted="@IsAdmin" IsDeleted="@IsAdmin">
+            <div class="col-md-12"> *@
+                
+                <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" DoubleClickRowEdit=false OnRowClick="Nodes" IsInserted="@IsAdmin" IsDeleted="@IsAdmin">
                    <Buttons Context="item">
                         <RadzenButton Text="Nodes" Click="()=>Nodes(item)" Disabled=@(item == null) />
                     </Buttons>
@@ -14,10 +15,11 @@
                         <RadzenDataGridColumn TItem="Sabatex.ObjectsExchange.Models.Client" Property="Description" Title="Description" />
                     </Columns>
                 </SabatexRadzenGrid>
-            </div>
+
+           @*  </div>
         </div>
     </ChildContent>
-</RadzenContent>
+</RadzenContent> *@
 
 @code {
     bool IsAdmin = false;

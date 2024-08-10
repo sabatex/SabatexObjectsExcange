@@ -160,7 +160,7 @@ public class v1Controller : ControllerBase
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
-        Thread.Sleep(100); // 
+
         var result = await _dbContext.ObjectExchanges
                         .Where(s => s.Destination == clientId)
                         .Where(s => s.Sender == destinationId)

@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-ObjectsExchange-b463a7e1-074e-48cf-9f4f-d216310d61c7</UserSecretsId>
-		<Version>4.0.3</Version>
+		<Version>4.0.4</Version>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
 		<ServerGarbageCollection>false</ServerGarbageCollection>
