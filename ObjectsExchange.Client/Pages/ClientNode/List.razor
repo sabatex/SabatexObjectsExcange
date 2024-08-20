@@ -2,20 +2,14 @@
 @attribute [Authorize]
 @inject HttpClient HttpClient
 @inject SabatexJsInterop SabatexJS
+@inject TooltipService tooltipService
+
 @rendermode InteractiveWebAssembly
 <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.ClientNode" TKey="Guid" ForeginKey="ForeginKey" @ref=grid>
     <Buttons Context="item">
-        <RadzenButton Text="CleanNode" Click="()=>CleanNode(item)" Disabled=@(item == null) />
-        <RadzenButton Text="Export CSV" Icon="wrap_text" Click="@(async args => await ExportAsync())" />
- @*        <RadzenButton Text="Download" Icon="download" Click="@(async args => await DownloadAsync())" />
-         <div>
-        <RadzenLabel Component="uploadFile" >
-                <RadzenBadge Text="Upload" BadgeStyle="BadgeStyle.Primary" Style="height:35px;width:100px" />
-        </RadzenLabel>
-        <InputFile id="uploadFile" hidden OnChange="UploadChange" />
-    </div>
-        *@
-     </Buttons>
+        <RadzenButton Icon="Mop" Click="()=>CleanNode(item)" Disabled=@(item == null) MouseEnter="@(args => tooltipService.Open(args, "Clean all messages in selected node.", null))" />
+        <RadzenButton Icon="Download" Click="@(async args => await ExportAsync())" MouseEnter="@(args => tooltipService.Open(args, "Download client nodes configuration.", null))" />
+    </Buttons>
 
     <Columns>
         <RadzenDataGridColumn TItem="Sabatex.ObjectsExchange.Models.ClientNode" Property="Name" Title="Name" />
@@ -90,7 +84,7 @@
                     await HttpClient.PostAsJsonAsync("api/clientnode", item);
                 }
 
-              }
+            }
         }
         catch (Exception ex)
         {
@@ -98,5 +92,6 @@
         }
     }
 
-
+    void ShowTooltipExportCSV(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "Download cliebt nodes configuration.", options);
+ 
 }
