@@ -14,14 +14,17 @@ public class Client : IEntityBase<Guid>
     /// Primary key
     /// </summary>
     public Guid Id{ get; set; }
+    
     /// <summary>
     /// 
     /// </summary>
     public string Description { get; set; } = string.Empty;
+    
     /// <summary>
     /// Owner user name (administrator@contoso.com)
     /// </summary>
     public string OwnerUser { get; set; } = default!;
+    
     /// <summary>
     /// 
     /// </summary>

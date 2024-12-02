@@ -10,17 +10,17 @@
 
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.37.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.6" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.8" />
 	<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0 " />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="Sabatex.RadzenBlazor" Version="5.1.10" />
   </ItemGroup>
 
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Sabatex.RadzenBlazor\Sabatex.RadzenBlazor\Sabatex.RadzenBlazor.csproj" />
     <ProjectReference Include="..\Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj" />
   </ItemGroup>
 

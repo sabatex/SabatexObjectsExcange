@@ -19,23 +19,24 @@ public class ClientNode:IEntityBase<Guid>
     /// Client ID - UUID string
     /// </summary>
     public Guid Id { get; set; }
-    //string IEntityBase<Guid>.KeyAsString() => Id.ToString();
+
     /// <summary>
     /// Frendly client name (not indexed)
     /// </summary>
-
     [MaxLength(100)]
     public string Name { get; set; } = default!;
 
     /// <summary>
-    /// Password hash
+    /// The password hash for current node
     /// </summary>
     [Display(Name = "Password")]
     public string Password { get; set; } = default!;
+    
     /// <summary>
     /// Client entity
     /// </summary>
     public Client? Client { get; set; }
+    
     /// <summary>
     /// Foregin key for Client
     /// </summary>
@@ -52,15 +53,11 @@ public class ClientNode:IEntityBase<Guid>
     /// </summary>
     public DateTime CounterReseted { get; set; }
     
-    
-    
     /// <summary>
     /// list messages
     /// </summary>
     [JsonIgnore]
     public IEnumerable<ObjectExchange>? Objects { get; set; }
-
-
 
     /// <summary>
     /// Client description
@@ -74,18 +71,21 @@ public class ClientNode:IEntityBase<Guid>
     public string? ClientAccess { get; set; }
 
     /// <summary>
-    /// Get 
+    /// Get access nodes id`s
     /// </summary>
     /// <returns></returns>
     public IEnumerable<Guid> GetClientAccess() => ClientAccess?.Split(',').Select(s => new Guid(s)) ?? new Guid[] { };
+
     /// <summary>
     /// Demo mode (limit count transactions and trolling)
     /// </summary>
     public bool IsDemo { get; set; } = true;
+
     /// <summary>
     /// Transactions counter
     /// </summary>
     public uint Counter { get; set; }
+
     /// <summary>
     /// limit transactions per day (drop count every day)
     /// </summary>

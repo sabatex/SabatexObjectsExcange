@@ -31,14 +31,8 @@ namespace Sabatex.ObjectsExchange.Models
         [MaxLength(150)]
         public string MessageHeader { get; set; } = default!;
         
-        ///// <summary>
-        ///// client object type
-        ///// </summary>
-        //[MaxLength(50)]
-        //public string ObjectType { get; set; } = default!;
-        
         /// <summary>
-        /// внутрішня позначка часу створення обєкта
+        /// server datestamp moment 
         /// </summary>
         public DateTime DateStamp { get; set; } = DateTime.UtcNow;
         
@@ -51,6 +45,11 @@ namespace Sabatex.ObjectsExchange.Models
         /// serialized object (json,xml,csv...)
         /// </summary>
         public string? Message { get; set; } = default!;
+
+        /// <summary>
+        /// message size for calculate transmited data
+        /// </summary>
+        public int? MessageSize { get; set; }
 
     }
 }
