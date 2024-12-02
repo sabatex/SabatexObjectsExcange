@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+	<TargetFramework>net9.0</TargetFramework>
 	<Nullable>enable</Nullable>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>  
 	<NeutralLanguage>en-US</NeutralLanguage>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Sabatex.Core" Version="2.1.0" />
+	<PackageReference Include="Sabatex.Core" Version="9.0.0-rc2" />
   </ItemGroup>
 
 </Project>
