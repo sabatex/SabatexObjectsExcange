@@ -25,7 +25,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.0" />
 		<ProjectReference Include="..\ObjectsExchange.Client\ObjectsExchange.Client.csproj" />
 		<Content Include="..\Sabatex.Blazor.Identity.UI\Sabatex.Blazor.Identity.UI\Components\Account\**">
-			<Link>Components\Account\%(RecursiveDir)%(FileName)%(Extension)</Link>	
+			<Link>Components\Account\%(RecursiveDir)%(FileName)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
