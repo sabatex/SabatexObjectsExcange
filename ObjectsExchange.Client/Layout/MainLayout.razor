@@ -25,6 +25,12 @@
                 <NotAuthorized>
                 </NotAuthorized>
             </AuthorizeView>
+            <AuthorizeView>
+                <Authorized>
+                    <RadzenPanelMenuItem Icon="person" Path="Account/Manage" Text="@context.User.Identity?.Name" class="rz-my-auto" />
+                </Authorized>
+            <NotAuthorized> </NotAuthorized>
+        </AuthorizeView>
 
         </RadzenPanelMenu>
      </RadzenSidebar>
