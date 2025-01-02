@@ -23,9 +23,10 @@
 		</PackageReference>
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.0" />
-	</ItemGroup>
-	<ItemGroup>
 		<ProjectReference Include="..\ObjectsExchange.Client\ObjectsExchange.Client.csproj" />
+		<Content Include="..\Sabatex.Blazor.Identity.UI\Sabatex.Blazor.Identity.UI\Components\Account\**">
+			<Link>Components\Account\%(RecursiveDir)%(FileName)%(Extension)</Link>	
+		</Content>
 	</ItemGroup>
 	<ItemGroup>
 		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
