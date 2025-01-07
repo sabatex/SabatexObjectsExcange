@@ -1,7 +1,9 @@
 ﻿@* @inject NavigationManager NavigationManager *@
+@using System.Globalization
+@using Microsoft.AspNetCore.Localization
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@language">
 
 <head>
     <meta charset="utf-8" />
@@ -12,7 +14,7 @@
     <link rel="icon" href="icon-192.png" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-    
+
     <Radzen.Blazor.RadzenTheme Theme="material" @rendermode="RenderModeForPage" />
     <HeadOutlet @rendermode="RenderModeForPage" />
 </head>
@@ -24,17 +26,42 @@
     <script>navigator.serviceWorker.register('service-worker.js');</script>
     <script src="js/qrcode.min.js"></script>
     <script>
-        window.blazorCulture = { set: (culture) => { localStorage['BlazorCulture'] = culture; }, get: () => localStorage['BlazorCulture'] };
+        //window.blazorCulture = { set: (culture) => { localStorage['BlazorCulture'] = culture; }, get: () => localStorage['BlazorCulture'] };
     </script>
- </body>
+    <script>
+        // Blazor.start({
+        //   webAssembly: {
+        //     applicationCulture: 'uk-UA'
+        //   }
+        // });
+    </script>
+</body>
 
 </html>
 
 @code {
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
+    string language = "en-US";
 
     private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/Account")
         ? null
     : new InteractiveWebAssemblyRenderMode(prerender:false);
+    // protected override void OnInitialized()
+    // {
+    //     HttpContext?.Response.Cookies.Append(
+    //         CookieRequestCultureProvider.DefaultCookieName,
+    //         CookieRequestCultureProvider.MakeCookieValue(
+    //             new RequestCulture(
+    //                 CultureInfo.GetCultureInfo("uk-UA"),//  CultureInfo.CurrentCulture,
+    //                 CultureInfo.GetCultureInfo("uk-UA") /** CultureInfo.CurrentUICulture **/)));
+    // }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var language = HttpContext?.Request.Headers["Accept-Language"].ToString();
+        this.language = Sabatex.Blazor.Globalization.GetSupportedCultureByAcceptLanguage(language);
+
+    }
 }

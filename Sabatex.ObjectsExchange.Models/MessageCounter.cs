@@ -17,12 +17,12 @@ public class MessageCounter
     /// <summary>
     /// Client node reference
     /// </summary>
-    public ClientNode? ClientNode { get; set; }
+    //public ClientNode? ClientNode { get; set; }
     
     /// <summary>
     ///  foregin key for node
     /// </summary>
-    public Guid ClientNodeId { get; set; }
+    //public Guid ClientNodeId { get; set; }
     /// <summary>
     /// 
     /// </summary>
@@ -30,7 +30,7 @@ public class MessageCounter
     /// <summary>
     /// 
     /// </summary>
-    public int TotalTransmited { get; set; }
+    //public int TotalTransmited { get; set; }
     /// <summary>
     /// Last counter change
     /// </summary>

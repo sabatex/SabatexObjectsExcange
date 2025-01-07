@@ -49,7 +49,7 @@ namespace Sabatex.ObjectsExchange.Models
         /// <summary>
         /// message size for calculate transmited data
         /// </summary>
-        public int? MessageSize { get; set; }
+        //public int? MessageSize { get; set; }
 
     }
 }

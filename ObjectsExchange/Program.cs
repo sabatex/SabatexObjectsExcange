@@ -9,21 +9,24 @@ using ObjectsExchange.Data;
 using ObjectsExchange.Models;
 using ObjectsExchange.Services;
 using Radzen;
+using Sabatex.Identity.UI;
 using Sabatex.RadzenBlazor;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddUserConfiguration("sabatex-exchange.json");
+//builder.Configuration.AddUserConfiguration("sabatex-exchange.json");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+Sabatex.Blazor.Globalization.AddCulture("uk");
 
 builder.Services.AddRazorComponents().AddInteractiveWebAssemblyComponents();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddSabatexRadzenBlazor();
-builder.Services.AddScoped<IdentityUserAccessor>();
+builder.Services.AddScoped<ApplicationUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenticationStateProvider>();
-builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>();
 builder.Services.AddScoped<ClientManager>();
 builder.Services.AddHeaderPropagation(o => o.Headers.Add("Cookie"));
 builder.Services.AddAuthentication(options =>
@@ -40,7 +43,7 @@ builder.Services.AddDbContext<ObjectsExchangeDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ObjectsExchangeDbContext>()
                 .AddDefaultTokenProviders();
 builder.Services.AddControllers();
@@ -77,16 +80,16 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 
-var supportedCultures = new[] { "en-US", "uk-UA" };
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[1])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-app.UseRequestLocalization(localizationOptions);
+app.UseRequestLocalization(
+    new RequestLocalizationOptions() { ApplyCurrentCultureToResponseHeaders = true }
+    .AddSupportedCultures(new[] { "en-US", "uk-UA" })
+    .AddSupportedUICultures(new[] { "en-US", "uk-UA" })
+    .SetDefaultCulture("uk-UA")
+);
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(ObjectsExchange.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(ObjectsExchange.Client._Imports).Assembly,typeof(Sabatex.Identity.UI._Imports).Assembly);
 app.MapAdditionalIdentityEndpoints();
 //await DataSeed.InitializeAsync(app.Services.CreateScope().ServiceProvider,builder.Configuration);
 

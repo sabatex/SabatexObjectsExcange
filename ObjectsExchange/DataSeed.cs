@@ -5,6 +5,7 @@ using System;
 using ObjectsExchange.Data;
 using ObjectsExchange.Models;
 using static ObjectsExchange.DataSeed;
+using Sabatex.Identity.UI;
 namespace ObjectsExchange;
 
 public class DataSeed
@@ -49,13 +50,13 @@ public class DataSeed
             }
         }
 
-        using var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        using var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         foreach (var userData in seedData.Users ?? new User[] {})
         {
             if (userData.Email == null || userData.Password == null) continue;
             if (await userManager.FindByEmailAsync(userData.Email) != null) continue;
 
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 Email = userData.Email,
                 NormalizedEmail = userData.Email.ToUpper(),
@@ -65,7 +66,7 @@ public class DataSeed
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
-            var password = new PasswordHasher<IdentityUser>();
+            var password = new PasswordHasher<ApplicationUser>();
             var hashed = password.HashPassword(user, userData.Password);
             user.PasswordHash = hashed;
             context.Users.Add(user);

@@ -26,13 +26,14 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
 
 
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+//builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddLocalization();
 var host = builder.Build();
-var js = host.Services.GetRequiredService<IJSRuntime>();
-var culture = await js.InvokeAsync<string>("blazorCulture.get") ?? "uk-UA";
-var cultureInfo = new CultureInfo(culture);
-CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+//var js = host.Services.GetRequiredService<IJSRuntime>();
+//var culture = await js.InvokeAsync<string>("blazorCulture.get") ?? "uk-UA";
+//var cultureInfo = new CultureInfo(culture);
+//CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+//CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 // set base address for default host
 
 

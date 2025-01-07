@@ -6,23 +6,23 @@
 <PageTitle>Home</PageTitle>
 
 
-@body
+@* @body *@
 
 
 @code
 {
     bool IsAdmin = false;
 
-    const string FileName = "Readme.md";
-    private MarkupString? body;
+    //const string FileName = "Readme.md";
+    //private MarkupString? body;
     RenderFragment StringToHtml(string htmlString)
     {
         return new RenderFragment(b => b.AddMarkupContent(0, htmlString));
     }
     protected override async Task OnInitializedAsync()
     {
-        var markDown = await ApiAdapter.GetReadmeAsync();
-        body = new MarkupString(Markdig.Markdown.ToHtml(markDown));
+        //var markDown = await ApiAdapter.GetReadmeAsync();
+        //body = new MarkupString(Markdig.Markdown.ToHtml(markDown));
         IsAdmin = await AuthenticationStateProvider.IsInRoreAsync(ApplicationClaim.AdministratorRole);
         var state =await AuthenticationStateProvider.GetAuthenticationStateAsync();
         if (await AuthenticationStateProvider.IsAuthenticatedAsync())
@@ -30,9 +30,6 @@
                 NavigationManager.NavigateTo("client/list");
 
         }    
-
-  
-
     }
     async Task Download()
     {

@@ -6,7 +6,7 @@ using Sabatex.ObjectsExchange.Models;
 
 namespace ObjectsExchange.Data;
 
-public class ObjectsExchangeDbContext(DbContextOptions<ObjectsExchangeDbContext> options) : IdentityDbContext(options)
+public class ObjectsExchangeDbContext(DbContextOptions<ObjectsExchangeDbContext> options) : IdentityDbContext<Sabatex.Identity.UI.ApplicationUser>(options)
 {
     public DbSet<Sabatex.ObjectsExchange.Models.ClientNode> ClientNodes { get; set; }
     public DbSet<Sabatex.ObjectsExchange.Models.Client> Clients { get; set; }
@@ -20,7 +20,7 @@ public class ObjectsExchangeDbContext(DbContextOptions<ObjectsExchangeDbContext>
         base.OnModelCreating(builder);
         builder.Entity<ObjectExchange>().HasOne<Sabatex.ObjectsExchange.Models.ClientNode>().WithMany().HasForeignKey(p => p.Sender).OnDelete(DeleteBehavior.Cascade);
         builder.Entity<ObjectExchange>().HasOne<Sabatex.ObjectsExchange.Models.ClientNode>().WithMany().HasForeignKey(p => p.Destination).OnDelete(DeleteBehavior.Cascade);
-        builder.Entity<ClientNode>().HasOne<MessageCounter>().WithOne(e => e.ClientNode).HasForeignKey<MessageCounter>(e => e.Id);
+        //builder.Entity<ClientNode>().HasOne<MessageCounter>().WithOne(e => e.ClientNode).HasForeignKey<MessageCounter>(e => e.Id);
         
 
     }
