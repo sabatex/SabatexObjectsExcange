@@ -49,6 +49,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddControllers();
 
 builder.Services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
+builder.Services.AddScoped<ICommandLineOperations, CommandLineOperations>();
+
+
+
 
 var app = builder.Build();
 
@@ -91,9 +95,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(ObjectsExchange.Client._Imports).Assembly,typeof(Sabatex.Identity.UI._Imports).Assembly);
 app.MapAdditionalIdentityEndpoints();
-//await DataSeed.InitializeAsync(app.Services.CreateScope().ServiceProvider,builder.Configuration);
 
-app.Run();
+await app.RunAsync(args);
 
 
 
