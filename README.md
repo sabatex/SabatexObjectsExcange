@@ -60,7 +60,8 @@
     {
         "objectType":"string", // max 50
         "objectId":"string",   // max 50
-        "text":"string"        // unlimited (system limit)
+        "text":"string",       // unlimited (system limit)
+        "dateStamp":"DateTime" // date time send message
     }
 ```
 #### response:
