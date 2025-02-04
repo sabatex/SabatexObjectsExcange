@@ -28,6 +28,7 @@
     200 - success
     401 - Unauthorized
 
+### Token renewal using refresh token.
 #### POST [host]/api/v1/RefresToken
 ##### Headers:
     "Content-Type":"application/json; charset=utf-8"
