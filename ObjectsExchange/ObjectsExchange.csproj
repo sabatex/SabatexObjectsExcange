@@ -24,7 +24,6 @@
 		</PackageReference>
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.0" />
-		<ProjectReference Include="..\..\Sabatex.RadzenBlazor\Sabatex.Identity.UI\Sabatex.Identity.UI.csproj" />
 		<ProjectReference Include="..\ObjectsExchange.Client\ObjectsExchange.Client.csproj" />
 	</ItemGroup>
 	<ItemGroup>

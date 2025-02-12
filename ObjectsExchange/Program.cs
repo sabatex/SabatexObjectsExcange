@@ -93,7 +93,7 @@ app.UseRequestLocalization(
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(ObjectsExchange.Client._Imports).Assembly,typeof(Sabatex.Identity.UI._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(ObjectsExchange.Client._Imports).Assembly);
 app.MapAdditionalIdentityEndpoints();
 
 await app.RunAsync(args);
