@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange.Client", "O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "ObjectsExchange\ObjectsExchange.csproj", "{CEF09DEB-9152-4860-ADFB-B784F57D85D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.Identity.UI", "..\Sabatex.RadzenBlazor\Sabatex.Identity.UI\Sabatex.Identity.UI.csproj", "{DBB78552-BDE2-4A10-9E81-6A2093AB4F12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.Identity.UI", "..\SabatexBlazor\Sabatex.Identity.UI\Sabatex.Identity.UI.csproj", "{69B3145B-0EE3-78E9-B021-3FE47ECEFCE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,10 +54,10 @@ Global
 		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DBB78552-BDE2-4A10-9E81-6A2093AB4F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DBB78552-BDE2-4A10-9E81-6A2093AB4F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DBB78552-BDE2-4A10-9E81-6A2093AB4F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DBB78552-BDE2-4A10-9E81-6A2093AB4F12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69B3145B-0EE3-78E9-B021-3FE47ECEFCE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69B3145B-0EE3-78E9-B021-3FE47ECEFCE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69B3145B-0EE3-78E9-B021-3FE47ECEFCE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69B3145B-0EE3-78E9-B021-3FE47ECEFCE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

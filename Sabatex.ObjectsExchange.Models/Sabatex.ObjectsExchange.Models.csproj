@@ -16,8 +16,11 @@
 	<Version>1.0.0-rc10</Version>
   </PropertyGroup>
 
-  <ItemGroup>
-	<PackageReference Include="Sabatex.Core" Version="9.0.0" />
+  <ItemGroup Condition="$(Version.Contains('-'))">
+	<PackageReference Include="Sabatex.Core" Version="9.0.*-*" />
   </ItemGroup>
+	<ItemGroup Condition="!$(Version.Contains('-'))">
+		<PackageReference Include="Sabatex.Core" Version="9.0.*" />
+	</ItemGroup>
 
 </Project>
