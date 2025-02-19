@@ -9,31 +9,56 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
+    <link rel="stylesheet" href="@Assets["app.css"]" />
+    <link rel="stylesheet" href="@Assets["ObjectExchange.styles.css"]" />
+    <link rel="stylesheet" href="@Assets["_content/Radzen.Blazor/css/material-base.css"]" id="sabatex-radzenCSS" />
+    <ImportMap />
     <link rel="icon" href="icon-192.png" />
-    <link href="manifest.json" rel="manifest" />
+    <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
 
-    <Radzen.Blazor.RadzenTheme Theme="material" @rendermode="RenderModeForPage" />
-    <HeadOutlet @rendermode="RenderModeForPage" />
+    <HeadOutlet/>
 </head>
 
 <body>
-    <Routes @rendermode="RenderModeForPage" />
+    <Routes/>
     <script src="_framework/blazor.web.js"></script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script src="app.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script>
-        //window.blazorCulture = { set: (culture) => { localStorage['BlazorCulture'] = culture; }, get: () => localStorage['BlazorCulture'] };
-    </script>
-    <script>
-        // Blazor.start({
-        //   webAssembly: {
-        //     applicationCulture: 'uk-UA'
-        //   }
-        // });
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/service-worker.js');
+          });
+        }
+
+          function isPushSupported() {
+          //checks if user has granted permission to Push notifications
+          if (Notification.permission === 'denied') {
+            alert('User has blocked push notification.');
+            return;
+          }
+
+          //Checks if current browser supports Push notification
+          if (!('PushManager' in window)) {
+            alert('Sorry, Push notification isn\'t supported in your browser.');
+            return;
+          }
+
+          //Get `push notification` subscription id
+
+          //If `serviceWorker` is registered and ready
+          navigator.serviceWorker.ready
+            .then(function (registration) {
+              registration.pushManager.getSubscription()
+              .catch(function (error) {
+                console.error('Error occurred while enabling push ', error);
+              });
+            });
+        }
+
     </script>
 </body>
 

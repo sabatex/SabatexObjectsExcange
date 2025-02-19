@@ -1,6 +1,6 @@
 ﻿@page "/clientnode/edit/{id?}"
 @attribute [Authorize]
-@rendermode InteractiveWebAssembly
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 <SabatexEditForm TItem="Sabatex.ObjectsExchange.Models.ClientNode" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)">
     <Content Context="item">
         <RadzenColumn Size="12" SizeMD="8" SizeLG="10">

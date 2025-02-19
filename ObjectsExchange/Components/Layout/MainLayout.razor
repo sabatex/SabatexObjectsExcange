@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 
-<RadzenComponents/>
+<RadzenComponents @rendermode=InteractiveWebAssembly />
 <RadzenLayout @ref="radzenLayout">
      <RadzenHeader Style="min-height:auto" @ref="radzenHeader">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" JustifyContent="JustifyContent.SpaceBetween" class="rz-ml-2">
@@ -9,7 +9,7 @@
                 <RadzenSidebarToggle Click="@(() => sideBarExpanded = !sideBarExpanded)" />
             </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" class="rz-my-auto">
-            <RadzenLink Image="images/github-mark/github-mark-white.svg" Path="/" class="rz-my-auto"/>
+                <RadzenLink Image="images/github-mark/github-mark-white.svg" Path="https://github.com/sabatex/SabatexObjectsExcange" class="rz-my-auto" />
              <RadzenAppearanceToggle />
             <LoginDisplay/>
         </RadzenStack>

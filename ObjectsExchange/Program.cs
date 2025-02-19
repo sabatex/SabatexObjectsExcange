@@ -97,7 +97,7 @@ app.MapRazorComponents<App>()
 app.MapAdditionalIdentityEndpoints();
 
 //await app.RunAsync(args);
-await Sabatex.Identity.UI.IdentityExtensions.RunAsync(app, args);
+await app.RunAsync(args);
 
 
 

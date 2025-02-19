@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
-	  <Version>9.0.0-rc1</Version>
+	  <Version>9.0.0-rc2</Version>
 	  <InvariantGlobalization>true</InvariantGlobalization>
 	  <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
 
