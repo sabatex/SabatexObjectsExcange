@@ -37,26 +37,7 @@ public class v1Controller : ControllerBase
         _clientManager = clientManager;
     }
 
-    private string extractToken(string authorizationToken)
-    {
-        var r = authorizationToken.Split(' ');
-        if (r.Length != 2) return string.Empty;
-        if (r[0].ToUpper() != _tokenType) return string.Empty;
-        return r[1];
-    }
 
-    /// <summary>
-    /// Random GUID access token generate
-    /// </summary>
-    /// <param name="nodeName"></param>
-    /// <returns></returns>
-    private string CreateAccessToken()
-    {
-        var r = new Random();
-        byte[] data = new byte[16];
-        r.NextBytes(data);
-        return new Guid(data).ToString();
-    }
     private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId, string apiToken)
     {
         var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(nodeId);
@@ -90,46 +71,6 @@ public class v1Controller : ControllerBase
             return null;
         }
     }
-    /// <summary>
-    /// Autenficate in service
-    /// </summary>
-    /// <param name="login">The object Login with node Id (register unsensitive) and password</param>
-    /// <returns>string access token or empty for fail</returns>
-    /// <exception cref="Exception"></exception>
-    [HttpPost("login")]
-    [Route("/api/v0/login")]
-    [Route("/api/v1/login")]
-    public async Task<IActionResult> PostLoginAsync(Login login)
-    {
-        Thread.Sleep(100); // anti butforce
-        try
-        {
-            return Ok(await _clientManager.LoginAsync(login.ClientId, login.Password));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Login client {login.ClientId} error:{ex.Message}");
-            return BadRequest(ex.Message);
-        }
-    }
-
-
-
-
-    [HttpPost("refresh_token")]
-    public async Task<IActionResult> PostRefresTokenAsync(Login login)
-    {
-        Thread.Sleep(100); // anti butforce
-        try
-        {
-            return Ok(await _clientManager.RefreshTokenAsync(login.ClientId, login.Password));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Refresh token fail for client {login.ClientId} error:{ex.Message}");
-            return Unauthorized();
-        }
-    }
 
     /// <summary>
     /// Get current API version
@@ -138,7 +79,6 @@ public class v1Controller : ControllerBase
     [HttpGet("version")]
     public IActionResult Get()
     {
-        Thread.Sleep(500);
         return Ok(Assembly.GetExecutingAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty);
     }
 
@@ -255,115 +195,6 @@ public class v1Controller : ControllerBase
 
     #endregion
 
-
-
-
-
-    #region queries
-    /// <summary>
-    /// Get 
-    /// </summary>
-    /// <param name="apiToken"></param>
-    /// <param name="nodeName"></param>
-    /// <param name="take"></param>
-    /// <returns></returns>
-    //[HttpGet("queries")]
-    //public async Task<IActionResult> GetQueryesAsync([FromHeader] string? apiToken,
-    //                                                 [FromHeader] Guid clientId,
-    //                                                 [FromHeader] Guid destinationId,
-    //                                                 [FromQuery] int take = 10)
-    //{
-
-    //    var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-    //    if (clientNode == null)
-    //        return Unauthorized();
-    //    if (clientNode.IsDemo) Thread.Sleep(100);
-    //    var result = await _dbContext.QueryObjects
-    //            .Where(s => s.Destination == clientId)
-    //            .Where(s => s.Sender == destinationId)
-    //            .OrderBy(d => d.Id) // priority
-    //            .Take(take)
-    //            .ToArrayAsync();
-    //    return Ok(result);
-    //}
-
-    //[HttpPost("queries")]
-    //public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken,
-    //                                                [FromHeader] Guid clientId,
-    //                                                [FromHeader] Guid destinationId,
-    //                                                JsonDocument json)
-    //{
-    //    string? objectId = json.RootElement.GetProperty("objectId").GetString();
-    //    if (objectId == null)
-    //        return BadRequest("The not defined objectId");
-    //    string? objectType = json.RootElement.GetProperty("objectType").GetString();
-    //    if (objectType == null)
-    //        return BadRequest("The not defined objectType");
-
-    //    var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-    //    if (clientNode == null)
-    //        return Unauthorized();
-
-    //    var validNodes = clientNode.GetClientAccess();
-    //    if (!validNodes.Contains(destinationId))
-    //        return BadRequest("The node not accept post");
-    //    // check exist same query 
-    //    var obj = new QueryObject
-    //    {
-    //        Sender = clientId,
-    //        Destination = destinationId,
-    //        ObjectId = objectId,
-    //        ObjectType = objectType
-    //    };
-    //    await _dbContext.QueryObjects.AddAsync(obj);
-
-    //    await _dbContext.SaveChangesAsync();
-    //    return Ok();
-    //}
-
-
-
-    //[HttpDelete("queries/{id:long}")]
-    //public async Task<IActionResult> DeleteQueryAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
-    //{
-    //    var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-    //    if (clientNode == null)
-    //        return Unauthorized();
-
-    //    var obj = await _dbContext.QueryObjects.FindAsync(id);
-    //    if (obj == null)
-    //        return NotFound();
-    //    if (obj.Destination != clientId)
-    //    {
-    //        var error = $"Нод {clientNode.Name} з id={clientId} не може видаляти дані чужих нодів {obj.Destination}";
-    //        _logger.LogError($"{DateTime.Now}: {error}");
-    //        return Conflict(error);
-
-    //    }
-    //    _dbContext.QueryObjects.Remove(obj);
-
-    //    await _dbContext.SaveChangesAsync();
-    //    return Ok();
-
-    //}
-
-
-    #endregion
-
-
-    [HttpGet("DataBaseBackup")]
-    [Authorize(Roles = "Administrator")]
-    public async Task<string> GetDataBaseBackupAsync()
-    {
-        var result = new DataBaseBackup();
-        result.ClientNodes = await _dbContext.ClientNodes.ToArrayAsync();
-        result.Clients = await _dbContext.Clients.ToArrayAsync();
-        result.ClientUsers = await _dbContext.ClientUsers.ToArrayAsync();
-        result.Roles = await _dbContext.Roles.ToArrayAsync();
-        result.Users = await _dbContext.Users.ToArrayAsync();
-        result.UserRoles = await _dbContext.UserRoles.ToArrayAsync();
-        return System.Text.Json.JsonSerializer.Serialize(result,new JsonSerializerOptions { Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic) });
-    }
 
 
 }

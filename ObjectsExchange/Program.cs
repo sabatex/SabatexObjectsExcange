@@ -15,7 +15,7 @@ using Sabatex.RadzenBlazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Configuration.AddUserConfiguration("sabatex-exchange.json");
+builder.Configuration.AddUserConfiguration("objectsexchange.json");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 Sabatex.Blazor.Globalization.AddCulture("uk");
@@ -51,6 +51,12 @@ builder.Services.AddControllers();
 builder.Services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
 builder.Services.AddScoped<ICommandLineOperations, CommandLineOperations>();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
 
 
 
@@ -67,22 +73,23 @@ else
    app.UseExceptionHandler("/Error");
    app.UseHsts();
 }
-//app.UseForwardedHeaders(new ForwardedHeadersOptions
-//{
-//    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-//});
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 //app.UseHttpsRedirection();
 app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/v0"),
                            builder => builder.UseHttpsRedirection());
-
+app.UseAntiforgery();
+app.MapStaticAssets();
 //app.UseODataQueryRequest();
-app.UseHeaderPropagation();
-app.UseStaticFiles();
-app.MapControllers();
+//app.UseHeaderPropagation();
+//app.UseStaticFiles();
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseAntiforgery();
+
 
 app.UseRequestLocalization(
     new RequestLocalizationOptions() { ApplyCurrentCultureToResponseHeaders = true }
@@ -95,7 +102,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Sabatex.Identity.UI._Imports).Assembly, typeof(ObjectsExchange.Client._Imports).Assembly);
 app.MapAdditionalIdentityEndpoints();
-
+app.MapControllers();
 //await app.RunAsync(args);
 await app.RunAsync(args);
 

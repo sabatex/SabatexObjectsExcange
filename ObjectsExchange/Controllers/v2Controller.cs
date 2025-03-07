@@ -5,35 +5,37 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
+using Radzen.Blazor.Rendering;
 using Sabatex.ObjectsExchange.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 
 namespace Sabatex.ObjectsExchange.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class v0Controller : ControllerBase
+public class v2Controller : ControllerBase
 {
-    private readonly ILogger<v0Controller> _logger;
+    private readonly ILogger<v1Controller> _logger;
     private readonly ObjectsExchangeDbContext _dbContext;
     private readonly ApiConfig _apiConfig;
     private readonly ClientManager _clientManager;
     public static int maxTake = 50;
-    public const int MessageSizeLimit = 50000;
+    public const int MessageSizeLimit = 1000000;
     private const string _tokenType = "BEARER";
-    public v0Controller(ObjectsExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
+    public v2Controller(ObjectsExchangeDbContext dbContext, ILogger<v1Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
     {
         _logger = logger;
         _dbContext = dbContext;
         _apiConfig = apiConfig.Value;
         _clientManager = clientManager;
     }
-
 
     private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId, string apiToken)
     {
@@ -68,7 +70,52 @@ public class v0Controller : ControllerBase
             return null;
         }
     }
-  
+
+
+    /// <summary>
+    /// Autenficate in service
+    /// </summary>
+    /// <param name="login">The object Login with node Id (register unsensitive) and password</param>
+    /// <returns>string access token or empty for fail</returns>
+    /// <exception cref="Exception"></exception>
+    [HttpPost("login")]
+    [Route("/api/v0/login")]
+    [Route("/api/v1/login")]
+    [Route("/api/v2/login")]
+    public async Task<IActionResult> PostLoginAsync(Login login)
+    {
+        try
+        {
+            return Ok(await _clientManager.LoginAsync(login.ClientId, login.Password));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Login client {login.ClientId} error:{ex.Message}");
+            return BadRequest(ex.Message);
+        }
+    }
+
+
+
+
+    [HttpPost("refresh_token")]
+    [Route("/api/v0/refresh_token")]
+    [Route("/api/v1/refresh_token")]
+    [Route("/api/v2/refresh_token")]
+
+    public async Task<IActionResult> PostRefresTokenAsync(Login login)
+    {
+        try
+        {
+            return Ok(await _clientManager.RefreshTokenAsync(login.ClientId, login.Password));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Refresh token fail for client {login.ClientId} error:{ex.Message}");
+            return Unauthorized();
+        }
+    }
+
     /// <summary>
     /// Get current API version
     /// </summary>
@@ -76,7 +123,6 @@ public class v0Controller : ControllerBase
     [HttpGet("version")]
     public IActionResult Get()
     {
-        Thread.Sleep(500);
         return Ok(Assembly.GetExecutingAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty);
     }
 
@@ -95,19 +141,15 @@ public class v0Controller : ControllerBase
                                                      [FromHeader] Guid destinationId,
                                                      [FromQuery] int take = 10)
     {
-        Thread.Sleep(100); // 
         var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
         if (clientNode == null)
             return Unauthorized();
-        
+
         var result = await _dbContext.ObjectExchanges
                         .Where(s => s.Destination == clientId)
                         .Where(s => s.Sender == destinationId)
-                        .Where(s => s.Message != null)
                         .OrderBy(d => d.Id) // priority
-                        .Take(take)
-                        .Select(d => new ObjectExchange_v0(d))
-                        .ToArrayAsync();
+                        .Take(take).ToArrayAsync();
         return Ok(result);
     }
 
@@ -118,18 +160,18 @@ public class v0Controller : ControllerBase
                                                [FromHeader] Guid destinationId,
                                                JsonDocument json)
     {
-
-        string? objectId = json.RootElement.GetProperty("objectId").GetString();
-        if (objectId == null)
-            return BadRequest("The not defined objectId");
-        string? objectType = json.RootElement.GetProperty("objectType").GetString();
-        if (objectType == null)
-            return BadRequest("The not defined objectType");
-        string? text = json.RootElement.GetProperty("text").GetString();
-        if (text == null)
-            return BadRequest("The not defined text");
-        if (text.Length > MessageSizeLimit)
-            return BadRequest($"The message size {text.Length} is overflow limit {MessageSizeLimit} per message.");
+        string? messageHeader = json.RootElement.GetProperty("messageHeader").GetString();
+        if (messageHeader == null)
+            return BadRequest("The not defined messageHeader");
+        
+        //string? objectType = json.RootElement.GetProperty("objectType").GetString();
+        //if (objectType == null)
+        //    return BadRequest("The not defined objectType");
+        
+        string? message = json.RootElement.GetProperty("message").GetString();
+        if (message != null)
+           if (message.Length > MessageSizeLimit)
+                return BadRequest($"The message size {message.Length} is overflow limit {MessageSizeLimit} per message.");
 
         DateTime? dateStamp = null;
         if (json.RootElement.GetProperty("dateStamp").TryGetDateTime(out DateTime tdateStamp))
@@ -141,31 +183,26 @@ public class v0Controller : ControllerBase
         {
             clientNode.CounterReseted = DateTime.UtcNow;
             clientNode.Counter = 0;
-
         }
 
-        if (clientNode.ObjectsCount >= clientNode.MaxOperationPerDay)
+        if (clientNode.Counter >= clientNode.MaxOperationPerDay)
         {
             return BadRequest("The limit operations per day is overflow");
         }
 
-
-
         var validNodes = clientNode.GetClientAccess();
         if (validNodes.Contains(destinationId))
         {
-            var doc = new ObjectExchange_v0
+            var doc = new ObjectExchange
             {
                 Sender = clientId,
                 Destination = destinationId,
-                ObjectId = objectId,
-                ObjectType = objectType,
-                ObjectAsText = text,
+                MessageHeader = messageHeader,
+                Message = message,
                 DateStamp = DateTime.UtcNow,
-                SenderDateStamp = dateStamp
+                SenderDateStamp = DateTime.SpecifyKind(dateStamp ?? DateTime.UtcNow, DateTimeKind.Utc)
             };
-            var oe = doc.GetObjectExchange();
-            await _dbContext.ObjectExchanges.AddAsync(oe);
+            await _dbContext.ObjectExchanges.AddAsync(doc);
             clientNode.Counter++;
             await _dbContext.SaveChangesAsync();
         }
@@ -202,97 +239,5 @@ public class v0Controller : ControllerBase
 
     #endregion
 
-    #region queries
-    /// <summary>
-    /// Get 
-    /// </summary>
-    /// <param name="apiToken"></param>
-    /// <param name="nodeName"></param>
-    /// <param name="take"></param>
-    /// <returns></returns>
-    [HttpGet("queries")]
-    public async Task<IActionResult> GetQueryesAsync([FromHeader] string? apiToken,
-                                                     [FromHeader] Guid clientId,
-                                                     [FromHeader] Guid destinationId,
-                                                     [FromQuery] int take = 10)
-    {
-
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-        if (clientNode == null)
-            return Unauthorized();
-        if (clientNode.IsDemo) Thread.Sleep(100);
-        var result = await _dbContext.ObjectExchanges
-                .Where(s => s.Destination == clientId)
-                .Where(s => s.Sender == destinationId)
-                .Where(s=>s.Message==null)
-                .OrderBy(d => d.Id) // priority
-                .Take(take)
-                .Select(s=>new QueryObject(s))
-                .ToArrayAsync();
-        return Ok(result);
-    }
-
-    [HttpPost("queries")]
-    public async Task<IActionResult> PostQueryAsync([FromHeader] string apiToken,
-                                                    [FromHeader] Guid clientId,
-                                                    [FromHeader] Guid destinationId,
-                                                    JsonDocument json)
-    {
-        string? objectId = json.RootElement.GetProperty("objectId").GetString();
-        if (objectId == null)
-            return BadRequest("The not defined objectId");
-        string? objectType = json.RootElement.GetProperty("objectType").GetString();
-        if (objectType == null)
-            return BadRequest("The not defined objectType");
-
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-        if (clientNode == null)
-            return Unauthorized();
-
-        var validNodes = clientNode.GetClientAccess();
-        if (!validNodes.Contains(destinationId))
-            return BadRequest("The node not accept post");
-        // check exist same query 
-        var obj = new QueryObject
-        {
-            Sender = clientId,
-            Destination = destinationId,
-            ObjectId = objectId,
-            ObjectType = objectType
-        };
-        await _dbContext.ObjectExchanges.AddAsync(obj.GetObjectExchange());
-
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-    }
-
-
-
-    [HttpDelete("queries/{id:long}")]
-    public async Task<IActionResult> DeleteQueryAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
-    {
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-        if (clientNode == null)
-            return Unauthorized();
-
-        var obj = await _dbContext.ObjectExchanges.FindAsync(id);
-        if (obj == null)
-            return NotFound();
-        if (obj.Destination != clientId)
-        {
-            var error = $"Нод {clientNode.Name} з id={clientId} не може видаляти дані чужих нодів {obj.Destination}";
-            _logger.LogError($"{DateTime.Now}: {error}");
-            return Conflict(error);
-
-        }
-        _dbContext.ObjectExchanges.Remove(obj);
-
-        await _dbContext.SaveChangesAsync();
-        return Ok();
-
-    }
-
-
-    #endregion
-
+ 
 }

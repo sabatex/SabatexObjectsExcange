@@ -5,34 +5,28 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-ObjectsExchange-b463a7e1-074e-48cf-9f4f-d216310d61c7</UserSecretsId>
-		<Version>5.0.0-rc2</Version>
+		<Version>5.0.0</Version>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..</DockerfileContext>
 		<ServerGarbageCollection>false</ServerGarbageCollection>
 	</PropertyGroup>
+	
 	<ItemGroup>
-		<!--<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0" />-->
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.*" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.*" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.*" />
 		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="9.4.9" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.*" />
 		<PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.*" />
+		<PackageReference Include="Sabatex.Identity.UI" Version="9.0.*" />
 		<ProjectReference Include="..\ObjectsExchange.Client\ObjectsExchange.Client.csproj" />
 	</ItemGroup>
 	
-	<ItemGroup Condition="$(Version.Contains('-'))">
-		<PackageReference Include="Sabatex.Identity.UI" Version="9.0.*-*" />
-	</ItemGroup>
-	<ItemGroup Condition="!$(Version.Contains('-'))">
-		<PackageReference Include="Sabatex.Identity.UI" Version="9.0.*" />
-	</ItemGroup>
+
 
 	<ItemGroup>
 		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Sabatex.ObjectsExchange.Models;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -114,6 +115,43 @@ namespace ObjectsExchange.Services
             await _dbContext.AutenficatedNodes.AddAsync(result);
             await _dbContext.SaveChangesAsync();
             return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="apiToken"></param>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId, string apiToken,string? ip)
+        {
+            var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(nodeId);
+            if (clientAutenficate != null)
+            {
+                if (apiToken != clientAutenficate.AccessToken)
+                {
+                    _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  try use invalid token {apiToken}");
+                    return null;
+                }
+
+                var existTime = DateTime.UtcNow;
+                if (existTime > clientAutenficate.ExpiresDate)
+                {
+                    _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  use exprise token {apiToken} by time {existTime}");
+                    return null;
+                }
+                
+                var result = await _dbContext.ClientNodes.FindAsync(nodeId);
+                if (result == null)
+                    _logger.LogError($"{DateTime.Now}: The client {nodeId} do not Exist, but exist valid token by same id ");
+                return result;
+            }
+            else
+            {
+                _logger.LogTrace($"{DateTime.Now}: Try use service from ip={ip} with nodeId={nodeId} and The client {nodeId} and token = {apiToken}");
+                return null;
+            }
         }
 
 
