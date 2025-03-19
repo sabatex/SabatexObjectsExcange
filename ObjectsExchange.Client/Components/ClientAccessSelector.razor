@@ -31,7 +31,7 @@
 
         try
         {
-            var queryParams = new QueryParams { Args = new LoadDataArgs { Filter = $"ClientId == \"{ClientNode.ClientId}\" && Id != \"{ClientNode.Id}\"" } };
+            var queryParams = new QueryParams { Args = new LoadDataArgs { Filter = $"it => it.ClientId == Guid(\"{ClientNode.ClientId}\")  && it.Id != Guid(\"{ClientNode.Id}\")" } };
             var avaliableNodes = await DataAdapter.GetAsync<Sabatex.ObjectsExchange.Models.ClientNode>(queryParams);
             this.avaliableNodes = avaliableNodes.Value;
         }
