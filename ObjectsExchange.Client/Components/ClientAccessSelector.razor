@@ -1,5 +1,44 @@
-﻿{
-  "Scenario": "Default",
-  "Type": "TrainingConfig",
-  "Version": 3
+﻿@inherits SabatexRadzenBlazorBaseDataComponent<Guid>
+
+<RadzenCheckBoxList Data="@avaliableNodes" @bind-Value=@values TValue="Guid" TextProperty="Name" ValueProperty="Id" class="mb-5">
+    <Items>
+        <RadzenCheckBoxListItem Text="Static item" Value="0" />
+    </Items>
+</RadzenCheckBoxList>
+
+
+
+
+@code {
+    record NodeDescriptor(Guid Id, string Name);
+    [Parameter] public Sabatex.ObjectsExchange.Models.ClientNode? ClientNode { get; set; }
+
+    private IEnumerable<Guid> values
+    {
+        get => ClientNode?.GetClientAccess() ?? new Guid[] { };
+        set
+        {
+            if (ClientNode != null) ClientNode.ClientAccess = string.Join(",", value);
+        }
+    }
+
+    private IEnumerable<Sabatex.ObjectsExchange.Models.ClientNode>? avaliableNodes;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (ClientNode == null)
+            throw new ArgumentNullException(nameof(ClientNode));
+
+        try
+        {
+            var queryParams = new QueryParams { Args = new LoadDataArgs { Filter = $"ClientId == \"{ClientNode.ClientId}\" && Id != \"{ClientNode.Id}\"" } };
+            var avaliableNodes = await DataAdapter.GetAsync<Sabatex.ObjectsExchange.Models.ClientNode>(queryParams);
+            this.avaliableNodes = avaliableNodes.Value;
+        }
+        catch (Exception ex)
+        {
+            NotificationService?.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Помилка запису", Detail = ex.Message });
+
+        }
+    }
 }

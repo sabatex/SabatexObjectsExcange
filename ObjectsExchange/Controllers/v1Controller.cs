@@ -82,6 +82,28 @@ public class v1Controller : ControllerBase
         return Ok(Assembly.GetExecutingAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty);
     }
 
+
+    [HttpPost("refresh_token")]
+    [Route("/api/v0/refresh_token")]
+    [Route("/api/v1/refresh_token")]
+ 
+    public async Task<IActionResult> PostRefresTokenAsync(Login login)
+    {
+        try
+        {
+            return Ok(await _clientManager.RefreshTokenAsync(login.Password));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Refresh token fail for client {login.ClientId} error:{ex.Message}");
+            return Unauthorized();
+        }
+    }
+
+
+
+
+
     #region ObjectExchange
     /// <summary>
     /// Get incoming objects

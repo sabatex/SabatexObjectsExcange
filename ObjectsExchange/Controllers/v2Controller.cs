@@ -99,19 +99,17 @@ public class v2Controller : ControllerBase
 
 
     [HttpPost("refresh_token")]
-    [Route("/api/v0/refresh_token")]
-    [Route("/api/v1/refresh_token")]
     [Route("/api/v2/refresh_token")]
 
-    public async Task<IActionResult> PostRefresTokenAsync(Login login)
+    public async Task<IActionResult> PostRefreshTokenAsync(RefreshToken refresh_token)
     {
         try
         {
-            return Ok(await _clientManager.RefreshTokenAsync(login.ClientId, login.Password));
+             return Ok(await _clientManager.RefreshTokenAsync(refresh_token.refresh_token));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Refresh token fail for client {login.ClientId} error:{ex.Message}");
+            _logger.LogError($"Refresh token  {refresh_token} fail error:{ex.Message}");
             return Unauthorized();
         }
     }
@@ -136,13 +134,13 @@ public class v2Controller : ControllerBase
     /// <param name="take">take objects by query </param>
     /// <returns>incoming objects </returns>
     [HttpGet("objects")]
-    public async Task<IActionResult> GetObjectsAsync([FromHeader] string apiToken,
-                                                     [FromHeader] Guid clientId,
-                                                     [FromHeader] Guid destinationId,
+    public async Task<IActionResult> GetObjectsAsync([FromHeader] string authorization,
+                                                     [FromQuery] Guid destinationId,
                                                      [FromQuery] int take = 10)
     {
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-        if (clientNode == null)
+
+        var clientId = await _clientManager.VerifyTokenAsync(authorization);
+        if (clientId == null)
             return Unauthorized();
 
         var result = await _dbContext.ObjectExchanges
@@ -155,18 +153,19 @@ public class v2Controller : ControllerBase
 
     [HttpPost("objects")]
 
-    public async Task<IActionResult> PostAsync([FromHeader] string apiToken,
-                                               [FromHeader] Guid clientId,
-                                               [FromHeader] Guid destinationId,
+    public async Task<IActionResult> PostAsync([FromHeader] string authorization,
                                                JsonDocument json)
     {
+        var clientId = await _clientManager.VerifyTokenAsync(authorization);
+
+        Guid? destinationId = json.RootElement.GetProperty("destinationId").GetGuid();
+        if (destinationId == null)
+            return BadRequest("The not defined destinationId");
+
+
         string? messageHeader = json.RootElement.GetProperty("messageHeader").GetString();
         if (messageHeader == null)
             return BadRequest("The not defined messageHeader");
-        
-        //string? objectType = json.RootElement.GetProperty("objectType").GetString();
-        //if (objectType == null)
-        //    return BadRequest("The not defined objectType");
         
         string? message = json.RootElement.GetProperty("message").GetString();
         if (message != null)
@@ -176,7 +175,7 @@ public class v2Controller : ControllerBase
         DateTime? dateStamp = null;
         if (json.RootElement.GetProperty("dateStamp").TryGetDateTime(out DateTime tdateStamp))
             dateStamp = tdateStamp;
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
+        var clientNode = await _dbContext.ClientNodes.FindAsync(clientId);
         if (clientNode == null)
             return Unauthorized();
         if (clientNode.CounterReseted.Day != DateTime.UtcNow.Day)
@@ -191,12 +190,13 @@ public class v2Controller : ControllerBase
         }
 
         var validNodes = clientNode.GetClientAccess();
-        if (validNodes.Contains(destinationId))
+        if (validNodes == null) return BadRequest("The not defined valid nodes");
+        if (validNodes.Contains(destinationId.Value))
         {
             var doc = new ObjectExchange
             {
-                Sender = clientId,
-                Destination = destinationId,
+                Sender = clientId.Value,
+                Destination = destinationId.Value,
                 MessageHeader = messageHeader,
                 Message = message,
                 DateStamp = DateTime.UtcNow,
@@ -241,3 +241,6 @@ public class v2Controller : ControllerBase
 
  
 }
+
+
+public record RefreshToken(string refresh_token);
