@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectsExchange.BAS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectsExchange.ApiAdapter", "Sabatex.ObjectsExchange.ApiAdapter\Sabatex.ObjectsExchange.ApiAdapter.csproj", "{379480BE-BD2F-4695-8DB3-B8FF36052185}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectsExchange.ApiAdapter.Framework", "Sabatex.ObjectsExchange.ApiAdapter.Framework\Sabatex.ObjectsExchange.ApiAdapter.Framework.csproj", "{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{379480BE-BD2F-4695-8DB3-B8FF36052185}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{379480BE-BD2F-4695-8DB3-B8FF36052185}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{379480BE-BD2F-4695-8DB3-B8FF36052185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
