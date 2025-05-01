@@ -5,6 +5,7 @@
     <NoWarn>$(NoWarn);NU1507</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.3" />
@@ -21,7 +22,9 @@
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Localization" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.3" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Sabatex.Core" Version="9.0.1" />
     <PackageVersion Include="Sabatex.Identity.UI" Version="9.0.3" />
@@ -29,6 +32,9 @@
     <PackageVersion Include="Sabatex.RadzenBlazor" Version="9.0.2" />
     <PackageVersion Include="sabatex.V1C77" Version="8.0.4" />
     <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="Xunit.Priority" Version="1.1.6" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
+    <PackageVersion Include="xunit.v3" Version="2.0.1" />
+    <PackageVersion Include="xunit.v3.core" Version="2.0.1" />
   </ItemGroup>
 </Project>

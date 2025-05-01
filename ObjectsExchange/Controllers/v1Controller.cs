@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ObjectsExchange.Controllers;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Radzen.Blazor.Rendering;
@@ -20,22 +21,36 @@ namespace Sabatex.ObjectsExchange.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class v1Controller : ControllerBase
+public class v1Controller : BaseApiController
 {
-    private readonly ILogger<v1Controller> _logger;
     private readonly ObjectsExchangeDbContext _dbContext;
     private readonly ApiConfig _apiConfig;
     private readonly ClientManager _clientManager;
     public static int maxTake = 50;
     public const int MessageSizeLimit = 1000000;
     private const string _tokenType = "BEARER";
-    public v1Controller(ObjectsExchangeDbContext dbContext, ILogger<v1Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
+    public v1Controller(ObjectsExchangeDbContext dbContext, ILogger<v1Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager) : base(logger, dbContext, apiConfig)
     {
-        _logger = logger;
         _dbContext = dbContext;
         _apiConfig = apiConfig.Value;
         _clientManager = clientManager;
     }
+
+    //[HttpPost("login")]
+    //public async Task<IActionResult> PostLoginAsync(Login login)
+    //{
+    //    try
+    //    {
+    //        return Ok(await _clientManager.LoginAsync(login.ClientId, login.Password));
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError($"Login client {login.ClientId} error:{ex.Message}");
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
+
+
 
 
     private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId, string apiToken)
@@ -84,9 +99,6 @@ public class v1Controller : ControllerBase
 
 
     [HttpPost("refresh_token")]
-    [Route("/api/v0/refresh_token")]
-    [Route("/api/v1/refresh_token")]
- 
     public async Task<IActionResult> PostRefresTokenAsync(Login login)
     {
         try

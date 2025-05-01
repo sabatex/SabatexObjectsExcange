@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ObjectsExchange.Controllers;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Radzen.Blazor.Rendering;
@@ -20,20 +21,14 @@ namespace Sabatex.ObjectsExchange.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class v2Controller : ControllerBase
+public class v2Controller : BaseApiController
 {
-    private readonly ILogger<v1Controller> _logger;
-    private readonly ObjectsExchangeDbContext _dbContext;
-    private readonly ApiConfig _apiConfig;
     private readonly ClientManager _clientManager;
     public static int maxTake = 50;
     public const int MessageSizeLimit = 1000000;
     private const string _tokenType = "BEARER";
-    public v2Controller(ObjectsExchangeDbContext dbContext, ILogger<v1Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
+    public v2Controller(ObjectsExchangeDbContext dbContext, ILogger<v1Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager) : base(logger,dbContext,apiConfig)
     {
-        _logger = logger;
-        _dbContext = dbContext;
-        _apiConfig = apiConfig.Value;
         _clientManager = clientManager;
     }
 
@@ -72,35 +67,10 @@ public class v2Controller : ControllerBase
     }
 
 
-    /// <summary>
-    /// Autenficate in service
-    /// </summary>
-    /// <param name="login">The object Login with node Id (register unsensitive) and password</param>
-    /// <returns>string access token or empty for fail</returns>
-    /// <exception cref="Exception"></exception>
-    [HttpPost("login")]
-    [Route("/api/v0/login")]
-    [Route("/api/v1/login")]
-    [Route("/api/v2/login")]
-    public async Task<IActionResult> PostLoginAsync(Login login)
-    {
-        try
-        {
-            return Ok(await _clientManager.LoginAsync(login.ClientId, login.Password));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Login client {login.ClientId} error:{ex.Message}");
-            return BadRequest(ex.Message);
-        }
-    }
-
-
+ 
 
 
     [HttpPost("refresh_token")]
-    [Route("/api/v2/refresh_token")]
-
     public async Task<IActionResult> PostRefreshTokenAsync(RefreshToken refresh_token)
     {
         try
@@ -166,7 +136,10 @@ public class v2Controller : ControllerBase
         string? messageHeader = json.RootElement.GetProperty("messageHeader").GetString();
         if (messageHeader == null)
             return BadRequest("The not defined messageHeader");
-        
+
+        if (messageHeader.Length > 150)
+            return BadRequest($"The messageHeader size {messageHeader.Length} is overflow limit 150 per messageHeader.");
+
         string? message = json.RootElement.GetProperty("message").GetString();
         if (message != null)
            if (message.Length > MessageSizeLimit)
@@ -217,14 +190,16 @@ public class v2Controller : ControllerBase
     }
 
     [HttpDelete("objects/{id:long}")]
-    public async Task<IActionResult> DeleteAsync([FromHeader] string apiToken, [FromHeader] Guid clientId, long id)
+    public async Task<IActionResult> DeleteAsync([FromHeader] string authorization, long id)
     {
-        var clientNode = await GetClientNodeByTokenAsync(clientId, apiToken);
-        if (clientNode == null)
+        var clientId = await _clientManager.VerifyTokenAsync(authorization);
+        if (clientId == null)
             return Unauthorized();
+        
         var obj = await _dbContext.ObjectExchanges.FindAsync(id);
         if (obj == null)
             return NotFound();
+        
         if (obj.Destination != clientId)
         {
             var error = $"Нод {clientId} не може видалятидані чужих нодів {obj.Destination}";
@@ -237,9 +212,38 @@ public class v2Controller : ControllerBase
     }
 
 
+    [HttpPost("objects_delete_range")]
+    public async Task<IActionResult> PostDeleteAsync([FromHeader] string authorization, JsonDocument json)
+    {
+        var clientId = await _clientManager.VerifyTokenAsync(authorization);
+        if (clientId == null)
+            return Unauthorized();
+        var ids = json.RootElement.GetProperty("ids").EnumerateArray().Select(s => s.GetInt64()).ToArray();
+        if (ids.Length == 0)
+            return BadRequest("The not defined ids");
+        var objects = await _dbContext.ObjectExchanges
+                        .Where(s => s.Destination == clientId)
+                        .Where(s => ids.Contains(s.Id))
+                        .ToArrayAsync();
+        if (objects.Length == 0)
+            return NotFound();
+        foreach (var obj in objects)
+        {
+            if (obj.Destination != clientId)
+            {
+                var error = $"Нод {clientId} не може видалятидані чужих нодів {obj.Destination}";
+                _logger.LogError(error);
+                return BadRequest(error);
+            }
+        }
+        _dbContext.ObjectExchanges.RemoveRange(objects);
+        await _dbContext.SaveChangesAsync();
+        return Ok();
+    }
+
     #endregion
 
- 
+
 }
 
 

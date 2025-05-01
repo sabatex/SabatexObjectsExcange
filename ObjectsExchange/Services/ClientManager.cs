@@ -88,7 +88,7 @@ namespace ObjectsExchange.Services
             };
             await _dbContext.AutenficatedNodes.AddAsync(result);
             await _dbContext.SaveChangesAsync();
-            return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime,clientId);
+            return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime);
 
         }
 
@@ -120,7 +120,7 @@ namespace ObjectsExchange.Services
             };
             await _dbContext.AutenficatedNodes.AddAsync(result);
             await _dbContext.SaveChangesAsync();
-            return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime,tokenInternal.ClientId);
+            return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime);
         }
         
         /// <summary>

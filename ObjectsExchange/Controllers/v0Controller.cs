@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ObjectsExchange.Controllers;
 using ObjectsExchange.Data;
 using ObjectsExchange.Services;
 using Sabatex.ObjectsExchange.Models;
@@ -17,21 +18,46 @@ namespace Sabatex.ObjectsExchange.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class v0Controller : ControllerBase
+public class v0Controller :BaseApiController
 {
-    private readonly ILogger<v0Controller> _logger;
     private readonly ObjectsExchangeDbContext _dbContext;
     private readonly ApiConfig _apiConfig;
     private readonly ClientManager _clientManager;
     public static int maxTake = 50;
     public const int MessageSizeLimit = 50000;
     private const string _tokenType = "BEARER";
-    public v0Controller(ObjectsExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager)
+    public v0Controller(ObjectsExchangeDbContext dbContext, ILogger<v0Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager): base(logger, dbContext, apiConfig)
     {
-        _logger = logger;
         _dbContext = dbContext;
         _apiConfig = apiConfig.Value;
         _clientManager = clientManager;
+    }
+
+    //[HttpPost("login")]
+    //public async Task<IActionResult> PostLoginAsync(Login login)
+    //{
+    //    try
+    //    {
+    //        return Ok(await _clientManager.LoginAsync(login.ClientId, login.Password));
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError($"Login client {login.ClientId} error:{ex.Message}");
+    //        return BadRequest(ex.Message);
+    //    }
+    //}
+    [HttpPost("refresh_token")]
+    public async Task<IActionResult> PostRefresTokenAsync(Login login)
+    {
+        try
+        {
+            return Ok(await _clientManager.RefreshTokenAsync(login.Password));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Refresh token fail for client {login.ClientId} error:{ex.Message}");
+            return Unauthorized();
+        }
     }
 
 
