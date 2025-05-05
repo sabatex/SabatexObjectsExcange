@@ -63,65 +63,65 @@ namespace ObjectsExchange.Services
         /// <param name="password"></param>
         /// <returns></returns>
         /// <exception cref="LoginIdUknownException">Failure login to api</exception>
-        public async Task<Token> LoginAsync(Guid clientId, string password)
-        {
-            await Task.Delay(1000);// 
-            var clientNode = await _dbContext.ClientNodes.FindAsync(clientId);
-            if (clientNode == null)
-                throw new LoginIdUknownException($"Login failed: {clientId}");
+        //public async Task<Token> LoginAsync(Guid clientId, string password)
+        //{
+        //    await Task.Delay(1000);// 
+        //    var clientNode = await _dbContext.ClientNodes.FindAsync(clientId);
+        //    if (clientNode == null)
+        //        throw new LoginIdUknownException($"Login failed: {clientId}");
 
-            if (clientNode.Password != GetHashString(password))
-                throw new LoginIdUknownException($"Login failed: {clientId}");
+        //    if (clientNode.Password != GetHashString(password))
+        //        throw new LoginIdUknownException($"Login failed: {clientId}");
 
-            // success client verified
-            // remove old access token
-            var oldAccessToken = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Id == clientId);
-            if (oldAccessToken != null)
-                _dbContext.AutenficatedNodes.Remove(oldAccessToken);
+        //    // success client verified
+        //    // remove old access token
+        //    var oldAccessToken = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Id == clientId);
+        //    if (oldAccessToken != null)
+        //        _dbContext.AutenficatedNodes.Remove(oldAccessToken);
 
-            var result = new AutenficatedNode
-            {
-                Id = clientNode.Id,
-                AccessToken = CreateAccessToken(),
-                RefreshToken = CreateAccessToken(),
-                ExpiresDate = DateTime.UtcNow + TimeSpan.FromSeconds(apiConfig.TokensLifeTime)
-            };
-            await _dbContext.AutenficatedNodes.AddAsync(result);
-            await _dbContext.SaveChangesAsync();
-            return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime);
+        //    var result = new AutenficatedNode
+        //    {
+        //        Id = clientNode.Id,
+        //        AccessToken = CreateAccessToken(),
+        //        RefreshToken = CreateAccessToken(),
+        //        ExpiresDate = DateTime.UtcNow + TimeSpan.FromSeconds(apiConfig.TokensLifeTime)
+        //    };
+        //    await _dbContext.AutenficatedNodes.AddAsync(result);
+        //    await _dbContext.SaveChangesAsync();
+        //    return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime);
 
-        }
+        //}
 
-        public async Task<Token> RefreshTokenAsync(string refreshToken)
-        {
-            var jsonString = Encoding.UTF8.GetString(Convert.FromBase64String(refreshToken));
-            var tokenInternal = JsonSerializer.Deserialize<TokenInternal>(jsonString);
+        //public async Task<Token> RefreshTokenAsync(string refreshToken)
+        //{
+        //    var jsonString = Encoding.UTF8.GetString(Convert.FromBase64String(refreshToken));
+        //    var tokenInternal = JsonSerializer.Deserialize<TokenInternal>(jsonString);
 
 
 
-            var clientNode = await _dbContext.ClientNodes.FindAsync(tokenInternal.ClientId);
-            if (clientNode == null)
-                throw new LoginIdUknownException($"Login failed: {tokenInternal.ClientId}");
+        //    var clientNode = await _dbContext.ClientNodes.FindAsync(tokenInternal.ClientId);
+        //    if (clientNode == null)
+        //        throw new LoginIdUknownException($"Login failed: {tokenInternal.ClientId}");
 
-            var oldAccessToken = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Id == tokenInternal.ClientId);
-            if (oldAccessToken == null)
-                throw new TokenNotExistException($"Try refresh unexist token for clientId={tokenInternal.ClientId} ");
+        //    var oldAccessToken = await _dbContext.AutenficatedNodes.SingleOrDefaultAsync(s => s.Id == tokenInternal.ClientId);
+        //    if (oldAccessToken == null)
+        //        throw new TokenNotExistException($"Try refresh unexist token for clientId={tokenInternal.ClientId} ");
 
-            if (oldAccessToken.RefreshToken != tokenInternal.AccessToken)
-                throw new TokenNotExistException($"Try refresh token for clientId={tokenInternal.ClientId} fail");
+        //    if (oldAccessToken.RefreshToken != tokenInternal.AccessToken)
+        //        throw new TokenNotExistException($"Try refresh token for clientId={tokenInternal.ClientId} fail");
 
-            _dbContext.AutenficatedNodes.Remove(oldAccessToken);
-            var result = new AutenficatedNode
-            {
-                Id = clientNode.Id,
-                AccessToken = CreateAccessToken(),
-                RefreshToken = CreateAccessToken(),
-                ExpiresDate = DateTime.UtcNow + TimeSpan.FromSeconds(apiConfig.TokensLifeTime)
-            };
-            await _dbContext.AutenficatedNodes.AddAsync(result);
-            await _dbContext.SaveChangesAsync();
-            return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime);
-        }
+        //    _dbContext.AutenficatedNodes.Remove(oldAccessToken);
+        //    var result = new AutenficatedNode
+        //    {
+        //        Id = clientNode.Id,
+        //        AccessToken = CreateAccessToken(),
+        //        RefreshToken = CreateAccessToken(),
+        //        ExpiresDate = DateTime.UtcNow + TimeSpan.FromSeconds(apiConfig.TokensLifeTime)
+        //    };
+        //    await _dbContext.AutenficatedNodes.AddAsync(result);
+        //    await _dbContext.SaveChangesAsync();
+        //    return new Token(result.AccessToken, result.RefreshToken, apiConfig.TokensLifeTime);
+        //}
         
         /// <summary>
         /// 
@@ -181,33 +181,33 @@ namespace ObjectsExchange.Services
             return await _dbContext.ClientNodes.CountAsync();
         }
 
-        public async Task<Guid?> VerifyTokenAsync(string authorization)
-        {
-            var token = TokenInternal.GetFromAuthorization(authorization);
-            var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(token.ClientId);
-            if (clientAutenficate != null)
-            {
-                if (clientAutenficate.AccessToken != token.AccessToken)
-                {
-                    _logger.LogTrace($"{DateTime.Now}: The client {token.ClientId}  try use invalid token {token.AccessToken}");
-                     return null;
-                }
+        //public async Task<Guid?> VerifyTokenAsync(string authorization)
+        //{
+        //    var token = TokenInternal.GetFromAuthorization(authorization);
+        //    var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(token.ClientId);
+        //    if (clientAutenficate != null)
+        //    {
+        //        if (clientAutenficate.AccessToken != token.AccessToken)
+        //        {
+        //            _logger.LogTrace($"{DateTime.Now}: The client {token.ClientId}  try use invalid token {token.AccessToken}");
+        //             return null;
+        //        }
 
-                var existTime = DateTime.UtcNow;
-                if (existTime > clientAutenficate.ExpiresDate)
-                {
-                    _logger.LogTrace($"{DateTime.Now}: The client {token.ClientId}  use exprise token {token.AccessToken} by time {existTime}");
-                     return null;
-                }
-                return clientAutenficate.Id;
-            }
-            else
-            {
+        //        var existTime = DateTime.UtcNow;
+        //        if (existTime > clientAutenficate.ExpiresDate)
+        //        {
+        //            _logger.LogTrace($"{DateTime.Now}: The client {token.ClientId}  use exprise token {token.AccessToken} by time {existTime}");
+        //             return null;
+        //        }
+        //        return clientAutenficate.Id;
+        //    }
+        //    else
+        //    {
 
-                 _logger.LogTrace($"{DateTime.Now}: Try use service  with nodeId={token.ClientId} and The client {token.ClientId} and token = {token.AccessToken}");
-                return null;
-            }
-        }
+        //         _logger.LogTrace($"{DateTime.Now}: Try use service  with nodeId={token.ClientId} and The client {token.ClientId} and token = {token.AccessToken}");
+        //        return null;
+        //    }
+        //}
 
     }
 
@@ -220,6 +220,7 @@ namespace ObjectsExchange.Services
         public TokenNotExistException(string message) : base(message) { }
     }
     public class TokenInternal {
+
         public Guid ClientId { get; set; }
         public string AccessToken { get; set; }
         public static TokenInternal GetFromAuthorization(string authorization)

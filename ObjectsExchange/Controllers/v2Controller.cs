@@ -23,13 +23,12 @@ namespace Sabatex.ObjectsExchange.Controllers;
 [ApiController]
 public class v2Controller : BaseApiController
 {
-    private readonly ClientManager _clientManager;
     public static int maxTake = 50;
     public const int MessageSizeLimit = 1000000;
     private const string _tokenType = "BEARER";
-    public v2Controller(ObjectsExchangeDbContext dbContext, ILogger<v1Controller> logger, IOptions<ApiConfig> apiConfig, ClientManager clientManager) : base(logger,dbContext,apiConfig)
+    public v2Controller(ObjectsExchangeDbContext dbContext, ILogger<v1Controller> logger, IOptions<ApiConfig> apiConfig) : base(logger,dbContext,apiConfig)
     {
-        _clientManager = clientManager;
+
     }
 
     private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId, string apiToken)
@@ -70,29 +69,21 @@ public class v2Controller : BaseApiController
  
 
 
-    [HttpPost("refresh_token")]
-    public async Task<IActionResult> PostRefreshTokenAsync(RefreshToken refresh_token)
-    {
-        try
-        {
-             return Ok(await _clientManager.RefreshTokenAsync(refresh_token.refresh_token));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Refresh token  {refresh_token} fail error:{ex.Message}");
-            return Unauthorized();
-        }
-    }
+    //[HttpPost("refresh_token")]
+    //public async Task<IActionResult> PostRefreshTokenAsync(RefreshToken refresh_token)
+    //{
+    //    try
+    //    {
+    //         return Ok(await _clientManager.RefreshTokenAsync(refresh_token.refresh_token));
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError($"Refresh token  {refresh_token} fail error:{ex.Message}");
+    //        return Unauthorized();
+    //    }
+    //}
 
-    /// <summary>
-    /// Get current API version
-    /// </summary>
-    /// <returns>string API version or empty</returns>
-    [HttpGet("version")]
-    public IActionResult Get()
-    {
-        return Ok(Assembly.GetExecutingAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty);
-    }
+  
 
     #region ObjectExchange
     /// <summary>
@@ -109,7 +100,7 @@ public class v2Controller : BaseApiController
                                                      [FromQuery] int take = 10)
     {
 
-        var clientId = await _clientManager.VerifyTokenAsync(authorization);
+        var clientId = await VerifyTokenAsync(authorization);
         if (clientId == null)
             return Unauthorized();
 
@@ -126,7 +117,7 @@ public class v2Controller : BaseApiController
     public async Task<IActionResult> PostAsync([FromHeader] string authorization,
                                                JsonDocument json)
     {
-        var clientId = await _clientManager.VerifyTokenAsync(authorization);
+        var clientId = await VerifyTokenAsync(authorization);
 
         Guid? destinationId = json.RootElement.GetProperty("destinationId").GetGuid();
         if (destinationId == null)
@@ -192,7 +183,7 @@ public class v2Controller : BaseApiController
     [HttpDelete("objects/{id:long}")]
     public async Task<IActionResult> DeleteAsync([FromHeader] string authorization, long id)
     {
-        var clientId = await _clientManager.VerifyTokenAsync(authorization);
+        var clientId = await VerifyTokenAsync(authorization);
         if (clientId == null)
             return Unauthorized();
         
@@ -215,7 +206,7 @@ public class v2Controller : BaseApiController
     [HttpPost("objects_delete_range")]
     public async Task<IActionResult> PostDeleteAsync([FromHeader] string authorization, JsonDocument json)
     {
-        var clientId = await _clientManager.VerifyTokenAsync(authorization);
+        var clientId = await VerifyTokenAsync(authorization);
         if (clientId == null)
             return Unauthorized();
         var ids = json.RootElement.GetProperty("ids").EnumerateArray().Select(s => s.GetInt64()).ToArray();
