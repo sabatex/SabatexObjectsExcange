@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sabatex.ObjectsExchange.ApiAdapter;
+namespace Sabatex.ObjectExchange.Core;
 
 public class ExchangeNode:IEntityBase<Guid>,IEntityFieldDescription
 {
@@ -40,6 +40,9 @@ public class ExchangeNode:IEntityBase<Guid>,IEntityFieldDescription
     /// <summary>
     /// take objects by transaction
     /// </summary>
-    public int Take { get; set; }
+    public int TakeDownload { get; set; } = 10;
+
+    public short TakeUpload { get; set; } = 10;
+    public short TakeUnresolved { get; set; } = 10;
 
 }

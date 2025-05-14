@@ -30,6 +30,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectsExchange.Api
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectExchange.ClientDataAdapter.Memory", "Sabatex.ObjectExchange.ClientDataAdapter.Memory\Sabatex.ObjectExchange.ClientDataAdapter.Memory.csproj", "{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectExchange.ClientDataAdapter", "Sabatex.ObjectExchange.ClientDataAdapter\Sabatex.ObjectExchange.ClientDataAdapter.csproj", "{146E4167-6C27-4920-84A8-4D3F6253866A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectExchange.Core", "Sabatex.ObjectExchange.Core\Sabatex.ObjectExchange.Core.csproj", "{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +80,14 @@ Global
 		{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{146E4167-6C27-4920-84A8-4D3F6253866A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{146E4167-6C27-4920-84A8-4D3F6253866A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{146E4167-6C27-4920-84A8-4D3F6253866A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{146E4167-6C27-4920-84A8-4D3F6253866A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

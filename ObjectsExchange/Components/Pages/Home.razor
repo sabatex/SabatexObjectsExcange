@@ -1,12 +1,17 @@
 ﻿@page "/"
 @using ObjectsExchange.Client.Services
-@* @inject IApiAdapter ApiAdapter *@
+@inject IStringLocalizer<Home> Loc
+
 
 
 <PageTitle>Home</PageTitle>
 <AuthorizeView>
     <Authorized>Ви  авторизовані</Authorized>
-    <NotAuthorized>Ви не авторизовані</NotAuthorized>
+    <NotAuthorized>
+        <RadzenAlert AlertStyle="AlertStyle.Warning" AllowClose="false">
+            @Loc["You are not authorized, authorization is required for further work."]
+        </RadzenAlert>
+    </NotAuthorized>
 </AuthorizeView>
 
 @* @body *@

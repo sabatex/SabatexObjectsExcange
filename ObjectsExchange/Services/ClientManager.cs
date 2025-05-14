@@ -130,35 +130,35 @@ namespace ObjectsExchange.Services
         /// <param name="apiToken"></param>
         /// <param name="ip"></param>
         /// <returns></returns>
-        private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId, string apiToken,string? ip)
-        {
-            var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(nodeId);
-            if (clientAutenficate != null)
-            {
-                if (apiToken != clientAutenficate.AccessToken)
-                {
-                    _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  try use invalid token {apiToken}");
-                    return null;
-                }
+        //private async Task<ClientNode?> GetClientNodeByTokenAsync(Guid nodeId, string apiToken,string? ip)
+        //{
+        //    var clientAutenficate = await _dbContext.AutenficatedNodes.FindAsync(nodeId);
+        //    if (clientAutenficate != null)
+        //    {
+        //        if (apiToken != clientAutenficate.AccessToken)
+        //        {
+        //            _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  try use invalid token {apiToken}");
+        //            return null;
+        //        }
 
-                var existTime = DateTime.UtcNow;
-                if (existTime > clientAutenficate.ExpiresDate)
-                {
-                    _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  use exprise token {apiToken} by time {existTime}");
-                    return null;
-                }
+        //        var existTime = DateTime.UtcNow;
+        //        if (existTime > clientAutenficate.ExpiresDate)
+        //        {
+        //            _logger.LogTrace($"{DateTime.Now}: The client {nodeId}  use exprise token {apiToken} by time {existTime}");
+        //            return null;
+        //        }
                 
-                var result = await _dbContext.ClientNodes.FindAsync(nodeId);
-                if (result == null)
-                    _logger.LogError($"{DateTime.Now}: The client {nodeId} do not Exist, but exist valid token by same id ");
-                return result;
-            }
-            else
-            {
-                _logger.LogTrace($"{DateTime.Now}: Try use service from ip={ip} with nodeId={nodeId} and The client {nodeId} and token = {apiToken}");
-                return null;
-            }
-        }
+        //        var result = await _dbContext.ClientNodes.FindAsync(nodeId);
+        //        if (result == null)
+        //            _logger.LogError($"{DateTime.Now}: The client {nodeId} do not Exist, but exist valid token by same id ");
+        //        return result;
+        //    }
+        //    else
+        //    {
+        //        _logger.LogTrace($"{DateTime.Now}: Try use service from ip={ip} with nodeId={nodeId} and The client {nodeId} and token = {apiToken}");
+        //        return null;
+        //    }
+        //}
 
 
         public async Task<IEnumerable<ClientNode>> GetClients(int skip, int take)
@@ -211,29 +211,29 @@ namespace ObjectsExchange.Services
 
     }
 
-    public class LoginIdUknownException : Exception
-    {
-        public LoginIdUknownException(string message) : base(message) { }
-    }
-    public class TokenNotExistException : Exception
-    {
-        public TokenNotExistException(string message) : base(message) { }
-    }
-    public class TokenInternal {
+    //public class LoginIdUknownException : Exception
+    //{
+    //    public LoginIdUknownException(string message) : base(message) { }
+    //}
+    //public class TokenNotExistException : Exception
+    //{
+    //    public TokenNotExistException(string message) : base(message) { }
+    //}
+    //public class TokenInternal {
 
-        public Guid ClientId { get; set; }
-        public string AccessToken { get; set; }
-        public static TokenInternal GetFromAuthorization(string authorization)
-        {
-            var token = authorization.Split(' ')[1];
-            var jsonString = Encoding.UTF8.GetString(Convert.FromBase64String(token));
-            return JsonSerializer.Deserialize<TokenInternal>(jsonString);
-        }
+    //    public Guid ClientId { get; set; }
+    //    public string AccessToken { get; set; }
+    //    public static TokenInternal GetFromAuthorization(string authorization)
+    //    {
+    //        var token = authorization.Split(' ')[1];
+    //        var jsonString = Encoding.UTF8.GetString(Convert.FromBase64String(token));
+    //        return JsonSerializer.Deserialize<TokenInternal>(jsonString);
+    //    }
 
-        public static string GetAuthorization(Guid clientId, string accessToken)
-        {
-            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new TokenInternal { ClientId = clientId, AccessToken = accessToken })));
-            return $"Bearer {token}";
-        }
-    }
+    //    public static string GetAuthorization(Guid clientId, string accessToken)
+    //    {
+    //        var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new TokenInternal { ClientId = clientId, AccessToken = accessToken })));
+    //        return $"Bearer {token}";
+    //    }
+    //}
 }

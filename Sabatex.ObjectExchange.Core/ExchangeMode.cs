@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sabatex.ObjectsExchange.ApiAdapter;
+namespace Sabatex.ObjectExchange.Core;
 /// <summary>
 /// Режим обміну
 /// </summary>
