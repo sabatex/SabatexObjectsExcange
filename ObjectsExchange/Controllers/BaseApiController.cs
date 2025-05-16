@@ -189,7 +189,11 @@ namespace ObjectsExchange.Controllers
         {
             try
             {
-                var token = authorization.Split(' ')[1];
+                var token = authorization;
+                if (authorization.StartsWith("Bearer "))
+                {
+                    token = authorization.Split(' ')[1];
+                }
                 var json = JsonDocument.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(token)));
                 var clientId = json.RootElement.GetProperty("ClientId").GetGuid();
                 var accessToken = json.RootElement.GetProperty("AccessToken").GetString();

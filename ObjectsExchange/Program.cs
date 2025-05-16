@@ -108,10 +108,7 @@ public class Program
             .AddAdditionalAssemblies(typeof(Sabatex.Identity.UI._Imports).Assembly, typeof(ObjectsExchange.Client._Imports).Assembly);
         app.MapAdditionalIdentityEndpoints();
         app.MapControllers();
-        //await app.RunAsync(args);
+
         await app.RunAsync(args);
-
-
-
     }
 }

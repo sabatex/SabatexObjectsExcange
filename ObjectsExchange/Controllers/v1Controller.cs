@@ -63,7 +63,7 @@ public class v1Controller : BaseApiController
     /// <returns>incoming objects </returns>
     [HttpGet("objects")]
     public async Task<IActionResult> GetObjectsAsync([FromHeader] string apiToken,
-                                                     //[FromHeader] Guid clientId,
+                                                     [FromHeader] Guid clientId,
                                                      [FromHeader] Guid destinationId,
                                                      [FromQuery] int take = 10)
     {
@@ -82,7 +82,7 @@ public class v1Controller : BaseApiController
     [HttpPost("objects")]
 
     public async Task<IActionResult> PostAsync([FromHeader] string apiToken,
-                                               //[FromHeader] Guid clientId,
+                                               [FromHeader] Guid clientId,
                                                [FromHeader] Guid destinationId,
                                                JsonDocument json)
     {
