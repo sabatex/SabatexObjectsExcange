@@ -12,7 +12,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageId>Sabatex.ObjectsExchange.Models</PackageId>
     <PackageTags>#Exchange #API </PackageTags>
-    <Version>9.0.0</Version>
+    <Version>9.0.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Sabatex.Core" />

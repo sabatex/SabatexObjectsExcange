@@ -31,7 +31,7 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Sabatex.Core" Version="9.0.1" />
     <PackageVersion Include="Sabatex.Identity.UI" Version="9.0.3" />
-    <PackageVersion Include="Sabatex.ObjectsExchange.Models" Version="9.0.0" />
+    <PackageVersion Include="Sabatex.ObjectsExchange.Models" Version="9.0.1" />
     <PackageVersion Include="Sabatex.RadzenBlazor" Version="9.0.2" />
     <PackageVersion Include="sabatex.V1C77" Version="8.0.4" />
     <PackageVersion Include="xunit" Version="2.9.3" />
