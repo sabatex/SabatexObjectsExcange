@@ -10,24 +10,30 @@ using ObjectsExchange.Client.Services;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using System.Globalization;
+using Sabatex.Core.RadzenBlazor;
 
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.Services.AddRadzenComponents();
-builder.Services.AddScoped<ISabatexRadzenBlazorDataAdapter<Guid>, ApiAdapter>();
-builder.Services.AddScoped<IApiAdapter, ApiAdapter>();
-builder.Services.AddSingleton<SabatexBlazorAppState>();
-builder.Services.AddScoped<SabatexJsInterop>();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddAuthenticationStateDeserialization();
+builder.Services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
+builder.Services.AddSabatexRadzenBlazor();
+
+
+builder.Services.AddScoped<ISabatexRadzenBlazorDataAdapter, ApiAdapter>();
+builder.Services.AddScoped<IApiAdapter, ApiAdapter>();
 builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
+
+
+
 
 
 //builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.AddLocalization();
+
 var host = builder.Build();
 //var js = host.Services.GetRequiredService<IJSRuntime>();
 //var culture = await js.InvokeAsync<string>("blazorCulture.get") ?? "uk-UA";

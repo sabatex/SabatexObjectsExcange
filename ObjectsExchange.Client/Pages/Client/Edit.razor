@@ -2,8 +2,20 @@
 @attribute [Authorize]
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
+@if (isAccessDenied)
+{
+    <SabatexAccessDenied />
+}
+else if (Item == null)
+{
+    <SabatexLoading />
+}
+else
+{
+    @* The form is rendered below *@
+}
 
-<SabatexEditForm TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)">
+<SabatexEditForm TItem="Sabatex.ObjectsExchange.Models.Client" TKey="Guid" Item="Item" OnBeforeSubmit="OnBeforeSubmit" IsNew="@(Id==null)" ReturnUrl="@ReturnUrl">
     <Content Context="item">
         <RadzenColumn Size="12" SizeMD="8" SizeLG="10">
             <RadzenFormField Text="Description" Style="width:100%">
@@ -19,11 +31,19 @@
     [Parameter]
     public string? Id { get; set; }
 
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
 
     Sabatex.ObjectsExchange.Models.Client? Item;
 
+
+    bool isAccessDenied = false;
+
     async Task OnBeforeSubmit(Sabatex.ObjectsExchange.Models.Client item)
     {
+
         if (Id == null)
             item.OwnerUser = await AuthenticationStateProvider.GetUserNameAsync();
     }
@@ -31,11 +51,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //await base.OnInitializedAsync();
+        await base.OnInitializedAsync();
+
         if (Id != null)
         {
+            try
+            {
 
-            Item = await DataAdapter.GetByIdAsync<Sabatex.ObjectsExchange.Models.Client>(Id);
+                Item = await DataAdapter.GetByIdAsync<Sabatex.ObjectsExchange.Models.Client>(Id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
         else
         {

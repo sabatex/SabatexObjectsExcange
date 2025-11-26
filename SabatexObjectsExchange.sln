@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32319.34
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Models", "Sabatex.ObjectsExchange.Models\Sabatex.ObjectsExchange.Models.csproj", "{3AF42961-4628-4301-B439-76939F2E7D40}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E25FC2B4-765C-4D8E-9A3B-54D3355A5856}"
 	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 		Prepare ERP for exchange.md = Prepare ERP for exchange.md
 		Readme.md = Readme.md
 		test.json = test.json
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.V1C77.ExchangeService", "sabatex.1C77.ExchangeService\Sabatex.V1C77.ExchangeService.csproj", "{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Tests", "Sabatex.ObjectsExchange.Tests\Sabatex.ObjectsExchange.Tests.csproj", "{79B4D601-10CA-46EC-B928-32DB7B3D5F52}"
 EndProject
@@ -42,10 +42,6 @@ Global
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AF42961-4628-4301-B439-76939F2E7D40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB269AFB-2A90-4896-9F17-35ABA76F9ECF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79B4D601-10CA-46EC-B928-32DB7B3D5F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79B4D601-10CA-46EC-B928-32DB7B3D5F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79B4D601-10CA-46EC-B928-32DB7B3D5F52}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -65,28 +65,28 @@
 </html>
 
 @code {
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    // [CascadingParameter]
+    // private HttpContext HttpContext { get; set; } = default!;
     string language = "en-US";
 
-    private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/Account")
-        ? null
-    : new InteractiveWebAssemblyRenderMode(prerender:false);
-    // protected override void OnInitialized()
+    // private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/Account")
+    //     ? null
+    // : new InteractiveWebAssemblyRenderMode(prerender:false);
+    // // protected override void OnInitialized()
+    // // {
+    // //     HttpContext?.Response.Cookies.Append(
+    // //         CookieRequestCultureProvider.DefaultCookieName,
+    // //         CookieRequestCultureProvider.MakeCookieValue(
+    // //             new RequestCulture(
+    // //                 CultureInfo.GetCultureInfo("uk-UA"),//  CultureInfo.CurrentCulture,
+    // //                 CultureInfo.GetCultureInfo("uk-UA") /** CultureInfo.CurrentUICulture **/)));
+    // // }
+
+    // protected override async Task OnInitializedAsync()
     // {
-    //     HttpContext?.Response.Cookies.Append(
-    //         CookieRequestCultureProvider.DefaultCookieName,
-    //         CookieRequestCultureProvider.MakeCookieValue(
-    //             new RequestCulture(
-    //                 CultureInfo.GetCultureInfo("uk-UA"),//  CultureInfo.CurrentCulture,
-    //                 CultureInfo.GetCultureInfo("uk-UA") /** CultureInfo.CurrentUICulture **/)));
+    //     await base.OnInitializedAsync();
+    //     var language = HttpContext?.Request.Headers["Accept-Language"].ToString();
+    //     this.language = Sabatex.Blazor.Globalization.GetSupportedCultureByAcceptLanguage(language);
+
     // }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        var language = HttpContext?.Request.Headers["Accept-Language"].ToString();
-        this.language = Sabatex.Blazor.Globalization.GetSupportedCultureByAcceptLanguage(language);
-
-    }
 }

@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using ObjectsExchange.Client.Models;
 using ObjectsExchange.Models;
 using Sabatex.ObjectsExchange.Models;
+using Sabatex.RadzenBlazor.Server;
 
 namespace ObjectsExchange.Data;
 
-public class ObjectsExchangeDbContext(DbContextOptions<ObjectsExchangeDbContext> options) : IdentityDbContext<Sabatex.Identity.UI.ApplicationUser>(options)
+public class ObjectsExchangeDbContext(DbContextOptions<ObjectsExchangeDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Sabatex.ObjectsExchange.Models.ClientNode> ClientNodes { get; set; }
     public DbSet<Sabatex.ObjectsExchange.Models.Client> Clients { get; set; }

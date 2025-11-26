@@ -5,6 +5,7 @@
 @inject TooltipService tooltipService
 
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 <SabatexRadzenGrid TItem="Sabatex.ObjectsExchange.Models.ClientNode" TKey="Guid" ForeginKey="ForeginKey" @ref=grid>
     <Buttons Context="item">
         <RadzenButton Icon="Mop" Click="()=>CleanNode(item)" Disabled=@(item == null) MouseEnter="@(args => tooltipService.Open(args, "Clean all messages in selected node.", null))" />

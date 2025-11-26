@@ -4,9 +4,9 @@ using System;
 
 namespace ObjectsExchange.Client.Services
 {
-    public class ApiAdapter:SabatexRadzenBlazorApiDataAdapter<Guid>,IApiAdapter
+    public class ApiAdapter:SabatexRadzenBlazorApiDataAdapter,IApiAdapter
     {
-        public ApiAdapter(HttpClient httpClient, ILogger<SabatexRadzenBlazorODataAdapter<Guid>> logger, NavigationManager navigationManager):base(httpClient, logger, navigationManager) { }
+        public ApiAdapter(HttpClient httpClient, ILogger<SabatexRadzenBlazorApiDataAdapter> logger, NavigationManager navigationManager):base(httpClient, logger, navigationManager) { }
 
         public async Task<string> GetDataBaseBackupAsync()
         {

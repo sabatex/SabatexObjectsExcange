@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<MainLayout> Localizer
 
 <RadzenComponents @rendermode=InteractiveWebAssembly />
 <RadzenLayout @ref="radzenLayout">
@@ -17,10 +18,10 @@
         </RadzenHeader>
        <RadzenSidebar @bind-Expanded="@sideBarExpanded">
         <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
+            <RadzenPanelMenuItem Text=@Localizer["Home"] Icon="home" Path="/" />
             <AuthorizeView>
                 <Authorized>
-                    <RadzenPanelMenuItem Text="Clients" Icon="info" Path="client/list" />
+                    <RadzenPanelMenuItem Text=@Localizer["Clients"] Icon="info" Path="client/list" />
                 </Authorized>
                 <NotAuthorized>
                 </NotAuthorized>

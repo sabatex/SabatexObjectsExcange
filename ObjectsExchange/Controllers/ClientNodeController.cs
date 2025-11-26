@@ -6,9 +6,10 @@ using ObjectsExchange.Data;
 using ObjectsExchange.Models;
 using ObjectsExchange.Services;
 using Radzen;
-using Sabatex.Identity.UI;
+using Sabatex.Core.RadzenBlazor;
 using Sabatex.ObjectsExchange.Models;
 using Sabatex.RadzenBlazor;
+using Sabatex.RadzenBlazor.Server;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 
@@ -23,10 +24,7 @@ public class ClientNodeController : BaseController<ClientNode>
         this.clientManager = clientManager;
     }
 
-    public override Task<ODataServiceResult<ClientNode>> Get([FromQuery] string json)
-    {
-        return base.Get(json);
-    }
+
 
     [HttpDelete("clean/{id}")]
     public virtual async Task<IActionResult> CleanNode([FromRoute] Guid id)

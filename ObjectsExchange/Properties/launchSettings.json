@@ -2,7 +2,6 @@
   "profiles": {
     "ObjectsExchange": {
       "commandName": "Project",
-      "commandLineArgs": "-migrate",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
