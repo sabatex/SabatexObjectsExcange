@@ -1,0 +1,20 @@
+{
+  "projects": [
+    {
+      "path": "Sabatex.ObjectsExchange.Models/Sabatex.ObjectsExchange.Models.csproj",
+      "enabled": true
+    },
+    {
+      "path": "Sabatex.ObjectExchange.Core/Sabatex.ObjectExchange.Core.csproj",
+      "enabled": true
+    },
+    {
+      "path": "Sabatex.ObjectsExchange.ApiAdapter/Sabatex.ObjectsExchange.ApiAdapter.csproj",
+      "enabled": true
+    },
+    {
+      "path": "Sabatex.ObjectExchange.ClientDataAdapter/Sabatex.ObjectExchange.ClientDataAdapter.csproj",
+      "enabled": true
+    }
+  ]
+}
