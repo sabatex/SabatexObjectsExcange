@@ -1,7 +1,7 @@
 {
   "projects": [
     {
-      "path": "Sabatex.ObjectsExchange.Models/Sabatex.ObjectsExchange.Models.csproj",
+      "path": "Sabatex.ObjectExchange.Models/Sabatex.ObjectExchange.Models.csproj",
       "enabled": true
     },
     {

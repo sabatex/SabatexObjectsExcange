@@ -6,32 +6,16 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E25FC2B4-765C-4D8E-9A3B-54D3355A5856}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		Directory.Packages.props = Directory.Packages.props
 		Prepare ERP for exchange.md = Prepare ERP for exchange.md
 		Readme.md = Readme.md
-		sabatex-publish-solution.json = sabatex-publish-solution.json
 		test.json = test.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.Tests", "Sabatex.ObjectsExchange.Tests\Sabatex.ObjectsExchange.Tests.csproj", "{79B4D601-10CA-46EC-B928-32DB7B3D5F52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sabatex.ObjectsExchange.HttpClientConnector", "Sabatex.ObjectsExchange.HttpClientConnector\Sabatex.ObjectsExchange.HttpClientConnector.csproj", "{1AAFAE12-D832-4414-AF2F-4E4B816B304A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange.Client", "ObjectsExchange.Client\ObjectsExchange.Client.csproj", "{75DB9265-342E-4DE3-A46A-C66DB25586CD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectsExchange", "ObjectsExchange\ObjectsExchange.csproj", "{CEF09DEB-9152-4860-ADFB-B784F57D85D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectsExchange.ApiAdapter", "Sabatex.ObjectsExchange.ApiAdapter\Sabatex.ObjectsExchange.ApiAdapter.csproj", "{379480BE-BD2F-4695-8DB3-B8FF36052185}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectsExchange.ApiAdapter.Framework", "Sabatex.ObjectsExchange.ApiAdapter.Framework\Sabatex.ObjectsExchange.ApiAdapter.Framework.csproj", "{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectExchange.ClientDataAdapter.Memory", "Sabatex.ObjectExchange.ClientDataAdapter.Memory\Sabatex.ObjectExchange.ClientDataAdapter.Memory.csproj", "{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectExchange.ClientDataAdapter", "Sabatex.ObjectExchange.ClientDataAdapter\Sabatex.ObjectExchange.ClientDataAdapter.csproj", "{146E4167-6C27-4920-84A8-4D3F6253866A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectExchange.Core", "Sabatex.ObjectExchange.Core\Sabatex.ObjectExchange.Core.csproj", "{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sabatex.ObjectExchange.Models", "Sabatex.ObjectExchange.Models\Sabatex.ObjectExchange.Models.csproj", "{4987B32D-F09D-A60C-9087-BFA8D9563111}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +27,6 @@ Global
 		{79B4D601-10CA-46EC-B928-32DB7B3D5F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79B4D601-10CA-46EC-B928-32DB7B3D5F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79B4D601-10CA-46EC-B928-32DB7B3D5F52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1AAFAE12-D832-4414-AF2F-4E4B816B304A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{75DB9265-342E-4DE3-A46A-C66DB25586CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{75DB9265-342E-4DE3-A46A-C66DB25586CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75DB9265-342E-4DE3-A46A-C66DB25586CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,30 +35,6 @@ Global
 		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEF09DEB-9152-4860-ADFB-B784F57D85D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{379480BE-BD2F-4695-8DB3-B8FF36052185}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{379480BE-BD2F-4695-8DB3-B8FF36052185}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{379480BE-BD2F-4695-8DB3-B8FF36052185}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{379480BE-BD2F-4695-8DB3-B8FF36052185}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96A161B9-5CB3-4315-A86F-6A3F70EBD8D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D64D0889-1357-40D6-B6FB-64D3BFDE7A05}.Release|Any CPU.Build.0 = Release|Any CPU
-		{146E4167-6C27-4920-84A8-4D3F6253866A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{146E4167-6C27-4920-84A8-4D3F6253866A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{146E4167-6C27-4920-84A8-4D3F6253866A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{146E4167-6C27-4920-84A8-4D3F6253866A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F3C31BE-E2FB-4D31-A4E5-51916DBA65C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4987B32D-F09D-A60C-9087-BFA8D9563111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4987B32D-F09D-A60C-9087-BFA8D9563111}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4987B32D-F09D-A60C-9087-BFA8D9563111}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4987B32D-F09D-A60C-9087-BFA8D9563111}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
